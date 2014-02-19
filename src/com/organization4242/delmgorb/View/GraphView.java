@@ -1,6 +1,5 @@
 package com.organization4242.delmgorb.View;
 
-import com.organization4242.delmgorb.Model.GraphModel;
 import org.sf.surfaceplot.SurfaceCanvas;
 
 import javax.swing.*;
@@ -17,16 +16,23 @@ public class GraphView extends JFrame{
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
 
+    SurfaceCanvas canvas = new SurfaceCanvas();
+
+    public SurfaceCanvas getCanvas() {
+        return canvas;
+    }
+
     public GraphView() {
         initComponents();
 
         setSize(800, 600);
-        GraphModel model = new GraphModel();
-        SurfaceCanvas canvas = new SurfaceCanvas();
-        canvas.setModel(model);
+    }
+
+    public GraphView initCanvas() {
         centerPanel.add(canvas, BorderLayout.CENTER);
         canvas.repaint();
         setVisible(true);
+        return this;
     }
 
     private void initComponents() {
@@ -62,7 +68,8 @@ public class GraphView extends JFrame{
     public void display() {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new GraphView().setVisible(true);
+                initCanvas();
+                setVisible(true);
             }
         });
     }

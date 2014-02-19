@@ -1,5 +1,7 @@
 package com.organization4242.delmgorb.Application;
 
+import com.organization4242.delmgorb.Controller.GraphController;
+import com.organization4242.delmgorb.Model.GraphModel;
 import com.organization4242.delmgorb.View.GraphView;
 
 /**
@@ -7,6 +9,8 @@ import com.organization4242.delmgorb.View.GraphView;
  */
 public class Application {
     public static void main(String[] args) {
-        new GraphView().display();
+        GraphView view = new GraphView();
+        new GraphController(new GraphModel(), view);
+        view.display();
     }
 }
