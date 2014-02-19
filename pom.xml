@@ -55,5 +55,12 @@
             <artifactId>commons-math3</artifactId>
             <version>3.2</version>
         </dependency>
+        <dependency>
+            <groupId>org.sf</groupId>
+            <artifactId>surfaceplot</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/SurfacePlot.jar</systemPath>
+        </dependency>
     </dependencies>
 </project>
