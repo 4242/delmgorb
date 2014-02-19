@@ -8,7 +8,7 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 install:
-  - mvn -Djava.library.path=lib test
+  - mvn test
 
 script:
   - echo 'Skipping script...'
