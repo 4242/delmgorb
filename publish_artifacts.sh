@@ -1,7 +1,7 @@
 #!/bin/sh
 echo -e "Publishing artifacts...\n"
 
-cp -R build/docs/javadoc $HOME/javadoc-latest
+cp -R ./target $HOME/target
 
 cd $HOME
 git config --global user.email "travis@travis-ci.org"
