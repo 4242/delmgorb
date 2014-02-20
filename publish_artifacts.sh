@@ -9,7 +9,7 @@ git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/4242/delmgorb
 
 cd gh-pages
 git rm -rf ./artifacts
-cp -Rf $HOME/artifacts ./gh-pages/artifacts
+cp -Rf $HOME/artifacts ./artifacts
 git add -f ./artifacts/delmgorb-1.0.jar
 git commit -m "Lastest artifacts on successful travis build $TRAVIS_BUILD_NUMBER auto-pushed to gh-pages"
 git push -fq origin gh-pages > /dev/null

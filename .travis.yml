@@ -1,7 +1,7 @@
 language: java
 
 env:
-  - secure: Q460czaFkS5lejBvt/sDMnZZnxPqDBoX0o7kl5vv0OCHq1mBrXqGwKBegDTAjHZM9B3GoL68dkkYo/ImWs1WlnETsxKkohT+TM3T5iJSYv3+Opo5T2tVfK028/6l/gk1UZpe8fgLI6iXk8LYVZ2xCv7T6WrXSxdnXH4+RQZiLLs=
+  - secure: "gYQLJvPPA5cPDVEFgOUSNmFONy2Sz9uAvaR7+/JC5BYuBFKebsKkSeFqgOuqD2qfKF5rWaGBYo+aI9HDxSuXSXgsxBjf7hI1v8uLO0esrooO7piahvEzGAxTQwKu3f/yFTxt3dEaMZNO1iD4MxpVqve+AmwNGlUrRXsOxJHKk/w="
 
 
 before_install:
