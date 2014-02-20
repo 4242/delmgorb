@@ -1,5 +1,9 @@
 language: java
 
+env:
+  - secure: Q460czaFkS5lejBvt/sDMnZZnxPqDBoX0o7kl5vv0OCHq1mBrXqGwKBegDTAjHZM9B3GoL68dkkYo/ImWs1WlnETsxKkohT+TM3T5iJSYv3+Opo5T2tVfK028/6l/gk1UZpe8fgLI6iXk8LYVZ2xCv7T6WrXSxdnXH4+RQZiLLs=
+
+
 before_install:
   - sudo add-apt-repository -y ppa:ricotz/testing
   - sudo apt-get update -qq
@@ -12,3 +16,6 @@ install:
 
 script:
   - echo 'Skipping script...'
+
+after_success:
+  - publish_artifacts.sh
