@@ -21,8 +21,6 @@ public class DataModel {
     private ArrayList<Point3D> YOUR_METHOD_NAME(/*add arguments*/) {
         ArrayList<Point3D> list = new ArrayList<Point3D>();
 
-        //TODO: put your logic here
-
         return list;
     }
 }
