@@ -12,7 +12,7 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 install:
-  - mvn test
+  - mvn package
 
 script:
   - echo 'Skipping script...'
