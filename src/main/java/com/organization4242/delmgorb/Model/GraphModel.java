@@ -8,7 +8,7 @@ import org.sf.surfaceplot.ISurfacePlotModel;
 public class GraphModel implements ISurfacePlotModel
 {
     public float calculateZ(float x, float y) {
-        return (float)(Math.pow(x, 2) * Math.atan(y));
+        return (float)(Math.pow(x, 2) / Math.pow(y, 2));
     }
 
     public int getPlotMode()
@@ -48,42 +48,42 @@ public class GraphModel implements ISurfacePlotModel
 
     public int getCalcDivisions()
     {
-        return 50;
+        return 100;
     }
 
     public int getDispDivisions()
     {
-        return 50;
+        return 100;
     }
 
     public float getXMin()
     {
-        return 0;
+        return -15;
     }
 
     public float getXMax()
     {
-        return 1;
+        return 15;
     }
 
     public float getYMin()
     {
-        return 0;
+        return -15;
     }
 
     public float getYMax()
     {
-        return 6;
+        return 15;
     }
 
     public float getZMin()
     {
-        return -1.5f;
+        return -1;
     }
 
     public float getZMax()
     {
-        return 1.5f;
+        return 15;
     }
 
     public String getXAxisLabel()
