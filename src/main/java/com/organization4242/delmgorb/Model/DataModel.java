@@ -36,38 +36,24 @@ public class DataModel {
         return listOfPoints;
     }
 
-    public DataModel() {
+    public DataModel(int num) {
         //Here listOfPoints gets assigned
-        listOfPoints = buildPoints(/*add arguments*/);
+        listOfPoints = buildPoints(num);
     }
 
-    private ArrayList<Point3D> buildPoints(/*add arguments*/) {
+    private ArrayList<Point3D> buildPoints(int number_of_points) {
 
         System.out.println("Inside buildPoints");
-
         ArrayList<Point3D> list = new ArrayList<Point3D>();
         FirstOrderIntegrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
         FirstOrderDifferentialEquations ode = new CircleODE(new double[] { 1.0, 1.0 }, 0.1);
-        double[] y = new double[] { 0.0, 1.0 }; // initial state
-        dp853.integrate(ode, 0.0, y, 16.0, y); // now y contains final state at time t=16.0
-
-        Point3D point1 = new Point3D();
-        Point3D point = new Point3D(1,3,4);
-        point1.x = 1.2;
-        point1.y = 1.3;
-        point1.z = 0.2;
-
-        list.add(0, point);
-        list.add(1, point1);
-
-        for (int i = 1; i <= 4; i++) {
-
-            list.add(i+1,new Point3D(1,i,Math.pow(i, 2)));
-
+        double[] y0 = new double[] { 0.0, 1.0 }; // initial state
+        double[] y1 = new double[] { 0.0, 1.0 }; // final state
+        for (int i = 0; i <= number_of_points; i++) {
+            dp853.integrate(ode, 0.0, y0, i*0.01+0.01, y1);// now y1 contains final state at time i*0.01+0.01
+            list.add(i,new Point3D(i,y1[0],y1[1]));
         }
-
         System.out.println("Outside buildPoints");
-
         return list;
     }
 }
