@@ -13,7 +13,9 @@ public class Point3D {
         this.y = y;
         this.z = z;
     }
-    
+
+    Point3D() {
+    }
     @Override
     public String toString() {
         return "[" + x + ", " + y + ", " + z + "]";
