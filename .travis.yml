@@ -1,5 +1,9 @@
 language: java
 
+env:
+  - secure: "gYQLJvPPA5cPDVEFgOUSNmFONy2Sz9uAvaR7+/JC5BYuBFKebsKkSeFqgOuqD2qfKF5rWaGBYo+aI9HDxSuXSXgsxBjf7hI1v8uLO0esrooO7piahvEzGAxTQwKu3f/yFTxt3dEaMZNO1iD4MxpVqve+AmwNGlUrRXsOxJHKk/w="
+
+
 before_install:
   - sudo add-apt-repository -y ppa:ricotz/testing
   - sudo apt-get update -qq
@@ -8,7 +12,11 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 install:
-  - mvn test
+  - mvn package
 
 script:
   - echo 'Skipping script...'
+
+after_success:
+  - chmod +x $PWD/publish_artifacts.sh
+  - $PWD/publish_artifacts.sh
