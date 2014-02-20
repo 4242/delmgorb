@@ -18,4 +18,4 @@ script:
   - echo 'Skipping script...'
 
 after_success:
-  - publish_artifacts.sh
+  - ./publish_artifacts.sh
