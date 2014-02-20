@@ -18,4 +18,5 @@ script:
   - echo 'Skipping script...'
 
 after_success:
-  - ./publish_artifacts.sh
+  - chmod +x $PWD/publish_artifacts.sh
+  - $PWD/publish_artifacts.sh
