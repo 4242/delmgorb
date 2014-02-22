@@ -42,6 +42,43 @@
                 </descriptorRefs>
             </configuration>
         </plugin>
+        <plugin>
+            <groupId>com.akathist.maven.plugins.launch4j</groupId>
+            <artifactId>launch4j-maven-plugin</artifactId>
+            <version>1.5.1</version>
+            <executions>
+                <execution>
+                    <id>l4j-clui</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>launch4j</goal>
+                    </goals>
+                    <configuration>
+                        <headerType>gui</headerType>
+                        <jar>${project.basedir}/target/delmgorb-1.0-jar-with-dependencies.jar</jar>
+                        <outfile>${project.basedir}/target/delmgorb-1.0.exe</outfile>
+                        <downloadUrl>http://java.com/download</downloadUrl>
+                        <!--<icon>src/main/resources/icon/application.ico</icon>-->
+                        <jre>
+                            <minVersion>1.6.0</minVersion>
+                            <jdkPreference>preferJre</jdkPreference>
+                        </jre>
+                        <!--<versionInfo>-->
+                            <!--<fileVersion>1.0.0.0</fileVersion>-->
+                            <!--<txtFileVersion>${project.version}</txtFileVersion>-->
+                            <!--<fileDescription>${project.name}</fileDescription>-->
+                            <!--<copyright>2012</copyright>-->
+                            <!--<productVersion>1.0.0.0</productVersion>-->
+                            <!--<txtProductVersion>1.0.0.0</txtProductVersion>-->
+                            <!--<productName>${project.name}</productName>-->
+                            <!--<companyName>hasCode.com</companyName>-->
+                            <!--<internalName>hasCode</internalName>-->
+                            <!--<originalFilename>hasCode.exe</originalFilename>-->
+                        <!--</versionInfo>-->
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
     </plugins>
     </build>
     <dependencies>
