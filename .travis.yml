@@ -11,10 +11,10 @@ before_install:
   - "export DISPLAY=:99.0"
   - sh -e /etc/init.d/xvfb start
   - mkdir ./target
-  - touch ./target/delmgorb-1.0.exes
+  - touch ./target/delmgorb-1.0.exe
 
 install:
-  - mvn package
+  - mvn -e -X package
 
 script:
   - echo 'Skipping script...'
