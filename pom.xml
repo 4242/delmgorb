@@ -34,7 +34,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>com.organization4242.delmgorb.View.Sample</mainClass>
+                        <mainClass>com.organization4242.delmgorb.Application.Application</mainClass>
                     </manifest>
                 </archive>
                 <descriptorRefs>
