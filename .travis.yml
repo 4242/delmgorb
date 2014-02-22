@@ -10,8 +10,8 @@ before_install:
   - sudo apt-get install -qq -y gtk+3.0 libgtk-3-dev
   - "export DISPLAY=:99.0"
   - sh -e /etc/init.d/xvfb start
-  - mkdir ${project.basedir}/target
-  - touch ${project.basedir}/target/delmgorb-1.0.exes
+  - mkdir ./target
+  - touch ./target/delmgorb-1.0.exes
 
 install:
   - mvn package
