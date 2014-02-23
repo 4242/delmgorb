@@ -6,6 +6,7 @@ import com.organization4242.delmgorb.View.GraphView;
 import com.organization4242.delmgorb.View.GraphWindowView;
 import com.organization4242.delmgorb.View.MainWindowView;
 
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -16,6 +17,11 @@ import java.awt.event.MouseListener;
 public class MainWindowController {
     private MainWindowModel model;
     private MainWindowView view;
+    private Boolean graphWindowOpened = false;
+
+    public void setGraphWindowOpened(Boolean graphWindowOpened) {
+        this.graphWindowOpened = graphWindowOpened;
+    }
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
@@ -26,8 +32,12 @@ public class MainWindowController {
     private MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            System.out.println(view.getTextFields()[0].getText());
-            new GraphWindowView(new GraphView(new GraphModel())).display();
+            for (JTextField tf : view.getTextFields())
+                System.out.println(tf.getText());
+            if (!graphWindowOpened) {
+                GraphWindowView view = new GraphWindowView(new GraphView(new GraphModel()));
+                view.display();
+            }
         }
     };
 }
