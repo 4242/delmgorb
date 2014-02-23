@@ -1,5 +1,7 @@
 package com.organization4242.delmgorb.View;
 
+import com.organization4242.delmgorb.Model.IntegrationMethods;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -87,19 +89,4 @@ public class MainWindowView extends JPanel{
     public void display() {
         jf.setVisible(true);
     }
-}
-
-enum IntegrationMethods {
-    Euler,
-    Midpoint,
-    ClassicalRungeKutta,
-    Gill,
-    ThreeEights,
-    HighamAndHall,
-    DormandPrince5,
-    DormandPrince8,
-    GraggBulirschStoer,
-    AdamsBashforth,
-    AdamsMoulton,
-
 }
