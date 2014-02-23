@@ -11,7 +11,6 @@ import static java.lang.System.*;
 
 public class DataModel {
     private ArrayList<Point3D> listOfPoints;
-
     {
         listOfPoints = new ArrayList<Point3D>();
     }
@@ -20,13 +19,14 @@ public class DataModel {
         return listOfPoints;
     }
 
-    public DataModel(int num) {
+    public DataModel(int num, double time_step) {
         //Here listOfPoints gets assigned
         double angle = PI/20;
-        listOfPoints = buildPoints(num, angle, angle, angle, 100);
+        listOfPoints = buildPoints(num, 100, time_step, angle, angle, angle);
     }
 
-    private ArrayList<Point3D> buildPoints(int num_of_points, double phi_0, double theta_0, double psi_0, double time) {
+    private ArrayList<Point3D> buildPoints(int num_of_points, double time, double time_step,
+                                           double phi_0, double theta_0, double psi_0) {
 
         out.println("Inside buildPoints");
         ArrayList<Point3D> list;
@@ -77,13 +77,15 @@ public class DataModel {
         for (int i = 0; i <= counter - 1; i++) {
             double max;
             max = 0;
-            for (int t = 1; t <= 100*time; t++) {
+            for (int t = 1; t <= time/time_step; t++) {
                 double[] y0; // initial state
                 y0 = new double[] { lambda_0, lambda_1, lambda_2, lambda_3, 0, 1, 0 };
                 double[] y1; // final state
                 y1 = new double[] { 0, 0, 0, 0, 0, 0, 0 };
+                double time_state;
+                time_state = 1.0*t*time_step;
                 FirstOrderDifferentialEquations ode = new LibrationODE(1000, list.get(i).x, list.get(i).y, 0.001078011072);
-                dp853.integrate(ode, 0.0, y0, 1.0*t/100, y1);// now y1 contains final state at time t/100
+                dp853.integrate(ode, 0.0, y0, time_state, y1);// now y1 contains final state at time t/100
                 //eulin.integrate(ode, 0.0, y0, 1.0*t/100, y1);// now y1 contains final state at time t/100
                 double alpha_1;//элемент матрицы направляющих косинусов
                 alpha_1 = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
