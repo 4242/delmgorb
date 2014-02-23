@@ -33,8 +33,10 @@ public class MainWindowView extends JPanel{
         jf.setResizable(false);
         jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         label = new JLabel("Input parameters:");
-        for (int i=0; i<textFieldNumber; i++)
+        for (int i=0; i<textFieldNumber; i++) {
             textFields[i] = new JTextField(4);
+            textFields[i].setText("0");
+        }
         button = new JButton("Draw!");
         GridBagLayout gbl = new GridBagLayout();
         jf.setLayout(gbl);
