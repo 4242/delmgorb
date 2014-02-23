@@ -14,10 +14,10 @@ public class InterpolatorModel {
     public BicubicSplineInterpolatingFunction getFunction(ArrayList<Point3D> list) {
         double[] x = new double[]{-4,-3,-2,-1,1,2,3,4};
         double[] y = new double[]{-4,-3,-2,-1,1,2,3,4};
-        double[][] f = new double[][]{new double[]{-4,-3,-2,-1,1,2,3,4,}, new double[]{-4,-3,-2,-1,1,2,3,4},
-                new double[]{-4,-3,-2,-1,1,2,3,4}, new double[]{-4,-3,-2,-1,1,2,3,4},
-                new double[]{-4,-3,-2,-1,1,2,3,4,}, new double[]{-4,-3,-2,-1,1,2,3,4},
-                new double[]{-4,-3,-2,-1,1,2,3,4}, new double[]{-4,-3,-2,-1,1,2,3,4}};
+        double[][] f = new double[][]{new double[]{-4,-5,-9,-11,13,24,3,4,}, new double[]{-2,-6,-2,-1,0,2,5,4},
+                new double[]{-4,-3,-2,-1,1,2,3,4}, new double[]{-4,-5,-9,-11,13,24,3,4,},
+                new double[]{-4,-5,-9,-11,13,24,3,4,}, new double[]{-4,-3,-2,-1,1,2,3,4},
+                new double[]{-4,-3,-2,-1,1,2,3,4}, new double[]{-2,-6,-2,-1,0,2,5,4}};
 
         return interpolator.interpolate(x, y, f);
     }
