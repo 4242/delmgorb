@@ -8,11 +8,12 @@ import java.awt.*;
  */
 public class MainWindowView extends JPanel{
     private JFrame jf;
-    private JTextField textField;
+    private int textFieldNumber = 14;
+    private JTextField[] textFields = new JTextField[textFieldNumber];
     private JButton button;
 
-    public JTextField getTextField() {
-        return textField;
+    public JTextField[] getTextFields() {
+        return textFields;
     }
 
     public JButton getButton() {
@@ -27,12 +28,35 @@ public class MainWindowView extends JPanel{
         }
         catch(Exception e){
         }
-        jf.setSize(400, 300);
+        jf.setSize(400, 150);
         jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        jf.setLayout(new GridLayout(2, 1));
         button = new JButton("Draw!");
-        textField = new JTextField();
-        jf.add(textField);
+        for (int i=0; i<textFieldNumber; i++)
+            textFields[i] = new JTextField(4);
+        GridBagLayout gbl = new GridBagLayout();
+        jf.setLayout(gbl);
+        GridBagConstraints c =  new GridBagConstraints();
+        c.anchor = GridBagConstraints.NORTH;
+        c.fill   = GridBagConstraints.NONE;
+        c.gridheight = 1;
+        c.insets = new Insets(10, 0, 0, 0);
+        c.ipadx = 0;
+        c.ipady = 0;
+        c.weightx = 1.0;
+        c.weighty = 0.0;
+        for (int i=0; i<textFieldNumber/2; i++) {
+            gbl.setConstraints(textFields[i], c);
+            jf.add(textFields[i]);
+        }
+        c.gridy = 1;
+        for (int i=textFieldNumber/2; i<textFieldNumber; i++) {
+            gbl.setConstraints(textFields[i], c);
+            jf.add(textFields[i]);
+        }
+        c.gridy++;
+        c.gridx = 5;
+        c.gridwidth = 2;
+        gbl.setConstraints(button, c);
         jf.add(button);
     }
 

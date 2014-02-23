@@ -26,7 +26,7 @@ public class MainWindowController {
     private MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            System.out.println(view.getTextField().getText());
+            System.out.println(view.getTextFields()[0].getText());
             new GraphWindowView(new GraphView(new GraphModel())).display();
         }
     };
