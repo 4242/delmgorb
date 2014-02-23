@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Sandbox {
     public static void main(String[] args) {
-        int number_of_building_points = 100;
+        int number_of_building_points = 5;
         ArrayList<Point3D> list_of_points;
         list_of_points = new DataModel(number_of_building_points).getListOfPoints();
         for (Point3D p: list_of_points)
