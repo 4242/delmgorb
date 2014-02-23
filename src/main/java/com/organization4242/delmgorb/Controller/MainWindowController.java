@@ -17,10 +17,6 @@ public class MainWindowController {
     private MainWindowView view;
     private Boolean graphWindowOpened = false;
 
-    public void setGraphWindowOpened(Boolean graphWindowOpened) {
-        this.graphWindowOpened = graphWindowOpened;
-    }
-
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
         this.view = view;
@@ -28,6 +24,7 @@ public class MainWindowController {
             tf.addFocusListener(focusListener);
         }
         view.getButton().addMouseListener(mouseListener);
+        view.getComboBox().addItemListener(itemListener);
     }
 
     private MouseListener mouseListener = new MouseAdapter() {
@@ -48,6 +45,14 @@ public class MainWindowController {
                 view.addWindowListener(windowListener);
                 view.display();
             }
+        }
+    };
+
+    private ItemListener itemListener = new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.SELECTED)
+                System.out.println(((JComboBox) e.getSource()).getSelectedItem());
         }
     };
 

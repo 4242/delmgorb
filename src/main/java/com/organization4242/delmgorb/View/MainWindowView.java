@@ -22,6 +22,10 @@ public class MainWindowView extends JPanel{
         return button;
     }
 
+    public JComboBox<IntegrationMethods> getComboBox() {
+        return comboBox;
+    }
+
     public MainWindowView() {
         jf = new JFrame("Main Window");
         try
