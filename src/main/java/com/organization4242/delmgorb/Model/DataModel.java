@@ -6,9 +6,7 @@ import org.apache.commons.math3.ode.nonstiff.EulerIntegrator;
 
 import java.util.ArrayList;
 
-import static java.lang.Math.atan;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
+import static java.lang.Math.*;
 import static java.lang.System.*;
 
 public class DataModel {
@@ -24,7 +22,8 @@ public class DataModel {
 
     public DataModel(int num) {
         //Here listOfPoints gets assigned
-        listOfPoints = buildPoints(num, 0.1, 0.1, 0.1, 100);
+        double angle = PI/20;
+        listOfPoints = buildPoints(num, angle, angle, angle, 100);
     }
 
     private ArrayList<Point3D> buildPoints(int num_of_points, double phi_0, double theta_0, double psi_0, double time) {
@@ -65,9 +64,9 @@ public class DataModel {
         double eps = 0;
         double del = 0;
         for (int i = 1; i <= num_of_points; i++) {
-            eps = 1.0*i / (num_of_points + 1);
+            eps = 1.0 * i / (num_of_points + 1);
             for (int j = 1; j <= num_of_points; j++) {
-                del = 1 + 1.0*j/(num_of_points + 1);
+                del = 1 + 1.0 * j / (num_of_points + 1);
                 if(eps > del - 1) {
                     list.add(counter, new Point3D(eps, del, 0));
                     counter++;
@@ -78,14 +77,14 @@ public class DataModel {
         for (int i = 0; i <= counter - 1; i++) {
             double max;
             max = 0;
-            for (int t = 1; t <= time; t++) {
+            for (int t = 1; t <= 100*time; t++) {
                 double[] y0; // initial state
                 y0 = new double[] { lambda_0, lambda_1, lambda_2, lambda_3, 0, 1, 0 };
                 double[] y1; // final state
                 y1 = new double[] { 0, 0, 0, 0, 0, 0, 0 };
                 FirstOrderDifferentialEquations ode = new LibrationODE(1000, list.get(i).x, list.get(i).y, 0.001078011072);
-                //dp853.integrate(ode, 0.0, y0, 1.0*t, y1);// now y1 contains final state at time t/100
-                eulin.integrate(ode, 0.0, y0, 1.0*t, y1);// now y1 contains final state at time t/100
+                dp853.integrate(ode, 0.0, y0, 1.0*t/100, y1);// now y1 contains final state at time t/100
+                //eulin.integrate(ode, 0.0, y0, 1.0*t/100, y1);// now y1 contains final state at time t/100
                 double alpha_1;//элемент матрицы направляющих косинусов
                 alpha_1 = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
                 double beta_1;//элемент матрицы направляющих косинусов
@@ -96,13 +95,13 @@ public class DataModel {
                 out.print("i: ");     out.print(i);
                 out.print(" t: ");    out.print(t);
                 out.print(" y[0]: "); out.println(y1[0]);*/
-                if (psi >= max) {max = psi;/*System.out.println("NEW MAX");*/}
+                if (psi >= max) max = psi;
             }
             double epsilon = list.get(i).x;
             double delta  = list.get(i).y;
             list.remove(i);
             list.add(i, new Point3D(epsilon, delta, max));
-            //System.out.println(list.get(i));
+            System.out.println(list.get(i));
         }
         out.println("Outside buildPoints");
         return list;
