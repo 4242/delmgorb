@@ -24,6 +24,9 @@ public class MainWindowController {
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
         this.view = view;
+        for (JTextField tf : view.getTextFields()) {
+            tf.addFocusListener(focusListener);
+        }
         view.getButton().addMouseListener(mouseListener);
     }
 
@@ -58,6 +61,19 @@ public class MainWindowController {
         @Override
         public void windowClosing(WindowEvent e) {
             graphWindowOpened = false;
+        }
+    };
+
+    private FocusListener focusListener = new FocusAdapter() {
+        @Override
+        public void focusGained(final FocusEvent e) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    JTextField tf = (JTextField) e.getComponent();
+                    tf.selectAll();
+                }
+            });
         }
     };
 }
