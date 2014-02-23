@@ -3,6 +3,12 @@ language: java
 env:
   - secure: "gYQLJvPPA5cPDVEFgOUSNmFONy2Sz9uAvaR7+/JC5BYuBFKebsKkSeFqgOuqD2qfKF5rWaGBYo+aI9HDxSuXSXgsxBjf7hI1v8uLO0esrooO7piahvEzGAxTQwKu3f/yFTxt3dEaMZNO1iD4MxpVqve+AmwNGlUrRXsOxJHKk/w="
 
+notifications:
+  email:
+    - murz42@gmail.com
+    - 42_@mail.ru
+  on_success: always
+  on_failure: always
 
 before_install:
   - sudo add-apt-repository -y ppa:ricotz/testing
