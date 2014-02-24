@@ -106,11 +106,13 @@ public class MainWindowView extends JPanel{
         c.gridy++;
         c.gridwidth = 4;
         c.gridx = 0;
-        c.insets = new Insets(10, 0, 5, 0);
+        c.insets = new Insets(10, 5, 5, 5);
+        c.anchor = GridBagConstraints.WEST;
         gbl.setConstraints(comboBox, c);
         jf.add(comboBox);
         c.gridx = 5;
         c.gridwidth = 2;
+        c.anchor = GridBagConstraints.EAST;
         gbl.setConstraints(button, c);
         jf.add(button);
     }

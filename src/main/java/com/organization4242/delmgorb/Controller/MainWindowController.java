@@ -67,24 +67,6 @@ public class MainWindowController {
         }
     };
 
-    private InputMethodListener inputMethodListener = new InputMethodListener() {
-        @Override
-        public void inputMethodTextChanged(InputMethodEvent e) {
-            System.out.println(e.getSource());
-            if (e.getSource().equals(view.getNumberOfPoints())) {
-                numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
-            }
-            else if (e.getSource().equals(view.getTimeStep())) {
-                timeStep = Double.parseDouble(view.getTimeStep().getText());
-            }
-        }
-
-        @Override
-        public void caretPositionChanged(InputMethodEvent event) {
-
-        }
-    };
-
     private ItemListener itemListener = new ItemListener() {
         @Override
         public void itemStateChanged(ItemEvent e) {
