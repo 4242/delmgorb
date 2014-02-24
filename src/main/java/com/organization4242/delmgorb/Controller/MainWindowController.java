@@ -18,16 +18,22 @@ import java.awt.event.*;
 public class MainWindowController {
     private MainWindowModel model;
     private MainWindowView view;
+    private int numberOfPoints;
+    private double timeStep;
     private Boolean graphWindowOpened = false;
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
         this.view = view;
+        numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
+        timeStep = Double.parseDouble(view.getTimeStep().getText());
         for (JTextField tf : view.getTextFields()) {
             tf.addFocusListener(focusListener);
         }
         view.getButton().addMouseListener(mouseListener);
         view.getComboBox().addItemListener(itemListener);
+        view.getNumberOfPoints().addFocusListener(focusListener);
+        view.getTimeStep().addFocusListener(focusListener);
     }
 
     private MouseListener mouseListener = new MouseAdapter() {
@@ -48,16 +54,34 @@ public class MainWindowController {
                 try {
                     graphWindowView = new GraphWindowView(new GraphView(
                         new GraphModel(new InterpolatorModel()
-                            .getFunction(new DataModel(8, 0.2).getListOfPoints()))));
+                            .getFunction(new DataModel(numberOfPoints, timeStep).getListOfPoints()))));
                     graphWindowView.addWindowListener(windowListener);
                     graphWindowView.display();
                 } catch (NumberIsTooSmallException ex) {
                     JOptionPane.showMessageDialog(view, "Number of points is too small");
                 }
-//                catch (Exception ex) {
-//                    System.out.println(ex);
-//                }
+                catch (Exception ex) {
+                    System.out.println(ex);
+                }
             }
+        }
+    };
+
+    private InputMethodListener inputMethodListener = new InputMethodListener() {
+        @Override
+        public void inputMethodTextChanged(InputMethodEvent e) {
+            System.out.println(e.getSource());
+            if (e.getSource().equals(view.getNumberOfPoints())) {
+                numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
+            }
+            else if (e.getSource().equals(view.getTimeStep())) {
+                timeStep = Double.parseDouble(view.getTimeStep().getText());
+            }
+        }
+
+        @Override
+        public void caretPositionChanged(InputMethodEvent event) {
+
         }
     };
 
@@ -92,6 +116,17 @@ public class MainWindowController {
                     tf.selectAll();
                 }
             });
+        }
+
+        @Override
+        public void focusLost(final FocusEvent e) {
+            System.out.println(((JTextField)e.getSource()).getText());
+            if (e.getSource().equals(view.getNumberOfPoints())) {
+                numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
+            }
+            else if (e.getSource().equals(view.getTimeStep())) {
+                timeStep = Double.parseDouble(view.getTimeStep().getText());
+            }
         }
     };
 }

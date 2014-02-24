@@ -10,14 +10,23 @@ import java.awt.*;
  */
 public class MainWindowView extends JPanel{
     private JFrame jf;
-    private JLabel label;
     private int textFieldNumber = 14;
     private JTextField[] textFields = new JTextField[textFieldNumber];
+    private JTextField numberOfPointsTextField;
+    private JTextField timeStepTextField;
     private JComboBox<IntegrationMethods> comboBox;
     private JButton button;
 
     public JTextField[] getTextFields() {
         return textFields;
+    }
+
+    public JTextField getNumberOfPoints() {
+        return numberOfPointsTextField;
+    }
+
+    public JTextField getTimeStep() {
+        return timeStepTextField;
     }
 
     public JButton getButton() {
@@ -36,18 +45,23 @@ public class MainWindowView extends JPanel{
         }
         catch(Exception e){
         }
-        jf.setSize(400, 160);
+        jf.setSize(400, 185);
         jf.setResizable(false);
         jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        label = new JLabel("Input parameters:");
+        JLabel label = new JLabel("Input parameters:");
+        JLabel numLabel = new JLabel("Number of points:");
+        JLabel timeLabel = new JLabel("Time step:");
         for (int i=0; i<textFieldNumber; i++) {
             textFields[i] = new JTextField(4);
             textFields[i].setText("0");
         }
+        numberOfPointsTextField = new JTextField(4);
+        numberOfPointsTextField.setText("4");
+        timeStepTextField = new JTextField(4);
+        timeStepTextField.setText("0.5");
         button = new JButton("Draw!");
         comboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
         comboBox.setEditable(false);
-        //comboBox.
         GridBagLayout gbl = new GridBagLayout();
         jf.setLayout(gbl);
         GridBagConstraints c =  new GridBagConstraints();
@@ -75,13 +89,28 @@ public class MainWindowView extends JPanel{
             jf.add(textFields[i]);
         }
         c.gridy++;
-        c.gridwidth = 3;
         c.gridx = 0;
+        c.gridwidth = 3;
+        gbl.setConstraints(numLabel, c);
+        jf.add(numLabel);
+        c.gridx = 2;
+        gbl.setConstraints(numberOfPointsTextField, c);
+        jf.add(numberOfPointsTextField);
+        c.gridx = 4;
+        c.gridwidth = 2;
+        gbl.setConstraints(timeLabel, c);
+        jf.add(timeLabel);
+        c.gridx = 6;
+        gbl.setConstraints(timeStepTextField, c);
+        jf.add(timeStepTextField);
+        c.gridy++;
+        c.gridwidth = 4;
+        c.gridx = 0;
+        c.insets = new Insets(10, 0, 5, 0);
         gbl.setConstraints(comboBox, c);
         jf.add(comboBox);
         c.gridx = 5;
         c.gridwidth = 2;
-        c.insets = new Insets(10, 0, 0, 0);
         gbl.setConstraints(button, c);
         jf.add(button);
     }
