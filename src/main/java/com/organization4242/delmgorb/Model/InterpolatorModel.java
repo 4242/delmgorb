@@ -16,8 +16,8 @@ public class InterpolatorModel {
         double[] y = new double[]{-4,-3,-2,-1,1,2,3,4};
         double[][] f = new double[][]{new double[]{-4,-5,-9,-11,13,24,3,4,}, new double[]{-2,-6,-2,-1,0,2,5,4},
                 new double[]{-4,-3,-2,-1,1,2,3,4}, new double[]{-4,-5,-9,-11,13,24,3,4,},
-                new double[]{-4,-5,-9,-11,13,24,3,4,}, new double[]{-4,-3,-2,-1,1,2,3,4},
-                new double[]{-4,-3,-2,-1,1,2,3,4}, new double[]{-2,-6,-2,-1,0,2,5,4}};
+                new double[]{-4,5,-2,-11,-13,24,3,4,}, new double[]{-4,-8,-2,-5,1,8,3,4},
+                new double[]{-4,-3,-21,-1,1,2,0,4}, new double[]{-2,-6,-2,-1,0,2,5,4}};
 
         return interpolator.interpolate(x, y, f);
     }
