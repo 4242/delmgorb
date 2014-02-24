@@ -1,9 +1,6 @@
 package com.organization4242.delmgorb.Controller;
 
-import com.organization4242.delmgorb.Model.DataModel;
-import com.organization4242.delmgorb.Model.GraphModel;
-import com.organization4242.delmgorb.Model.InterpolatorModel;
-import com.organization4242.delmgorb.Model.MainWindowModel;
+import com.organization4242.delmgorb.Model.*;
 import com.organization4242.delmgorb.View.GraphView;
 import com.organization4242.delmgorb.View.GraphWindowView;
 import com.organization4242.delmgorb.View.MainWindowView;
@@ -54,7 +51,8 @@ public class MainWindowController {
                 try {
                     graphWindowView = new GraphWindowView(new GraphView(
                         new GraphModel(new InterpolatorModel()
-                            .getFunction(new DataModel(numberOfPoints, timeStep).getListOfPoints()))));
+                            .getFunction(new DataModel(numberOfPoints, timeStep,
+                                    IntegrationMethods.DormandPrince8).getListOfPoints()))));
                     graphWindowView.addWindowListener(windowListener);
                     graphWindowView.display();
                 } catch (NumberIsTooSmallException ex) {
@@ -120,7 +118,7 @@ public class MainWindowController {
 
         @Override
         public void focusLost(final FocusEvent e) {
-            System.out.println(((JTextField)e.getSource()).getText());
+            System.out.println(((JTextField) e.getSource()).getText());
             if (e.getSource().equals(view.getNumberOfPoints())) {
                 numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
             }

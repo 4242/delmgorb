@@ -1,6 +1,9 @@
 package com.organization4242.delmgorb.Model;
 
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
+import org.apache.commons.math3.ode.FirstOrderIntegrator;
+import org.apache.commons.math3.ode.nonstiff.AdamsBashforthIntegrator;
+import org.apache.commons.math3.ode.nonstiff.AdamsMoultonIntegrator;
 import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
 import org.apache.commons.math3.ode.nonstiff.EulerIntegrator;
 
@@ -19,20 +22,34 @@ public class DataModel {
         return listOfPoints;
     }
 
-    public DataModel(int num, double time_step) {
+    public DataModel(int num, double time_step, IntegrationMethods method) {
         //Here listOfPoints gets assigned
         double angle = PI/20;
-        listOfPoints = buildPoints(num, 100, time_step, angle, angle, angle);
+        listOfPoints = buildPoints(num, 100, time_step, angle, angle, angle, method);
     }
 
     private ArrayList<Point3D> buildPoints(int num_of_points, double time, double time_step,
-                                           double phi_0, double theta_0, double psi_0) {
+                                           double phi_0, double theta_0, double psi_0, IntegrationMethods method) {
 
         out.println("Inside buildPoints");
         ArrayList<Point3D> list;
         list = new ArrayList<Point3D>();
-        DormandPrince853Integrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-        EulerIntegrator eulin = new EulerIntegrator(0.01);
+        out.println(method);
+        FirstOrderIntegrator integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+        if(method == IntegrationMethods.DormandPrince8)
+            integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+        if(method == IntegrationMethods.AdamsBashforth)
+            integrator = new AdamsBashforthIntegrator(3, 0.01, 0.05, 1.0, 0.5);
+        if(method == IntegrationMethods.AdamsMoulton)
+            integrator = new AdamsMoultonIntegrator(2, 0.01, 0.05, 1.0, 0.5);
+        if(method == IntegrationMethods.Euler)
+            integrator = new EulerIntegrator(0.01);
+        if(method == IntegrationMethods.DormandPrince8)
+            integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+        if(method == IntegrationMethods.DormandPrince8)
+            integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+        //DormandPrince853Integrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+        //EulerIntegrator eulin = new EulerIntegrator(0.1);
 
         /*вычисляем начальные условия. на входе они в самолетных углах, а нужны в кватернионах*/
 
@@ -67,12 +84,13 @@ public class DataModel {
             eps = 1.0 * i / (num_of_points + 1);
             for (int j = 1; j <= num_of_points; j++) {
                 del = 1 + 1.0 * j / (num_of_points + 1);
-                if(eps > del - 1) {
+                if(eps - del > -1) {
                     list.add(counter, new Point3D(eps, del, 0));
                     counter++;
                 }
             }
         }
+
         /*в каждой точке выполняем численное интегрирование для разного времени, ищем максимум самолетного угла*/
         for (int i = 0; i <= counter - 1; i++) {
             double max;
@@ -85,8 +103,7 @@ public class DataModel {
                 double time_state;
                 time_state = 1.0*t*time_step;
                 FirstOrderDifferentialEquations ode = new LibrationODE(1000, list.get(i).x, list.get(i).y, 0.001078011072);
-                dp853.integrate(ode, 0.0, y0, time_state, y1);// now y1 contains final state at time t/100
-                //eulin.integrate(ode, 0.0, y0, 1.0*t/100, y1);// now y1 contains final state at time t/100
+                integrator.integrate(ode, 0.0, y0, time_state, y1);// now y1 contains final state at time t/100
                 double alpha_1;//элемент матрицы направляющих косинусов
                 alpha_1 = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
                 double beta_1;//элемент матрицы направляющих косинусов
