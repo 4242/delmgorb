@@ -1,7 +1,7 @@
 package com.organization4242.delmgorb.Model;
 
-import org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolatingFunction;
-import org.apache.commons.math3.analysis.interpolation.BicubicSplineInterpolator;
+import org.apache.commons.math3.analysis.MultivariateFunction;
+import org.apache.commons.math3.analysis.interpolation.MicrosphereInterpolator;
 
 import java.util.ArrayList;
 
@@ -9,16 +9,18 @@ import java.util.ArrayList;
  * Created by ilya-murzinov on 24.02.14.
  */
 public class InterpolatorModel {
-    BicubicSplineInterpolator interpolator = new BicubicSplineInterpolator();
+    MicrosphereInterpolator interpolator = new MicrosphereInterpolator();
 
-    public BicubicSplineInterpolatingFunction getFunction(ArrayList<Point3D> list) {
-        double[] x = new double[]{-4,-3,-2,-1,1,2,3,4};
-        double[] y = new double[]{-4,-3,-2,-1,1,2,3,4};
-        double[][] f = new double[][]{new double[]{-4,-5,-9,-11,13,24,3,4,}, new double[]{-2,-6,-2,-1,0,2,5,4},
-                new double[]{-4,-3,-2,-1,1,2,3,4}, new double[]{-4,-5,-9,-11,13,24,3,4,},
-                new double[]{-4,5,-2,-11,-13,24,3,4,}, new double[]{-4,-8,-2,-5,1,8,3,4},
-                new double[]{-4,-3,-21,-1,1,2,0,4}, new double[]{-2,-6,-2,-1,0,2,5,4}};
+    public MultivariateFunction getFunction(ArrayList<Point3D> list) {
+        double[][] xy = new double[list.size()][2];
+        double[] z = new double[list.size()];
 
-        return interpolator.interpolate(x, y, f);
+        for (int i = 0; i<list.size(); i++) {
+            xy[i][0] = list.get(i).x;
+            xy[i][1] = list.get(i).y;
+            z[i] = list.get(i).z;
+        }
+
+        return interpolator.interpolate(xy, z);
     }
 }

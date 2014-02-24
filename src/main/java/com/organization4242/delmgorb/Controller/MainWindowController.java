@@ -1,9 +1,9 @@
 package com.organization4242.delmgorb.Controller;
 
+import com.organization4242.delmgorb.Model.DataModel;
 import com.organization4242.delmgorb.Model.GraphModel;
 import com.organization4242.delmgorb.Model.InterpolatorModel;
 import com.organization4242.delmgorb.Model.MainWindowModel;
-import com.organization4242.delmgorb.Model.Point3D;
 import com.organization4242.delmgorb.View.GraphView;
 import com.organization4242.delmgorb.View.GraphWindowView;
 import com.organization4242.delmgorb.View.MainWindowView;
@@ -11,7 +11,6 @@ import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 /**
  * Created by ilya-murzinov on 22.02.14.
@@ -49,14 +48,15 @@ public class MainWindowController {
                 try {
                     graphWindowView = new GraphWindowView(new GraphView(
                         new GraphModel(new InterpolatorModel()
-                            .getFunction(new ArrayList<Point3D>()))));
+                            .getFunction(new DataModel(8, 0.2).getListOfPoints()))));
                     graphWindowView.addWindowListener(windowListener);
                     graphWindowView.display();
                 } catch (NumberIsTooSmallException ex) {
                     JOptionPane.showMessageDialog(view, "Number of points is too small");
-                } catch (Exception ex) {
-                    System.out.println(ex);
                 }
+//                catch (Exception ex) {
+//                    System.out.println(ex);
+//                }
             }
         }
     };
