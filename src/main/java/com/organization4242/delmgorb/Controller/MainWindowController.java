@@ -38,21 +38,23 @@ public class MainWindowController {
         public void mouseClicked(MouseEvent e) {
             Boolean canDraw = true;
             for (JTextField tf : view.getTextFields()) {
-                if (!tf.getText().equals("")) {
-                    System.out.println(tf.getText());
-                }
-                else {
+                if (tf.getText().equals("")) {
                     canDraw = false;
                     JOptionPane.showMessageDialog(view, "Please fill all fields");
                 }
             }
             if (!graphWindowOpened && canDraw) {
+                IntegrationMethods method = (IntegrationMethods) view.getComboBox().getSelectedItem();
+                System.out.println("Drawing plot:");
+                System.out.println("    number of points = " + numberOfPoints);
+                System.out.println("    time step = " + timeStep);
+                System.out.println("    method = " + method);
                 GraphWindowView graphWindowView;
                 try {
                     graphWindowView = new GraphWindowView(new GraphView(
                         new GraphModel(new InterpolatorModel()
                             .getFunction(new DataModel(numberOfPoints, timeStep,
-                                    IntegrationMethods.DormandPrince8).getListOfPoints()))));
+                                    method).getListOfPoints()))));
                     graphWindowView.addWindowListener(windowListener);
                     graphWindowView.display();
                 } catch (NumberIsTooSmallException ex) {
