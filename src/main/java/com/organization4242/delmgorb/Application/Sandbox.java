@@ -14,7 +14,7 @@ public class Sandbox {
     public static void main(String[] args) {
         int number_of_building_points = 4;
         double time_step_of_integration = 0.5;
-        IntegrationMethods method = IntegrationMethods.AdamsMoulton;
+        IntegrationMethods method = IntegrationMethods.GraggBulirschStoer;
         ArrayList<Point3D> list_of_points;
         list_of_points = new DataModel(number_of_building_points,
                 time_step_of_integration, method).getListOfPoints();

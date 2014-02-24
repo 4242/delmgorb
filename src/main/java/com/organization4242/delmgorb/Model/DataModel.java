@@ -2,10 +2,7 @@ package com.organization4242.delmgorb.Model;
 
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
-import org.apache.commons.math3.ode.nonstiff.AdamsBashforthIntegrator;
-import org.apache.commons.math3.ode.nonstiff.AdamsMoultonIntegrator;
-import org.apache.commons.math3.ode.nonstiff.DormandPrince853Integrator;
-import org.apache.commons.math3.ode.nonstiff.EulerIntegrator;
+import org.apache.commons.math3.ode.nonstiff.*;
 
 import java.util.ArrayList;
 
@@ -36,20 +33,19 @@ public class DataModel {
         list = new ArrayList<Point3D>();
         out.println(method);
         FirstOrderIntegrator integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-        if(method == IntegrationMethods.DormandPrince8)
-            integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-        if(method == IntegrationMethods.AdamsBashforth)
-            integrator = new AdamsBashforthIntegrator(3, 0.01, 0.05, 1.0, 0.5);
-        if(method == IntegrationMethods.AdamsMoulton)
-            integrator = new AdamsMoultonIntegrator(2, 0.01, 0.05, 1.0, 0.5);
-        if(method == IntegrationMethods.Euler)
-            integrator = new EulerIntegrator(0.01);
-        if(method == IntegrationMethods.DormandPrince8)
-            integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-        if(method == IntegrationMethods.DormandPrince8)
-            integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-        //DormandPrince853Integrator dp853 = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
-        //EulerIntegrator eulin = new EulerIntegrator(0.1);
+        switch (method) {
+            case Euler: integrator = new EulerIntegrator(0.01); break;
+            case Midpoint: integrator = new MidpointIntegrator(0.05); break;
+            case ClassicalRungeKutta: integrator = new ClassicalRungeKuttaIntegrator(0.1); break;
+            case Gill: integrator = new GillIntegrator(0.1); break;
+            case ThreeEights: integrator = new ThreeEighthesIntegrator(0.05); break;
+            case HighamAndHall: integrator = new HighamHall54Integrator(0.05, 0.1, 1.0, 0.5);break;
+            case DormandPrince5: integrator = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);break;
+            case DormandPrince8: integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10); break;
+            case GraggBulirschStoer: integrator = new GraggBulirschStoerIntegrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10); break;
+            case AdamsBashforth: integrator = new AdamsBashforthIntegrator(3, 0.01, 0.05, 1.0, 0.5); break;
+            case AdamsMoulton: integrator = new AdamsMoultonIntegrator(2, 0.01, 0.05, 1.0, 0.5); break;
+        }
 
         /*вычисляем начальные условия. на входе они в самолетных углах, а нужны в кватернионах*/
 
