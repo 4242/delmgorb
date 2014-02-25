@@ -28,7 +28,7 @@ public class DataModel {
     public DataModel(int num, double time_step, IntegrationMethods method) {
         //Here listOfPoints gets assigned
         double angle = PI/20;
-        listOfPoints = buildPoints(num, 100, time_step, angle, angle, angle, method);
+        //listOfPoints = buildPoints(num, 100, time_step, angle, angle, angle, method);
         threeArrays = buildNewPoints(num, 100, time_step, angle, angle, angle, method);
     }
 
