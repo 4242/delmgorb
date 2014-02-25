@@ -7,19 +7,20 @@ import org.apache.commons.math3.analysis.MultivariateFunction;
 /**
  * Created by ilya-murzinov on 22.02.14.
  */
-public class GraphModel {
+public class PlotModel {
     private DefaultSurfaceModel model;
 
     public DefaultSurfaceModel getModel() {
         return model;
     }
 
-    public GraphModel(final MultivariateFunction function) {
+    public PlotModel(final MultivariateFunction function,
+                     float xMin, float xMax, float yMin, float yMax) {
         model = new DefaultSurfaceModel();
-        model.setXMax((float) 2.0);
-        model.setXMin((float) 1.0);
-        model.setYMax((float) 1.0);
-        model.setYMin((float) 0.0);
+        model.setXMax(xMax);
+        model.setXMin(xMin);
+        model.setYMax(yMax);
+        model.setYMin(yMin);
 
         model.setMapper(new Mapper() {
             @Override

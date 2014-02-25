@@ -1,8 +1,8 @@
 package com.organization4242.delmgorb.Controller;
 
-import com.organization4242.delmgorb.Model.*;
-import com.organization4242.delmgorb.View.GraphView;
-import com.organization4242.delmgorb.View.GraphWindowView;
+import com.organization4242.delmgorb.Model.IntegrationMethods;
+import com.organization4242.delmgorb.Model.MainWindowModel;
+import com.organization4242.delmgorb.View.PlotWindowView;
 import com.organization4242.delmgorb.View.MainWindowView;
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
@@ -24,7 +24,6 @@ public class MainWindowController {
             tf.addFocusListener(focusListener);
         }
         view.getButton().addMouseListener(mouseListener);
-        view.getComboBox().addItemListener(itemListener);
         view.getNumberOfPoints().addFocusListener(focusListener);
         view.getTimeStep().addFocusListener(focusListener);
     }
@@ -32,49 +31,50 @@ public class MainWindowController {
     private MouseListener mouseListener = new MouseAdapter() {
         @Override
         public void mouseClicked(MouseEvent e) {
-            Boolean canDraw = true;
-            for (JTextField tf : view.getTextFields()) {
-                if (tf.getText().equals("")) {
-                    canDraw = false;
-                    JOptionPane.showMessageDialog(view, "Please fill all fields");
-                }
-            }
-            if (!graphWindowOpened && canDraw) {
-                IntegrationMethods method = (IntegrationMethods) view.getComboBox().getSelectedItem();
-                int numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
-                Double timeStep = Double.parseDouble(view.getTimeStep().getText());
-                System.out.println("Drawing plot:");
-                System.out.println("    number of points = " + numberOfPoints);
-                System.out.println("    time step = " + timeStep);
-                System.out.println("    method = " + method);
-                GraphWindowView graphWindowView;
-                try {
-                    graphWindowView = new GraphWindowView(new GraphView(
-                        new GraphModel(new InterpolatorModel()
-                            .getFunction(new DataModel(numberOfPoints,
-                                    timeStep,
-                                    method).getListOfPoints()))));
-                    graphWindowView.addWindowListener(windowListener);
-                    graphWindowView.display();
-                } catch (NumberIsTooSmallException ex) {
-                    JOptionPane.showMessageDialog(view, "Number of points is too small");
-                }
-                catch (Exception ex) {
-                    System.out.println(ex);
-                }
-            }
+            drawPlot();
         }
     };
 
-    private ItemListener itemListener = new ItemListener() {
-        @Override
-        public void itemStateChanged(ItemEvent e) {
-            if (e.getStateChange() == ItemEvent.SELECTED)
-                System.out.println(((JComboBox) e.getSource()).getSelectedItem());
+    private void drawPlot() {
+        Boolean canDraw = true;
+        for (JTextField tf : view.getTextFields()) {
+            if (tf.getText().equals("")) {
+                canDraw = false;
+                JOptionPane.showMessageDialog(view, "Please fill all fields");
+            }
         }
-    };
+        if (!graphWindowOpened && canDraw) {
+            //Get all values from view
+            IntegrationMethods method = (IntegrationMethods) view.getComboBox().getSelectedItem();
+            int numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
+            Double timeStep = Double.parseDouble(view.getTimeStep().getText());
+            float xMin = Float.parseFloat(view.getBoundsTextFields()[0].getText());
+            float xMax = Float.parseFloat(view.getBoundsTextFields()[1].getText());
+            float yMin = Float.parseFloat(view.getBoundsTextFields()[2].getText());
+            float yMax = Float.parseFloat(view.getBoundsTextFields()[3].getText());
+
+            System.out.println("Drawing plot:");
+            System.out.println("    number of points = " + numberOfPoints);
+            System.out.println("    time step = " + timeStep);
+            System.out.println("    method = " + method);
+            try {
+                //Pass all values fro view to constructor of new window
+                PlotWindowView plotWindowView =
+                        new PlotWindowView(numberOfPoints, timeStep, method,
+                                xMin, xMax, yMin, yMax);
+                plotWindowView.addWindowListener(windowListener);
+                plotWindowView.display();
+            } catch (NumberIsTooSmallException ex) {
+                JOptionPane.showMessageDialog(view, "Number of points is too small");
+            }
+            catch (Exception ex) {
+                System.out.println(ex);
+            }
+        }
+    }
 
     //TODO: not working!
+    //Prevent opening multiple windows with plots
     private WindowListener windowListener = new WindowAdapter() {
         @Override
         public void windowOpened(WindowEvent e) {
