@@ -36,7 +36,7 @@ public class DataModel {
                                         double phi_0, double theta_0, double psi_0, IntegrationMethods method) {
         out.println("Inside buildPoints");
         ThreeArrays combo_array;
-        combo_array = new ThreeArrays();
+        combo_array = new ThreeArrays(num_of_points, num_of_points);
         FirstOrderIntegrator integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
         switch (method) {
             case Euler: integrator = new EulerIntegrator(0.01); break;
@@ -82,11 +82,11 @@ public class DataModel {
         double del = 0;
         for (int i = 1; i <= num_of_points; i++) {
             eps = 1.0 * i / (num_of_points + 1);
-            combo_array.y_val[i] = eps;
+            combo_array.y_val[i-1] = eps;
             }
         for (int j = 1; j <= num_of_points; j++) {
             del = 1 + 1.0 * j / (num_of_points + 1);
-            combo_array.x_val[j] = del;
+            combo_array.x_val[j-1] = del;
         }
 
         for (int i = 1; i <= num_of_points; i++) {
@@ -100,8 +100,8 @@ public class DataModel {
                     y1 = new double[] { 0, 0, 0, 0, 0, 0, 0 };
                     double time_state;
                     time_state = 1.0*t*time_step;
-                    FirstOrderDifferentialEquations ode = new LibrationODE(1000, combo_array.y_val[i],
-                            combo_array.x_val[j], 0.001078011072);
+                    FirstOrderDifferentialEquations ode = new LibrationODE(1000, combo_array.y_val[i-1],
+                            combo_array.x_val[j-1], 0.001078011072);
                     integrator.integrate(ode, 0.0, y0, time_state, y1);// now y1 contains final state at time t/100
                     double alpha_1;//элемент матрицы направляющих косинусов
                     alpha_1 = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
@@ -111,10 +111,10 @@ public class DataModel {
                     psi = atan(beta_1 / alpha_1);
                     if (psi >= max) max = psi;
                 }
-                combo_array.f_val[j][i] = max;
-                out.print("eps = ");out.print(combo_array.y_val[i]);
-                out.print(" del = ");out.print(combo_array.x_val[j]);
-                out.print(" val = ");out.println(combo_array.f_val[j][i]);
+                combo_array.f_val[j-1][i-1] = max;
+                out.print("eps = ");out.print(combo_array.y_val[i-1]);
+                out.print(" del = ");out.print(combo_array.x_val[j-1]);
+                out.print(" val = ");out.println(combo_array.f_val[j-1][i-1]);
             }
         }
         return combo_array;
