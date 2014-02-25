@@ -16,10 +16,10 @@ public class GraphModel {
 
     public GraphModel(final MultivariateFunction function) {
         model = new DefaultSurfaceModel();
-        model.setXMax((float) 1.0);
-        model.setXMin((float) 0.0);
-        model.setYMax((float) 2.0);
-        model.setYMin((float) 1.0);
+        model.setXMax((float) 2.0);
+        model.setXMin((float) 1.0);
+        model.setYMax((float) 1.0);
+        model.setYMin((float) 0.0);
 
         model.setMapper(new Mapper() {
             @Override

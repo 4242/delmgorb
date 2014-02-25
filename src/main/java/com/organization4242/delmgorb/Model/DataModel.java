@@ -81,7 +81,7 @@ public class DataModel {
             for (int j = 1; j <= num_of_points; j++) {
                 del = 1 + 1.0 * j / (num_of_points + 1);
                 if(eps - del > -1) {
-                    list.add(counter, new Point3D(eps, del, 0));
+                    list.add(counter, new Point3D(del, eps, 0));
                     counter++;
                 }
             }
@@ -98,7 +98,7 @@ public class DataModel {
                 y1 = new double[] { 0, 0, 0, 0, 0, 0, 0 };
                 double time_state;
                 time_state = 1.0*t*time_step;
-                FirstOrderDifferentialEquations ode = new LibrationODE(1000, list.get(i).x, list.get(i).y, 0.001078011072);
+                FirstOrderDifferentialEquations ode = new LibrationODE(1000, list.get(i).y, list.get(i).x, 0.001078011072);
                 integrator.integrate(ode, 0.0, y0, time_state, y1);// now y1 contains final state at time t/100
                 double alpha_1;//элемент матрицы направляющих косинусов
                 alpha_1 = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
@@ -112,10 +112,10 @@ public class DataModel {
                 out.print(" y[0]: "); out.println(y1[0]);*/
                 if (psi >= max) max = psi;
             }
-            double epsilon = list.get(i).x;
-            double delta  = list.get(i).y;
+            double epsilon = list.get(i).y;
+            double delta  = list.get(i).x;
             list.remove(i);
-            list.add(i, new Point3D(epsilon, delta, max));
+            list.add(i, new Point3D(delta, epsilon, max));
             System.out.println(list.get(i));
         }
         out.println("Outside buildPoints");
