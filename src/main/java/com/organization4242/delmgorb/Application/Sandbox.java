@@ -24,7 +24,7 @@ public class Sandbox {
 
         ThreeArrays triple_array;
         triple_array = new DataModel(number_of_building_points,
-                time_step_of_integration, method).getThreeArrays();
+                time_step_of_integration, method, 1, 2, 0, 1).getThreeArrays();
 
         //for (Point3D p: list_of_points)
         //    System.out.println(p.toString());

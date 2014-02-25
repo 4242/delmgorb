@@ -21,7 +21,7 @@ public class PlotWindowView extends JFrame{
                           float xMin, float xMax, float yMin, float yMax) {
         this(new PlotView(
                 new PlotModel(new InterpolatorModel()
-                    .getFunction(new DataModel(numberOfPoints, timeStep, method).getThreeArrays()),
+                    .getFunction(new DataModel(numberOfPoints, timeStep, method, xMin, xMax, yMin, yMax).getThreeArrays()),
                     xMin, xMax, yMin, yMax)));
     }
 

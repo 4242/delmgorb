@@ -25,16 +25,18 @@ public class DataModel {
 
     public ThreeArrays getThreeArrays() {return threeArrays;}
 
-    public DataModel(int num, double time_step, IntegrationMethods method) {
+    public DataModel(int num, double time_step, IntegrationMethods method,
+                     float xMin, float xMax, float yMin, float yMax) {
         //Here listOfPoints gets assigned
         double angle = PI/20;
         //listOfPoints = buildPoints(num, 100, time_step, angle, angle, angle, method);
-        threeArrays = buildNewPoints(num, 100, time_step, angle, angle, angle, method);
+        threeArrays = buildNewPoints(num, 100, time_step, angle, angle, angle, method, xMin, xMax, yMin, yMax);
     }
 
     private ThreeArrays buildNewPoints (int num_of_points, double time, double time_step,
-                                        double phi_0, double theta_0, double psi_0, IntegrationMethods method) {
-        out.println("Inside buildPoints");
+                                        double phi_0, double theta_0, double psi_0, IntegrationMethods method,
+                                        float xMin, float xMax, float yMin, float yMax) {
+        out.println("Inside buildNewPoints");
         ThreeArrays combo_array;
         combo_array = new ThreeArrays(num_of_points, num_of_points);
         FirstOrderIntegrator integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
@@ -80,14 +82,16 @@ public class DataModel {
 
         double eps = 0;
         double del = 0;
-        for (int i = 1; i <= num_of_points; i++) {
-            eps = 1.0 * i / (num_of_points + 1);
-            combo_array.y_val[i-1] = eps;
+        for (int i = 0; i < num_of_points; i++) {
+            eps = yMin + 1.0 * i * yMax / (num_of_points - 1);
+            combo_array.y_val[i] = eps;
             }
-        for (int j = 1; j <= num_of_points; j++) {
-            del = 1 + 1.0 * j / (num_of_points + 1);
-            combo_array.x_val[j-1] = del;
+        for (int j = 0; j < num_of_points; j++) {
+            del = xMin + 1.0 * j * xMax / (num_of_points - 1);
+            combo_array.x_val[j] = del;
         }
+
+        out.println("Check!");
 
         for (int i = 1; i <= num_of_points; i++) {
             for (int j = 1; j <= num_of_points; j++) {
@@ -117,6 +121,7 @@ public class DataModel {
                 out.print(" val = ");out.println(combo_array.f_val[j-1][i-1]);
             }
         }
+        out.println("Outside buildNewPoints");
         return combo_array;
     }
 
