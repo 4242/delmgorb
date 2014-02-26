@@ -1,10 +1,5 @@
 package com.organization4242.delmgorb.View;
 
-import com.organization4242.delmgorb.Model.DataModel;
-import com.organization4242.delmgorb.Model.PlotModel;
-import com.organization4242.delmgorb.Model.IntegrationMethods;
-import com.organization4242.delmgorb.Model.InterpolatorModel;
-
 import javax.swing.*;
 
 /**
@@ -13,16 +8,8 @@ import javax.swing.*;
 public class PlotWindowView extends JFrame{
     private PlotView view;
 
-    private PlotWindowView(PlotView view) {
+    public PlotWindowView(PlotView view) {
         this.view = view;
-    }
-
-    public PlotWindowView(int numberOfPoints, double timeStep, IntegrationMethods method,
-                          float xMin, float xMax, float yMin, float yMax) {
-        this(new PlotView(
-                new PlotModel(new InterpolatorModel()
-                    .getFunction(new DataModel(numberOfPoints, timeStep, method, xMin, xMax, yMin, yMax).getThreeArrays()),
-                    xMin, xMax, yMin, yMax)));
     }
 
     public void display() {

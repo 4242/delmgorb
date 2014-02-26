@@ -9,7 +9,20 @@ import java.awt.*;
  * Created by ilya-murzinov on 22.02.14.
  */
 public class MainWindowView extends JPanel{
-    private JFrame jf;
+    //Window
+    private JFrame jf = new JFrame("Main Window");
+
+    //Labels
+    JLabel label = new JLabel("Input parameters:");
+    JLabel numLabel = new JLabel("Number of points:");
+    JLabel timeLabel = new JLabel("Time step:");
+    JLabel boundsLabel = new JLabel("Bounds:");
+    JLabel xLabel = new JLabel("x = ");
+    JLabel yLabel = new JLabel("y = ");
+    JLabel xToLabel = new JLabel("...");
+    JLabel yToLabel = new JLabel("...");
+
+    //UI Controls
     private int textFieldNumber = 14;
     private JTextField[] textFields = new JTextField[textFieldNumber];
     private JTextField[] boundsTextFields = new JTextField[4];
@@ -18,6 +31,7 @@ public class MainWindowView extends JPanel{
     private JComboBox<IntegrationMethods> comboBox;
     private JButton button;
 
+    //Getters
     public JTextField[] getTextFields() {
         return textFields;
     }
@@ -43,7 +57,12 @@ public class MainWindowView extends JPanel{
     }
 
     public MainWindowView() {
-        jf = new JFrame("Main Window");
+        //Setting window parameters
+        jf.setSize(400, 320);
+        jf.setResizable(false);
+        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        //Setting theme
         try
         {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
@@ -51,17 +70,17 @@ public class MainWindowView extends JPanel{
         catch(Exception e){
             System.out.println(e);
         }
-        jf.setSize(400, 320);
-        jf.setResizable(false);
-        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        JLabel label = new JLabel("Input parameters:");
-        JLabel numLabel = new JLabel("Number of points:");
-        JLabel timeLabel = new JLabel("Time step:");
-        JLabel boundsLabel = new JLabel("Bounds:");
-        JLabel xLabel = new JLabel("x = ");
-        JLabel yLabel = new JLabel("y = ");
-        JLabel xToLabel = new JLabel("...");
-        JLabel yToLabel = new JLabel("...");
+
+        init();
+
+        placeControls();
+    }
+
+    /**
+     * Initializes all controls in the window
+     */
+    private void init() {
+
         for (int i=0; i<textFieldNumber; i++) {
             textFields[i] = new JTextField(4);
             textFields[i].setText("0");
@@ -81,10 +100,13 @@ public class MainWindowView extends JPanel{
         button = new JButton("Draw!");
         comboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
         comboBox.setEditable(false);
+    }
+
+    private void placeControls() {
         GridBagLayout gbl = new GridBagLayout();
         jf.setLayout(gbl);
         GridBagConstraints c =  new GridBagConstraints();
-        c.anchor = GridBagConstraints.PAGE_START;
+        c.anchor = GridBagConstraints.NORTH;
         c.fill   = GridBagConstraints.NONE;
         c.gridheight = 1;
         c.insets = new Insets(10, 5, 0, 0);

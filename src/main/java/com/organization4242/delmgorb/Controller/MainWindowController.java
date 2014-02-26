@@ -1,7 +1,10 @@
 package com.organization4242.delmgorb.Controller;
 
 import com.organization4242.delmgorb.Model.IntegrationMethods;
+import com.organization4242.delmgorb.Model.InterpolationMethods;
 import com.organization4242.delmgorb.Model.MainWindowModel;
+import com.organization4242.delmgorb.Model.PlotBuilder;
+import com.organization4242.delmgorb.View.PlotView;
 import com.organization4242.delmgorb.View.PlotWindowView;
 import com.organization4242.delmgorb.View.MainWindowView;
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
@@ -45,27 +48,29 @@ public class MainWindowController {
         }
         if (!graphWindowOpened && canDraw) {
             //Get all values from view
-            IntegrationMethods method = (IntegrationMethods) view.getComboBox().getSelectedItem();
+            IntegrationMethods integrationMethod = (IntegrationMethods) view.getComboBox().getSelectedItem();
             int numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
             Double timeStep = Double.parseDouble(view.getTimeStep().getText());
             float xMin = Float.parseFloat(view.getBoundsTextFields()[0].getText());
             float xMax = Float.parseFloat(view.getBoundsTextFields()[1].getText());
             float yMin = Float.parseFloat(view.getBoundsTextFields()[2].getText());
             float yMax = Float.parseFloat(view.getBoundsTextFields()[3].getText());
+            InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
 
             System.out.println("Drawing plot:");
             System.out.println("    number of points = " + numberOfPoints);
             System.out.println("    time step = " + timeStep);
-            System.out.println("    method = " + method);
+            System.out.println("    method = " + integrationMethod);
             System.out.println("    xMin = " + xMin);
             System.out.println("    xMax = " + xMax);
             System.out.println("    yMin = " + yMin);
             System.out.println("    yMax = " + yMax);
             try {
                 //Pass all values fro view to constructor of new window
-                PlotWindowView plotWindowView =
-                        new PlotWindowView(numberOfPoints, timeStep, method,
-                                xMin, xMax, yMin, yMax);
+                PlotView plotView = PlotBuilder.build(numberOfPoints, timeStep, integrationMethod,
+                        xMin, xMax, yMin, yMax, interpolationMethod);
+                PlotWindowView plotWindowView = new PlotWindowView(plotView);
+
                 plotWindowView.addWindowListener(windowListener);
                 plotWindowView.display();
             } catch (NumberIsTooSmallException ex) {
