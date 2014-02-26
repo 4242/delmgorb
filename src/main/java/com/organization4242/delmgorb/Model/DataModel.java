@@ -26,7 +26,7 @@ public class DataModel {
     public ThreeArrays getThreeArrays() {return threeArrays;}
 
     public DataModel(int num, double time_step, IntegrationMethods method,
-                     float xMin, float xMax, float yMin, float yMax) {
+                     double xMin, double xMax, double yMin, double yMax) {
         //Here listOfPoints gets assigned
         double angle = PI/20;
         //listOfPoints = buildPoints(num, 100, time_step, angle, angle, angle, method);
@@ -35,7 +35,7 @@ public class DataModel {
 
     private ThreeArrays buildNewPoints (int num_of_points, double time, double time_step,
                                         double phi_0, double theta_0, double psi_0, IntegrationMethods method,
-                                        float xMin, float xMax, float yMin, float yMax) {
+                                        double xMin, double xMax, double yMin, double yMax) {
         out.println("Inside buildNewPoints");
         ThreeArrays combo_array;
         combo_array = new ThreeArrays(num_of_points, num_of_points);
@@ -83,18 +83,36 @@ public class DataModel {
         double eps = 0;
         double del = 0;
         for (int i = 0; i < num_of_points; i++) {
-            eps = yMin + 1.0 * i * yMax / (num_of_points - 1);
+            eps = yMin + 1.0 * i * (yMax - yMin) / (num_of_points - 1);
             combo_array.y_val[i] = eps;
+            System.out.println("y_val = " + combo_array.y_val[i]);
             }
         for (int j = 0; j < num_of_points; j++) {
-            del = xMin + 1.0 * j * xMax / (num_of_points - 1);
+            del = xMin + 1.0 * j * (xMax - xMin) / (num_of_points - 1);
             combo_array.x_val[j] = del;
+            System.out.println("x_val = " + combo_array.x_val[j]);
         }
-
+        System.out.println("xMin = " + xMin);
+        System.out.println("xMax = " + xMax);
+        System.out.println("yMin = " + yMin);
+        System.out.println("yMax = " + yMax);
+        /*for (int i = 1; i <= num_of_points; i++) {
+            eps = 1.0 * i / (num_of_points);
+            //eps = i;
+            combo_array.y_val[i-1] = eps;
+            if(combo_array.y_val[i-1]==0) combo_array.y_val[i] = 0.000001;
+        }
+        for (int j = 0; j < num_of_points; j++) {
+            del = 1 + 1.0 * j / (num_of_points - 1);
+            //del = j;
+            combo_array.x_val[j] = del;
+        }*/
+        out.print(combo_array.x_val[0]);out.print(" ");out.println(combo_array.x_val[num_of_points-1]);
+        out.print(combo_array.y_val[0]);out.print(" ");out.println(combo_array.y_val[num_of_points-1]);
         out.println("Check!");
 
-        for (int i = 1; i <= num_of_points; i++) {
-            for (int j = 1; j <= num_of_points; j++) {
+        for (int i = 0; i < num_of_points; i++) {
+            for (int j = 0; j < num_of_points; j++) {
                 double max;
                 max = 0;
                 for (int t = 1; t <= time/time_step; t++) {
@@ -104,8 +122,10 @@ public class DataModel {
                     y1 = new double[] { 0, 0, 0, 0, 0, 0, 0 };
                     double time_state;
                     time_state = 1.0*t*time_step;
-                    FirstOrderDifferentialEquations ode = new LibrationODE(1000, combo_array.y_val[i-1],
-                            combo_array.x_val[j-1], 0.001078011072);
+                    //out.println(combo_array.y_val[i]);
+                    //out.println(combo_array.x_val[j]);
+                    FirstOrderDifferentialEquations ode = new LibrationODE(1000, combo_array.y_val[i],
+                            combo_array.x_val[j], 0.001078011072);
                     integrator.integrate(ode, 0.0, y0, time_state, y1);// now y1 contains final state at time t/100
                     double alpha_1;//элемент матрицы направляющих косинусов
                     alpha_1 = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
@@ -115,10 +135,10 @@ public class DataModel {
                     psi = atan(beta_1 / alpha_1);
                     if (psi >= max) max = psi;
                 }
-                combo_array.f_val[j-1][i-1] = max;
-                out.print("eps = ");out.print(combo_array.y_val[i-1]);
-                out.print(" del = ");out.print(combo_array.x_val[j-1]);
-                out.print(" val = ");out.println(combo_array.f_val[j-1][i-1]);
+                combo_array.f_val[j][i] = max;
+                out.print("eps = ");out.print(combo_array.y_val[i]);
+                out.print(" del = ");out.print(combo_array.x_val[j]);
+                out.print(" val = ");out.println(combo_array.f_val[j][i]);
             }
         }
         out.println("Outside buildNewPoints");

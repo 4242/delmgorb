@@ -71,7 +71,7 @@ public class MainWindowView extends JPanel{
         }
         boundsTextFields[0].setText("1");
         boundsTextFields[1].setText("2");
-        boundsTextFields[2].setText("0");
+        boundsTextFields[2].setText("0.05");
         boundsTextFields[3].setText("1");
 
         numberOfPointsTextField = new JTextField(4);

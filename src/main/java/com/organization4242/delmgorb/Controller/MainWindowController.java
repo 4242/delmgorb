@@ -57,6 +57,10 @@ public class MainWindowController {
             System.out.println("    number of points = " + numberOfPoints);
             System.out.println("    time step = " + timeStep);
             System.out.println("    method = " + method);
+            System.out.println("    xMin = " + xMin);
+            System.out.println("    xMax = " + xMax);
+            System.out.println("    yMin = " + yMin);
+            System.out.println("    yMax = " + yMax);
             try {
                 //Pass all values fro view to constructor of new window
                 PlotWindowView plotWindowView =
