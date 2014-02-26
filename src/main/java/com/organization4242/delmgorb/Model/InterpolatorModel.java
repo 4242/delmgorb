@@ -22,7 +22,7 @@ public class InterpolatorModel {
 //                return new MicrosphereInterpolator().interpolate(new double[][]{new double[]{1,2}, new double[]{3,4}},
 //                        new double[]{1,1});
         int length = arrays.x_val.length;
-        double[][] points = new double[2][length*length];
+        double[][] points = new double[length*length][2];
         double[] values = new double[length*length];
 
         out.println(" l_x= " + length);
