@@ -19,11 +19,27 @@ public class MainWindowController {
     private MainWindowModel model;
     private MainWindowView view;
     private Boolean graphWindowOpened = false;
+    Boolean canDraw = true;
+
+    String[] bounds;
+
+    IntegrationMethods integrationMethod;
+    int numberOfPoints;
+    Double timeStep;
+    float xMin;
+    float xMax;
+    float yMin;
+    float yMax;
+    int numberOfSpheres;
+    InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
         this.view = view;
         for (JTextField tf : view.getTextFields()) {
+            tf.addFocusListener(focusListener);
+        }
+        for (JTextField tf : view.getBoundsTextFields()) {
             tf.addFocusListener(focusListener);
         }
         view.getButton().addMouseListener(mouseListener);
@@ -39,25 +55,11 @@ public class MainWindowController {
     };
 
     private void drawPlot() {
-        Boolean canDraw = true;
-        for (JTextField tf : view.getTextFields()) {
-            if (tf.getText().equals("")) {
-                canDraw = false;
-                JOptionPane.showMessageDialog(view, "Please fill all fields");
-            }
-        }
-        if (!graphWindowOpened && canDraw) {
-            //Get all values from view
-            IntegrationMethods integrationMethod = (IntegrationMethods) view.getComboBox().getSelectedItem();
-            int numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
-            Double timeStep = Double.parseDouble(view.getTimeStep().getText());
-            float xMin = Float.parseFloat(view.getBoundsTextFields()[0].getText());
-            float xMax = Float.parseFloat(view.getBoundsTextFields()[1].getText());
-            float yMin = Float.parseFloat(view.getBoundsTextFields()[2].getText());
-            float yMax = Float.parseFloat(view.getBoundsTextFields()[3].getText());
-            int numberOfSpheres = Integer.parseInt(view.getNumberOfSpheresTextField().getText());
-            InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
+        canDraw = true;
 
+        validate();
+
+        if (!graphWindowOpened && canDraw) {
             System.out.println("Drawing plot:");
             System.out.println("    number of points = " + numberOfPoints);
             System.out.println("    time step = " + timeStep);
@@ -77,9 +79,62 @@ public class MainWindowController {
             } catch (NumberIsTooSmallException ex) {
                 JOptionPane.showMessageDialog(view, "Number of points is too small");
             }
-            //catch (Exception ex) {
-            //    System.out.println(ex);
-            //}
+        }
+    }
+
+    private void validate() {
+        String validationMessage = "";
+
+        for (JTextField tf : view.getTextFields()) {
+            if (tf.getText().equals("")) {
+                canDraw = false;
+                JOptionPane.showMessageDialog(view, "Please fill all fields");
+                return;
+            }
+        }
+
+        try {
+            bounds = new String[]{view.getBoundsTextFields()[0].getText(),
+                    view.getBoundsTextFields()[1].getText(),
+                    view.getBoundsTextFields()[2].getText(),
+                    view.getBoundsTextFields()[3].getText()};
+
+            integrationMethod = (IntegrationMethods) view.getComboBox().getSelectedItem();
+            numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
+            timeStep = Double.parseDouble(view.getTimeStep().getText());
+            xMin = Float.parseFloat(bounds[0]);
+            xMax = Float.parseFloat(bounds[1]);
+            yMin = Float.parseFloat(bounds[2]);
+            yMax = Float.parseFloat(bounds[3]);
+            numberOfSpheres = Integer.parseInt(view.getNumberOfSpheresTextField().getText());
+            interpolationMethod = InterpolationMethods.Microsphere;
+        } catch (Exception ex) {
+            canDraw = false;
+            validationMessage = validationMessage.concat(ex.toString());
+            JOptionPane.showMessageDialog(view, validationMessage);
+            return;
+        }
+
+        if (bounds[0].equals("0") || bounds[1].equals("0")
+                || bounds[2].equals("0") || bounds[3].equals("0")
+                || (Double.parseDouble(bounds[0])*Double.parseDouble(bounds[1])<0)
+                || (Double.parseDouble(bounds[2])*Double.parseDouble(bounds[3])<0)) {
+            canDraw = false;
+            validationMessage = validationMessage.concat("Both x and y can't be zero!");
+            validationMessage = validationMessage.concat("\n");
+        }
+        if ((Double.parseDouble(bounds[0])>Double.parseDouble(bounds[1]))) {
+            canDraw = false;
+            validationMessage = validationMessage.concat("XMax should be greater then XMin!");
+            validationMessage = validationMessage.concat("\n");
+        }
+        if ((Double.parseDouble(bounds[2])>Double.parseDouble(bounds[3]))) {
+            canDraw = false;
+            validationMessage = validationMessage.concat("YMax should be greater then YMin!");
+            validationMessage = validationMessage.concat("\n");
+        }
+        if (!canDraw) {
+            JOptionPane.showMessageDialog(view, validationMessage);
         }
     }
 
