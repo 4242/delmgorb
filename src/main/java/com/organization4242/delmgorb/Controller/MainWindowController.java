@@ -55,6 +55,7 @@ public class MainWindowController {
             float xMax = Float.parseFloat(view.getBoundsTextFields()[1].getText());
             float yMin = Float.parseFloat(view.getBoundsTextFields()[2].getText());
             float yMax = Float.parseFloat(view.getBoundsTextFields()[3].getText());
+            int numberOfSpheres = Integer.parseInt(view.getNumberOfSpheresTextField().getText());
             InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
 
             System.out.println("Drawing plot:");
@@ -68,7 +69,7 @@ public class MainWindowController {
             try {
                 //Pass all values fro view to constructor of new window
                 PlotView plotView = PlotBuilder.build(numberOfPoints, timeStep, integrationMethod,
-                        xMin, xMax, yMin, yMax, interpolationMethod);
+                        xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
                 PlotWindowView plotWindowView = new PlotWindowView(plotView);
 
                 plotWindowView.addWindowListener(windowListener);

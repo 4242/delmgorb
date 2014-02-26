@@ -9,7 +9,7 @@ import static java.lang.System.out;
  */
 public class InterpolatorModel {
     public MultivariateFunction interpolate(PointsArray arrays,
-                                            InterpolationMethods interpolationMethods) {
+                                            InterpolationMethods interpolationMethods, int numberOfSpheres) {
 //        switch (interpolationMethods) {
 //            default:
 //            case BicubicSpline:
@@ -41,7 +41,7 @@ public class InterpolatorModel {
         }
 
 
-        MicrosphereInterpolator interpolator = new MicrosphereInterpolator(100, 2);
+        MicrosphereInterpolator interpolator = new MicrosphereInterpolator(numberOfSpheres, 2);
         return interpolator.interpolate(points, values);
         //return interpolator.interpolate(new double[][]{new double[]{1,2}, new double[]{3,4}},
         //        new double[]{1,1});

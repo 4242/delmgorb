@@ -10,17 +10,19 @@ import java.awt.*;
  */
 public class MainWindowView extends JPanel{
     //Window
-    private JFrame jf = new JFrame("Main Window");
+    private JFrame jf = new JFrame("Delmgorb v1.0");
 
     //Labels
-    JLabel label = new JLabel("Input parameters:");
-    JLabel numLabel = new JLabel("Number of points:");
-    JLabel timeLabel = new JLabel("Time step:");
-    JLabel boundsLabel = new JLabel("Bounds:");
-    JLabel xLabel = new JLabel("x = ");
-    JLabel yLabel = new JLabel("y = ");
-    JLabel xToLabel = new JLabel("...");
-    JLabel yToLabel = new JLabel("...");
+    private JLabel label = new JLabel("Input parameters:");
+    private JLabel numLabel = new JLabel("Number of points:");
+    private JLabel timeLabel = new JLabel("Time step:");
+    private JLabel boundsLabel = new JLabel("Bounds:");
+    private JLabel xLabel = new JLabel("x = ");
+    private JLabel yLabel = new JLabel("y = ");
+    private JLabel xToLabel = new JLabel("...");
+    private JLabel yToLabel = new JLabel("...");
+    private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
+    private JLabel brightnessLabel = new JLabel("Brightness:");
 
     //UI Controls
     private int textFieldNumber = 14;
@@ -29,6 +31,8 @@ public class MainWindowView extends JPanel{
     private JTextField numberOfPointsTextField;
     private JTextField timeStepTextField;
     private JComboBox<IntegrationMethods> comboBox;
+    private JTextField numberOfSpheresTextField;
+    private JTextField brightnessTextField;
     private JButton button;
 
     //Getters
@@ -48,6 +52,10 @@ public class MainWindowView extends JPanel{
         return timeStepTextField;
     }
 
+    public JTextField getNumberOfSpheresTextField() {
+        return numberOfSpheresTextField;
+    }
+
     public JButton getButton() {
         return button;
     }
@@ -58,7 +66,7 @@ public class MainWindowView extends JPanel{
 
     public MainWindowView() {
         //Setting window parameters
-        jf.setSize(400, 320);
+        jf.setSize(400, 370);
         jf.setResizable(false);
         jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -97,6 +105,11 @@ public class MainWindowView extends JPanel{
         numberOfPointsTextField.setText("4");
         timeStepTextField = new JTextField(4);
         timeStepTextField.setText("0.5");
+        numberOfSpheresTextField = new JTextField(4);
+        numberOfSpheresTextField.setText("100");
+        brightnessTextField = new JTextField(4);
+        brightnessTextField.setText("1");
+
         button = new JButton("Draw!");
         comboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
         comboBox.setEditable(false);
@@ -176,7 +189,7 @@ public class MainWindowView extends JPanel{
         c.gridy++;
         c.gridx = 0;
         c.gridwidth = 3;
-        c.anchor = GridBagConstraints.WEST;
+        c.anchor = GridBagConstraints.SOUTHWEST;
         gbl.setConstraints(numLabel, c);
         jf.add(numLabel);
         c.anchor = GridBagConstraints.CENTER;
@@ -186,7 +199,7 @@ public class MainWindowView extends JPanel{
         jf.add(numberOfPointsTextField);
         c.gridy++;
         c.insets = new Insets(10, 5, 0, 0);
-        c.anchor = GridBagConstraints.WEST;
+        c.anchor = GridBagConstraints.SOUTHWEST;
         c.gridx = 0;
         c.gridwidth = 3;
         gbl.setConstraints(timeLabel, c);
@@ -195,11 +208,36 @@ public class MainWindowView extends JPanel{
         c.anchor = GridBagConstraints.CENTER;
         gbl.setConstraints(timeStepTextField, c);
         jf.add(timeStepTextField);
+
+        c.gridy++;
+        c.gridx = 0;
+        c.gridwidth = 3;
+        c.anchor = GridBagConstraints.SOUTHWEST;
+        gbl.setConstraints(numberOfSpheresLabel, c);
+        jf.add(numberOfSpheresLabel);
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx = 2;
+        c.insets = new Insets(20, 5, 0, 0);
+        gbl.setConstraints(numberOfSpheresTextField, c);
+        jf.add(numberOfSpheresTextField);
+        c.gridy++;
+        c.insets = new Insets(10, 5, 0, 0);
+        c.anchor = GridBagConstraints.SOUTHWEST;
+        c.gridx = 0;
+        c.gridwidth = 3;
+        gbl.setConstraints(brightnessLabel, c);
+        //jf.add(brightnessLabel);
+        c.gridx = 2;
+        c.anchor = GridBagConstraints.CENTER;
+        gbl.setConstraints(brightnessTextField, c);
+        //jf.add(brightnessTextField);
+
         c.gridy++;
         c.gridwidth = 4;
         c.gridx = 0;
         c.insets = new Insets(10, 5, 5, 5);
         c.anchor = GridBagConstraints.WEST;
+        c.fill = GridBagConstraints.HORIZONTAL;
         gbl.setConstraints(comboBox, c);
         jf.add(comboBox);
         c.gridx = 5;
