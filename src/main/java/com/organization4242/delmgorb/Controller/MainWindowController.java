@@ -76,9 +76,9 @@ public class MainWindowController {
             } catch (NumberIsTooSmallException ex) {
                 JOptionPane.showMessageDialog(view, "Number of points is too small");
             }
-            catch (Exception ex) {
-                System.out.println(ex);
-            }
+            //catch (Exception ex) {
+            //    System.out.println(ex);
+            //}
         }
     }
 
