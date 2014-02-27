@@ -4,7 +4,6 @@ package com.organization4242.delmgorb.Model;
  * Created by ilya-murzinov on 24.02.14.
  */
 public enum IntegrationMethods {
-    DormandPrince8,
     Euler,
     Midpoint,
     ClassicalRungeKutta,
@@ -12,6 +11,7 @@ public enum IntegrationMethods {
     ThreeEights,
     HighamAndHall,
     DormandPrince5,
+    DormandPrince8,
     GraggBulirschStoer,
     AdamsBashforth,
     AdamsMoulton,

@@ -20,6 +20,7 @@ public class MainWindowController {
     private MainWindowView view;
     private Boolean graphWindowOpened = false;
     Boolean canDraw = true;
+    Boolean isPlotGenerating = false;
 
     String[] bounds;
 
@@ -32,6 +33,21 @@ public class MainWindowController {
     float yMax;
     int numberOfSpheres;
     InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
+
+    class Task extends SwingWorker<Boolean, Integer> {
+        @Override
+        protected Boolean doInBackground() throws Exception {
+            PlotView plotView = PlotBuilder.build(numberOfPoints, timeStep, integrationMethod,
+                    xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
+            PlotWindowView plotWindowView = new PlotWindowView(plotView);
+
+            plotWindowView.addWindowListener(windowListener);
+            plotWindowView.display();
+            return true;
+        }
+    }
+
+    private final Task task = new Task();
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
@@ -57,7 +73,16 @@ public class MainWindowController {
     private void drawPlot() {
         canDraw = true;
 
-        validate();
+        if (!isPlotGenerating) {
+            validate();
+            isPlotGenerating = true;
+            view.getProgressBar().setIndeterminate(true);
+            //view.getButton().setText("Stop");
+        } else {
+            //task.cancel(true);
+            //view.getButton().setText("Draw!");
+            return;
+        }
 
         if (!graphWindowOpened && canDraw) {
             System.out.println("Drawing plot:");
@@ -69,13 +94,7 @@ public class MainWindowController {
             System.out.println("    yMin = " + yMin);
             System.out.println("    yMax = " + yMax);
             try {
-                //Pass all values fro view to constructor of new window
-                PlotView plotView = PlotBuilder.build(numberOfPoints, timeStep, integrationMethod,
-                        xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
-                PlotWindowView plotWindowView = new PlotWindowView(plotView);
-
-                plotWindowView.addWindowListener(windowListener);
-                plotWindowView.display();
+                task.execute();
             } catch (NumberIsTooSmallException ex) {
                 JOptionPane.showMessageDialog(view, "Number of points is too small");
             }

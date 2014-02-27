@@ -33,6 +33,7 @@ public class MainWindowView extends JPanel{
     private JComboBox<IntegrationMethods> comboBox;
     private JTextField numberOfSpheresTextField;
     private JTextField brightnessTextField;
+    private JProgressBar progressBar;
     private JButton button;
 
     //Getters
@@ -64,9 +65,13 @@ public class MainWindowView extends JPanel{
         return comboBox;
     }
 
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
+
     public MainWindowView() {
         //Setting window parameters
-        jf.setSize(400, 370);
+        jf.setSize(400, 400);
         jf.setResizable(false);
         jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -112,7 +117,9 @@ public class MainWindowView extends JPanel{
 
         button = new JButton("Draw!");
         comboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
+        comboBox.setSelectedItem(IntegrationMethods.DormandPrince8);
         comboBox.setEditable(false);
+        progressBar = new JProgressBar();
     }
 
     private void placeControls() {
@@ -245,6 +252,13 @@ public class MainWindowView extends JPanel{
         c.anchor = GridBagConstraints.EAST;
         gbl.setConstraints(button, c);
         jf.add(button);
+
+        c.gridy++;
+        c.gridx = 0;
+        c.gridwidth = 7;
+        gbl.setConstraints(progressBar, c);
+        progressBar.setIndeterminate(false);
+        jf.add(progressBar);
     }
 
     public void display() {
