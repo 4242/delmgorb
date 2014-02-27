@@ -167,6 +167,10 @@ public class MainWindowView extends JFrame {
         buildingAngleJComboBox.setSelectedItem(BuildingAngle.Psi);
         buildingAngleJComboBox.setEditable(false);
         progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
+        progressBar.setMinimum(0);
+        progressBar.setMaximum(100);
+        progressBar.setValue(0);
     }
 
     /**

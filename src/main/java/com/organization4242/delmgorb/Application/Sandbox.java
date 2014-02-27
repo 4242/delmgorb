@@ -1,7 +1,5 @@
 package com.organization4242.delmgorb.Application;
 
-import com.organization4242.delmgorb.Model.BuildingAngle;
-import com.organization4242.delmgorb.Model.DataModel;
 import com.organization4242.delmgorb.Model.IntegrationMethods;
 import com.organization4242.delmgorb.Model.PointsArray;
 
@@ -20,8 +18,8 @@ public class Sandbox {
         //        time_step_of_integration, method).getListOfPoints();
 
         PointsArray triple_array;
-        triple_array = new DataModel(number_of_building_points, BuildingAngle.Psi, 100,
-                time_step_of_integration, 0.05, 0.05, 0.05, method, 1, 2, 0.05, 1).getPointsArray();
+//        triple_array = new DataModel(number_of_building_points, BuildingAngle.Psi, 100,
+//                time_step_of_integration, 0.05, 0.05, 0.05, method, 1, 2, 0.05, 1).getPointsArray();
     }
 }
 

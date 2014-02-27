@@ -8,6 +8,8 @@ import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by ilya-murzinov on 22.02.14.
@@ -35,16 +37,23 @@ public class MainWindowController {
     private int numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
 
-    private class Task extends SwingWorker<Void, Integer> {
+    private class Task extends SwingWorker<Void, Integer> implements Observer{
         @Override
         protected Void doInBackground() throws Exception {
-            PlotView plotView = PlotBuilder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
+            PlotBuilder builder = new PlotBuilder();
+            builder.addObserver(this);
+            PlotView plotView = builder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
                     integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
             plotWindowView.display();
             isPlotGenerating = false;
-            view.getProgressBar().setIndeterminate(false);
+            view.getProgressBar().setValue(0);
             return null;
+        }
+
+        @Override
+        public void update(Observable o, Object arg) {
+            view.getProgressBar().setValue((Integer) arg);
         }
     }
 
@@ -75,7 +84,6 @@ public class MainWindowController {
         if (!isPlotGenerating) {
             validate();
             isPlotGenerating = true;
-            view.getProgressBar().setIndeterminate(true);
         } else {
             return;
         }

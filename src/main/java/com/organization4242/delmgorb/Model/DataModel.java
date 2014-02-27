@@ -4,21 +4,20 @@ import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.*;
 
+import java.util.Observable;
+
 import static java.lang.Math.*;
 import static java.lang.System.out;
 
-public class DataModel {
-    private PointsArray pointsArray;
+public class DataModel extends Observable {
+    public DataModel() {
 
-    public PointsArray getPointsArray() {
-        return pointsArray;
     }
 
-    public DataModel(int numberOfPoints, BuildingAngle buildingAngle,
+    public PointsArray buildPoints(int numberOfPoints, BuildingAngle buildingAngle,
                      double timePeriod, double timeStep, double phi0, double theta0, double psi0,
                      IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
-        //Here listOfPoints gets assigned
-        pointsArray = buildNewPoints(numberOfPoints, buildingAngle, timePeriod, timeStep,
+        return buildNewPoints(numberOfPoints, buildingAngle, timePeriod, timeStep,
                 phi0, theta0, psi0, method, xMin, xMax, yMin, yMax);
     }
 
@@ -113,6 +112,9 @@ public class DataModel {
                 out.print("eps = ");out.print(comboArray.y_val[i]);
                 out.print(" del = ");out.print(comboArray.x_val[j]);
                 out.print(" val = ");out.println(comboArray.f_val[j][i]);
+                //Notifying progress bar
+                setChanged();
+                notifyObservers((int) (((double) i/numOfPoints)*100));
             }
         }
         out.println("Outside buildNewPoints");
