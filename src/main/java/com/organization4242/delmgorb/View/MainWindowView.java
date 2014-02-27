@@ -17,8 +17,8 @@ public class MainWindowView extends JPanel{
     private JLabel numLabel = new JLabel("Number of points:");
     private JLabel timeLabel = new JLabel("Time step:");
     private JLabel boundsLabel = new JLabel("Bounds:");
-    private JLabel xLabel = new JLabel("x = ");
-    private JLabel yLabel = new JLabel("y = ");
+    private JLabel xLabel = new JLabel("delta = ");
+    private JLabel yLabel = new JLabel("epsilon = ");
     private JLabel xToLabel = new JLabel("...");
     private JLabel yToLabel = new JLabel("...");
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
