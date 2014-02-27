@@ -118,7 +118,7 @@ public class MainWindowController {
                     view.getBoundsTextFields()[2].getText(),
                     view.getBoundsTextFields()[3].getText()};
 
-            integrationMethod = (IntegrationMethods) view.getComboBox().getSelectedItem();
+            integrationMethod = (IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem();
             numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
             timeStep = Double.parseDouble(view.getTimeStep().getText());
             xMin = Float.parseFloat(bounds[0]);
