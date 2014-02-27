@@ -101,9 +101,8 @@ public class MainWindowController {
             System.out.println("  Psi(0) = " + psi0);
             System.out.println("  Theta(0) = " + theta0);
 
-            task.execute();
             try {
-
+                new Task().execute();
             } catch (NumberIsTooSmallException ex) {
                 JOptionPane.showMessageDialog(view, "Number of points is too small");
             }
