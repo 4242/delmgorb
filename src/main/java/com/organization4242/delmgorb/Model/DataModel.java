@@ -19,7 +19,7 @@ public class DataModel {
                      double xMin, double xMax, double yMin, double yMax) {
         //Here listOfPoints gets assigned
         double angle = PI/20;
-        pointsArray = buildNewPoints(numberOfPoints, buildingAngle, 500, timeStep,
+        pointsArray = buildNewPoints(numberOfPoints, buildingAngle, 100, timeStep,
                 angle, angle, angle, method, xMin, xMax, yMin, yMax);
     }
 

@@ -1,5 +1,6 @@
 package com.organization4242.delmgorb.View;
 
+import com.organization4242.delmgorb.Model.BuildingAngle;
 import com.organization4242.delmgorb.Model.IntegrationMethods;
 
 import javax.swing.*;
@@ -30,6 +31,7 @@ public class MainWindowView extends JPanel{
     private JLabel yToLabel = new JLabel("...");
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
     private JLabel brightnessLabel = new JLabel("Brightness:");
+    private JLabel integrationAngle = new JLabel("Angle to plot:");
 
     //UI Controls
     private int parametersNumber = 14;
@@ -38,6 +40,7 @@ public class MainWindowView extends JPanel{
     private JTextField numberOfPointsTextField;
     private JTextField timeStepTextField;
     private JComboBox<IntegrationMethods> integrationMethodsComboBox;
+    private JComboBox<BuildingAngle> buildingAngleJComboBox;
     private JTextField numberOfSpheresTextField;
     private JTextField brightnessTextField;
     private JProgressBar progressBar;
@@ -70,6 +73,10 @@ public class MainWindowView extends JPanel{
 
     public JComboBox<IntegrationMethods> getIntegrationMethodsComboBox() {
         return integrationMethodsComboBox;
+    }
+
+    public JComboBox<BuildingAngle> getBuildingAngleJComboBox() {
+        return buildingAngleJComboBox;
     }
 
     public JProgressBar getProgressBar() {
@@ -129,6 +136,9 @@ public class MainWindowView extends JPanel{
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
         integrationMethodsComboBox.setSelectedItem(IntegrationMethods.DormandPrince8);
         integrationMethodsComboBox.setEditable(false);
+        buildingAngleJComboBox = new JComboBox<BuildingAngle>(BuildingAngle.values());
+        buildingAngleJComboBox.setSelectedItem(BuildingAngle.Psi);
+        buildingAngleJComboBox.setEditable(false);
         progressBar = new JProgressBar();
     }
 
@@ -264,6 +274,13 @@ public class MainWindowView extends JPanel{
         constraints.gridwidth = 4;
         gridBagLayout.setConstraints(integrationMethodsComboBox, constraints);
 
+        constraints.gridy++;
+        constraints.gridx = 0;
+        gridBagLayout.setConstraints(integrationAngle, constraints);
+        constraints.gridx++;
+        constraints.gridwidth = 4;
+        gridBagLayout.setConstraints(buildingAngleJComboBox, constraints);
+
         integrationParametersPanel.add(xLabel);
         integrationParametersPanel.add(yLabel);
         integrationParametersPanel.add(xToLabel);
@@ -278,6 +295,8 @@ public class MainWindowView extends JPanel{
         integrationParametersPanel.add(timeStepTextField);
         integrationParametersPanel.add(integrationMethodLabel);
         integrationParametersPanel.add(integrationMethodsComboBox);
+        integrationParametersPanel.add(integrationAngle);
+        integrationParametersPanel.add(buildingAngleJComboBox);
     }
 
     /**

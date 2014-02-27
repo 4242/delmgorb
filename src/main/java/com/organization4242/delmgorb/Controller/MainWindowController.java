@@ -1,9 +1,6 @@
 package com.organization4242.delmgorb.Controller;
 
-import com.organization4242.delmgorb.Model.IntegrationMethods;
-import com.organization4242.delmgorb.Model.InterpolationMethods;
-import com.organization4242.delmgorb.Model.MainWindowModel;
-import com.organization4242.delmgorb.Model.PlotBuilder;
+import com.organization4242.delmgorb.Model.*;
 import com.organization4242.delmgorb.View.PlotView;
 import com.organization4242.delmgorb.View.PlotWindowView;
 import com.organization4242.delmgorb.View.MainWindowView;
@@ -25,6 +22,7 @@ public class MainWindowController {
     String[] bounds;
 
     IntegrationMethods integrationMethod;
+    BuildingAngle buildingAngle;
     int numberOfPoints;
     Double timeStep;
     float xMin;
@@ -37,7 +35,7 @@ public class MainWindowController {
     class Task extends SwingWorker<Boolean, Integer> {
         @Override
         protected Boolean doInBackground() throws Exception {
-            PlotView plotView = PlotBuilder.build(numberOfPoints, timeStep, integrationMethod,
+            PlotView plotView = PlotBuilder.build(numberOfPoints, buildingAngle, timeStep, integrationMethod,
                     xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
 
@@ -119,6 +117,7 @@ public class MainWindowController {
                     view.getBoundsTextFields()[3].getText()};
 
             integrationMethod = (IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem();
+            buildingAngle = (BuildingAngle) view.getBuildingAngleJComboBox().getSelectedItem();
             numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
             timeStep = Double.parseDouble(view.getTimeStep().getText());
             xMin = Float.parseFloat(bounds[0]);
