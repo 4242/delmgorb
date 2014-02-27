@@ -12,9 +12,9 @@ public class PlotBuilder {
     static PlotModel plotModel;
     static PlotView plotView;
 
-    public static PlotView build(int numberOfPoints, BuildingAngle buildingAngle, double timeStep, IntegrationMethods integrationMethod,
+    public static PlotView build(int numberOfPoints, BuildingAngle buildingAngle, double timePeriod, double timeStep, IntegrationMethods integrationMethod,
                                  double xMin, double xMax, double yMin, double yMax, InterpolationMethods interpolationMethod, int numberOfSpheres) {
-        dataModel = new DataModel(numberOfPoints, buildingAngle, timeStep, integrationMethod, xMin, xMax, yMin, yMax);
+        dataModel = new DataModel(numberOfPoints, buildingAngle, timePeriod, timeStep, integrationMethod, xMin, xMax, yMin, yMax);
         MultivariateFunction function = interpolatorModel.interpolate(dataModel.getPointsArray(), interpolationMethod, numberOfSpheres);
         plotModel = new PlotModel(function, (float) xMin, (float) xMax, (float) yMin, (float) yMax);
         plotView = new PlotView(plotModel);

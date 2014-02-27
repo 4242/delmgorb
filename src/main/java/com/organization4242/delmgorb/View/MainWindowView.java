@@ -25,13 +25,14 @@ public class MainWindowView extends JPanel{
     private JLabel numLabel = new JLabel("Number of points:");
     private JLabel timeLabel = new JLabel("Time step:");
     private JLabel boundsLabel = new JLabel("Bounds:");
-    private JLabel xLabel = new JLabel("delta = ");
-    private JLabel yLabel = new JLabel("epsilon = ");
-    private JLabel xToLabel = new JLabel("...");
-    private JLabel yToLabel = new JLabel("...");
+    private JLabel xLabel = new JLabel("Delta:         from ");
+    private JLabel yLabel = new JLabel("Epsilon:     from ");
+    private JLabel xToLabel = new JLabel("    to ");
+    private JLabel yToLabel = new JLabel("    to ");
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
     private JLabel brightnessLabel = new JLabel("Brightness:");
     private JLabel integrationAngle = new JLabel("Angle to plot:");
+    private JLabel periodToInterpolateLabel = new JLabel("Period:");
 
     //UI Controls
     private int parametersNumber = 14;
@@ -39,6 +40,7 @@ public class MainWindowView extends JPanel{
     private JTextField[] boundsTextFields = new JTextField[4];
     private JTextField numberOfPointsTextField;
     private JTextField timeStepTextField;
+    private JTextField periodToInterpolateTextField;
     private JComboBox<IntegrationMethods> integrationMethodsComboBox;
     private JComboBox<BuildingAngle> buildingAngleJComboBox;
     private JTextField numberOfSpheresTextField;
@@ -61,6 +63,10 @@ public class MainWindowView extends JPanel{
 
     public JTextField getTimeStep() {
         return timeStepTextField;
+    }
+
+    public JTextField getPeriodToInterpolate() {
+        return periodToInterpolateTextField;
     }
 
     public JTextField getNumberOfSpheresTextField() {
@@ -127,6 +133,8 @@ public class MainWindowView extends JPanel{
         numberOfPointsTextField.setText("4");
         timeStepTextField = new JTextField(4);
         timeStepTextField.setText("0.5");
+        periodToInterpolateTextField = new JTextField(6);
+        periodToInterpolateTextField.setText("100");
         numberOfSpheresTextField = new JTextField(4);
         numberOfSpheresTextField.setText("100");
         brightnessTextField = new JTextField(4);
@@ -269,6 +277,12 @@ public class MainWindowView extends JPanel{
 
         constraints.gridy++;
         constraints.gridx = 0;
+        gridBagLayout.setConstraints(periodToInterpolateLabel, constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(periodToInterpolateTextField, constraints);
+
+        constraints.gridy++;
+        constraints.gridx = 0;
         gridBagLayout.setConstraints(integrationMethodLabel, constraints);
         constraints.gridx++;
         constraints.gridwidth = 4;
@@ -293,6 +307,8 @@ public class MainWindowView extends JPanel{
         integrationParametersPanel.add(numberOfPointsTextField);
         integrationParametersPanel.add(timeLabel);
         integrationParametersPanel.add(timeStepTextField);
+        integrationParametersPanel.add(periodToInterpolateLabel);
+        integrationParametersPanel.add(periodToInterpolateTextField);
         integrationParametersPanel.add(integrationMethodLabel);
         integrationParametersPanel.add(integrationMethodsComboBox);
         integrationParametersPanel.add(integrationAngle);

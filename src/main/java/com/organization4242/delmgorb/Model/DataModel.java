@@ -15,11 +15,11 @@ public class DataModel {
     }
 
     public DataModel(int numberOfPoints, BuildingAngle buildingAngle,
-                     double timeStep, IntegrationMethods method,
+                     double timePeriod, double timeStep, IntegrationMethods method,
                      double xMin, double xMax, double yMin, double yMax) {
         //Here listOfPoints gets assigned
         double angle = PI/20;
-        pointsArray = buildNewPoints(numberOfPoints, buildingAngle, 100, timeStep,
+        pointsArray = buildNewPoints(numberOfPoints, buildingAngle, timePeriod, timeStep,
                 angle, angle, angle, method, xMin, xMax, yMin, yMax);
     }
 

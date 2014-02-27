@@ -25,6 +25,7 @@ public class MainWindowController {
     BuildingAngle buildingAngle;
     int numberOfPoints;
     Double timeStep;
+    Double timePeriod;
     float xMin;
     float xMax;
     float yMin;
@@ -35,7 +36,7 @@ public class MainWindowController {
     class Task extends SwingWorker<Boolean, Integer> {
         @Override
         protected Boolean doInBackground() throws Exception {
-            PlotView plotView = PlotBuilder.build(numberOfPoints, buildingAngle, timeStep, integrationMethod,
+            PlotView plotView = PlotBuilder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, integrationMethod,
                     xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
 
@@ -86,11 +87,13 @@ public class MainWindowController {
             System.out.println("Drawing plot:");
             System.out.println("    number of points = " + numberOfPoints);
             System.out.println("    time step = " + timeStep);
+            System.out.println("    time period = " + timePeriod);
             System.out.println("    method = " + integrationMethod);
             System.out.println("    xMin = " + xMin);
             System.out.println("    xMax = " + xMax);
             System.out.println("    yMin = " + yMin);
             System.out.println("    yMax = " + yMax);
+
             try {
                 task.execute();
             } catch (NumberIsTooSmallException ex) {
@@ -120,6 +123,7 @@ public class MainWindowController {
             buildingAngle = (BuildingAngle) view.getBuildingAngleJComboBox().getSelectedItem();
             numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
             timeStep = Double.parseDouble(view.getTimeStep().getText());
+            timePeriod = Double.parseDouble(view.getPeriodToInterpolate().getText());
             xMin = Float.parseFloat(bounds[0]);
             xMax = Float.parseFloat(bounds[1]);
             yMin = Float.parseFloat(bounds[2]);

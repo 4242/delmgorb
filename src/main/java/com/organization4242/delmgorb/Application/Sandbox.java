@@ -20,7 +20,7 @@ public class Sandbox {
         //        time_step_of_integration, method).getListOfPoints();
 
         PointsArray triple_array;
-        triple_array = new DataModel(number_of_building_points, BuildingAngle.Psi,
+        triple_array = new DataModel(number_of_building_points, BuildingAngle.Psi, 100,
                 time_step_of_integration, method, 1, 2, 0.05, 1).getPointsArray();
     }
 }
