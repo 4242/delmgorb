@@ -106,10 +106,9 @@ public class MainWindowView extends JFrame {
     public MainWindowView() {
         //Setting window parameters
         setTitle("Delmgorb v1.0");
-        setSize(400, 600);
+        setSize(400, 650);
         setVisible(true);
-        setResizable(true);
-        setMaximumSize(new Dimension(800, 600));
+        setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         //Setting theme
@@ -423,11 +422,17 @@ public class MainWindowView extends JFrame {
         constraints.gridy = 0;
         constraints.weightx = 1;
         constraints.weighty = 1;
-        constraints.fill = GridBagConstraints.NONE;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
 
+        gridBagLayout.setConstraints(progressBar, constraints);
+        progressBar.setIndeterminate(false);
+
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.gridy++;
         gridBagLayout.setConstraints(button, constraints);
 
         buttonsPanel.add(button);
+        buttonsPanel.add(progressBar);
     }
 
     private void placeControls() {

@@ -15,42 +15,38 @@ import java.awt.event.*;
 public class MainWindowController {
     private MainWindowModel model;
     private MainWindowView view;
-    private Boolean graphWindowOpened = false;
-    Boolean canDraw = true;
-    Boolean isPlotGenerating = false;
+    private Boolean canDraw = true;
+    private Boolean isPlotGenerating = false;
 
-    String[] bounds;
+    private String[] bounds;
 
-    IntegrationMethods integrationMethod;
-    BuildingAngle buildingAngle;
-    int numberOfPoints;
-    Double timeStep;
-    Double timePeriod;
-    Double phi0;
-    Double psi0;
-    Double theta0;
-    float xMin;
-    float xMax;
-    float yMin;
-    float yMax;
-    int numberOfSpheres;
-    InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
+    private IntegrationMethods integrationMethod;
+    private BuildingAngle buildingAngle;
+    private int numberOfPoints;
+    private Double timeStep;
+    private Double timePeriod;
+    private Double phi0;
+    private Double psi0;
+    private Double theta0;
+    private float xMin;
+    private float xMax;
+    private float yMin;
+    private float yMax;
+    private int numberOfSpheres;
+    private InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
 
-    class Task extends SwingWorker<Void, Integer> {
+    private class Task extends SwingWorker<Void, Integer> {
         @Override
         protected Void doInBackground() throws Exception {
             PlotView plotView = PlotBuilder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
                     integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
-
-            plotWindowView.addWindowListener(windowListener);
             plotWindowView.display();
-            this.cancel(true);
+            isPlotGenerating = false;
+            view.getProgressBar().setIndeterminate(false);
             return null;
         }
     }
-
-    private final Task task = new Task();
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
@@ -80,14 +76,11 @@ public class MainWindowController {
             validate();
             isPlotGenerating = true;
             view.getProgressBar().setIndeterminate(true);
-            //view.getButton().setText("Stop");
         } else {
-            //task.cancel(true);
-            //view.getButton().setText("Draw!");
             return;
         }
 
-        if (!graphWindowOpened && canDraw) {
+        if (canDraw) {
             System.out.println("Drawing plot:");
             System.out.println("    number of points = " + numberOfPoints);
             System.out.println("    time step = " + timeStep);
@@ -169,20 +162,6 @@ public class MainWindowController {
             JOptionPane.showMessageDialog(view, validationMessage);
         }
     }
-
-    //Prevent opening multiple windows with plots
-    private WindowListener windowListener = new WindowAdapter() {
-        @Override
-        public void windowOpened(WindowEvent e) {
-            graphWindowOpened = true;
-            isPlotGenerating = false;
-        }
-
-        @Override
-        public void windowClosing(WindowEvent e) {
-            graphWindowOpened = false;
-        }
-    };
 
     private FocusListener focusListener = new FocusAdapter() {
         @Override

@@ -18,9 +18,8 @@ public class PlotView extends JPanel {
     }
 
     private void initComponents() {
-        JSurfacePanel surfacePanel = new JSurfacePanel();
+        JSurfacePanel surfacePanel = new JSurfacePanel(model.getModel());
         setLayout(new BorderLayout());
-        surfacePanel.setModel(model.getModel());
         model.getModel().plot().execute();
         surfacePanel.setTitleText("title");
         surfacePanel.setBackground(Color.white);
