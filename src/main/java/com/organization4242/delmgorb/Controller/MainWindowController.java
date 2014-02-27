@@ -26,6 +26,9 @@ public class MainWindowController {
     int numberOfPoints;
     Double timeStep;
     Double timePeriod;
+    Double phi0;
+    Double psi0;
+    Double theta0;
     float xMin;
     float xMax;
     float yMin;
@@ -36,8 +39,8 @@ public class MainWindowController {
     class Task extends SwingWorker<Boolean, Integer> {
         @Override
         protected Boolean doInBackground() throws Exception {
-            PlotView plotView = PlotBuilder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, integrationMethod,
-                    xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
+            PlotView plotView = PlotBuilder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
+                    integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
 
             plotWindowView.addWindowListener(windowListener);
@@ -93,6 +96,9 @@ public class MainWindowController {
             System.out.println("    xMax = " + xMax);
             System.out.println("    yMin = " + yMin);
             System.out.println("    yMax = " + yMax);
+            System.out.println("  Phi(0) = " + phi0);
+            System.out.println("  Psi(0) = " + psi0);
+            System.out.println("  Theta(0) = " + theta0);
 
             try {
                 task.execute();
@@ -124,6 +130,9 @@ public class MainWindowController {
             numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
             timeStep = Double.parseDouble(view.getTimeStep().getText());
             timePeriod = Double.parseDouble(view.getPeriodToInterpolate().getText());
+            phi0 = Double.parseDouble(view.getPhiTextField().getText());
+            psi0 = Double.parseDouble(view.getPsiTextField().getText());
+            theta0 = Double.parseDouble(view.getThetaTextField().getText());
             xMin = Float.parseFloat(bounds[0]);
             xMax = Float.parseFloat(bounds[1]);
             yMin = Float.parseFloat(bounds[2]);

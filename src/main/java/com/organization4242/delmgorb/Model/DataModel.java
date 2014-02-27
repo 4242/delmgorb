@@ -15,17 +15,16 @@ public class DataModel {
     }
 
     public DataModel(int numberOfPoints, BuildingAngle buildingAngle,
-                     double timePeriod, double timeStep, IntegrationMethods method,
-                     double xMin, double xMax, double yMin, double yMax) {
+                     double timePeriod, double timeStep, double phi0, double theta0, double psi0,
+                     IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
         //Here listOfPoints gets assigned
-        double angle = PI/20;
         pointsArray = buildNewPoints(numberOfPoints, buildingAngle, timePeriod, timeStep,
-                angle, angle, angle, method, xMin, xMax, yMin, yMax);
+                phi0, theta0, psi0, method, xMin, xMax, yMin, yMax);
     }
 
-    private PointsArray buildNewPoints (int numOfPoints, BuildingAngle buildingAngle, double time, double timeStep,
-                                        double phi0, double theta0, double psi0, IntegrationMethods method,
-                                        double xMin, double xMax, double yMin, double yMax) {
+    private PointsArray buildNewPoints (int numOfPoints, BuildingAngle buildingAngle,
+                                        double time, double timeStep, double phi0, double theta0, double psi0,
+                                        IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
         out.println("Inside buildNewPoints");
         PointsArray comboArray;
         comboArray = new PointsArray(numOfPoints, numOfPoints);
@@ -46,12 +45,12 @@ public class DataModel {
 
         /*вычисляем начальные условия. на входе они в самолетных углах, а нужны в кватернионах*/
 
-        double sPh0 = sin(phi0 / 2);
-        double sPs0 = sin(psi0 / 2);
-        double sTh0 = sin(theta0 / 2);
-        double cPh0 = cos(phi0 / 2);
-        double cPs0 = cos(psi0 / 2);
-        double cTh0 = cos(theta0 / 2);
+        double sPh0 = sin((phi0 * PI) / 2);
+        double sPs0 = sin((psi0 * PI) / 2);
+        double sTh0 = sin((theta0 * PI) / 2);
+        double cPh0 = cos((phi0 * PI) / 2);
+        double cPs0 = cos((psi0 * PI) / 2);
+        double cTh0 = cos((theta0 * PI) / 2);
 
         double lambda0 = cPh0*cPs0*cTh0 + sPh0*sPs0*sTh0;
         double lambda1 = sPh0*cPs0*cTh0 - cPh0*sPs0*sTh0;
