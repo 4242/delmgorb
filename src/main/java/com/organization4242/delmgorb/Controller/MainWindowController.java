@@ -36,16 +36,17 @@ public class MainWindowController {
     int numberOfSpheres;
     InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
 
-    class Task extends SwingWorker<Boolean, Integer> {
+    class Task extends SwingWorker<Void, Integer> {
         @Override
-        protected Boolean doInBackground() throws Exception {
+        protected Void doInBackground() throws Exception {
             PlotView plotView = PlotBuilder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
                     integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
 
             plotWindowView.addWindowListener(windowListener);
             plotWindowView.display();
-            return true;
+            this.cancel(true);
+            return null;
         }
     }
 
@@ -100,8 +101,9 @@ public class MainWindowController {
             System.out.println("  Psi(0) = " + psi0);
             System.out.println("  Theta(0) = " + theta0);
 
+            task.execute();
             try {
-                task.execute();
+
             } catch (NumberIsTooSmallException ex) {
                 JOptionPane.showMessageDialog(view, "Number of points is too small");
             }
@@ -169,12 +171,12 @@ public class MainWindowController {
         }
     }
 
-    //TODO: not working!
     //Prevent opening multiple windows with plots
     private WindowListener windowListener = new WindowAdapter() {
         @Override
         public void windowOpened(WindowEvent e) {
             graphWindowOpened = true;
+            isPlotGenerating = false;
         }
 
         @Override

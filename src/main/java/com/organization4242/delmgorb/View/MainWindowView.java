@@ -9,10 +9,7 @@ import java.awt.*;
 /**
  * Created by ilya-murzinov on 22.02.14.
  */
-public class MainWindowView extends JPanel{
-    //Window
-    private JFrame jf = new JFrame("Delmgorb v1.0");
-
+public class MainWindowView extends JFrame {
     //Internal panels
     private JPanel equationParametersPanel = new JPanel();
     private JPanel integrationParametersPanel = new JPanel();
@@ -31,7 +28,6 @@ public class MainWindowView extends JPanel{
     private JLabel xToLabel = new JLabel("    to ");
     private JLabel yToLabel = new JLabel("    to ");
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
-    private JLabel brightnessLabel = new JLabel("Brightness:");
     private JLabel integrationAngle = new JLabel("Angle to plot:");
     private JLabel periodToInterpolateLabel = new JLabel("Period:");
     private JLabel phiLabel = new JLabel("Phi(0):");
@@ -48,7 +44,6 @@ public class MainWindowView extends JPanel{
     private JComboBox<IntegrationMethods> integrationMethodsComboBox;
     private JComboBox<BuildingAngle> buildingAngleJComboBox;
     private JTextField numberOfSpheresTextField;
-    private JTextField brightnessTextField;
     private JTextField phiTextField;
     private JTextField psiTextField;
     private JTextField thetaTextField;
@@ -110,10 +105,12 @@ public class MainWindowView extends JPanel{
 
     public MainWindowView() {
         //Setting window parameters
-        jf.setSize(400, 650);
-        jf.setResizable(true);
-        jf.setMaximumSize(new Dimension(800, 600));
-        jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setTitle("Delmgorb v1.0");
+        setSize(400, 600);
+        setVisible(true);
+        setResizable(true);
+        setMaximumSize(new Dimension(800, 600));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         //Setting theme
         try
@@ -156,8 +153,6 @@ public class MainWindowView extends JPanel{
         periodToInterpolateTextField.setText("100");
         numberOfSpheresTextField = new JTextField(4);
         numberOfSpheresTextField.setText("100");
-        brightnessTextField = new JTextField(4);
-        brightnessTextField.setText("1");
         phiTextField = new JTextField(4);
         phiTextField.setText("0.05");
         psiTextField = new JTextField(4);
@@ -204,9 +199,9 @@ public class MainWindowView extends JPanel{
         constraints.gridy++;
         gridBagLayout.setConstraints(integrationParametersPanel, constraints);
         constraints.gridy++;
-        gridBagLayout.setConstraints(interpolationParametersPanel, constraints);
-        constraints.gridy++;
         gridBagLayout.setConstraints(initialConditionsPanel, constraints);
+        constraints.gridy++;
+        gridBagLayout.setConstraints(interpolationParametersPanel, constraints);
         constraints.gridy++;
         gridBagLayout.setConstraints(buttonsPanel, constraints);
 
@@ -218,7 +213,7 @@ public class MainWindowView extends JPanel{
         mainPanel.add(buttonsPanel);
 
         //Add main panel to window
-        jf.getContentPane().add(mainPanel);
+        getContentPane().add(mainPanel);
     }
 
     /**
@@ -443,7 +438,14 @@ public class MainWindowView extends JPanel{
         placeButtonControls();
     }
 
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            setVisible(true);
+        }
+    };
+
     public void display() {
-        jf.setVisible(true);
+        SwingUtilities.invokeLater(runnable);
     }
 }

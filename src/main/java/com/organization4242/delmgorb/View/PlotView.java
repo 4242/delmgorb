@@ -9,7 +9,7 @@ import java.awt.*;
 /**
  * Created by ilya-murzinov on 22.02.14.
  */
-public class PlotView extends JPanel{
+public class PlotView extends JPanel {
     private PlotModel model;
 
     public PlotView(PlotModel model) {
