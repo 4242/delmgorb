@@ -10,18 +10,20 @@ import java.awt.*;
  * Created by ilya-murzinov on 22.02.14.
  */
 public class PlotView extends JPanel {
-    private PlotModel model;
+    JSurfacePanel surfacePanel;
 
     public PlotView(PlotModel model) {
-        this.model = model;
         initComponents();
+    }
+    
+    public void setTitleText(text) {
+        surfacePanel.setTitleText(text);
     }
 
     private void initComponents() {
-        JSurfacePanel surfacePanel = new JSurfacePanel(model.getModel());
+        surfacePanel = new JSurfacePanel(model.getModel());
         setLayout(new BorderLayout());
         model.getModel().plot().execute();
-        surfacePanel.setTitleText("title");
         surfacePanel.setBackground(Color.white);
         surfacePanel.setConfigurationVisible(true);
         add(surfacePanel, BorderLayout.CENTER);
