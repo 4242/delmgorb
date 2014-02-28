@@ -144,7 +144,7 @@ public class MainWindowController {
             canDraw = false;
             validationMessage = validationMessage.concat(ex.toString());
             JOptionPane.showMessageDialog(view, validationMessage);
-            return;
+            return false;
         }
 
         if (bounds[0].equals("0") || bounds[1].equals("0")
