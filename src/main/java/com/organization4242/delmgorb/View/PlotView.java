@@ -13,6 +13,7 @@ public class PlotView extends JPanel {
     JSurfacePanel surfacePanel;
 
     public PlotView(PlotModel model) {
+        surfacePanel = new JSurfacePanel(model.getModel());
         initComponents();
     }
     
@@ -21,7 +22,6 @@ public class PlotView extends JPanel {
     }
 
     private void initComponents() {
-        surfacePanel = new JSurfacePanel(model.getModel());
         setLayout(new BorderLayout());
         model.getModel().plot().execute();
         surfacePanel.setBackground(Color.white);
