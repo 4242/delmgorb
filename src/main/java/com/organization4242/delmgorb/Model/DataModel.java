@@ -72,6 +72,7 @@ public class DataModel extends Observable {
         }
         out.print(comboArray.x_val[0]);out.print(" ");out.println(comboArray.x_val[numOfPoints - 1]);
         out.print(comboArray.y_val[0]);out.print(" ");out.println(comboArray.y_val[numOfPoints-1]);
+        double pointsCounted = 0;
         for (int i = 0; i < numOfPoints; i++) {
             for (int j = 0; j < numOfPoints; j++) {
                 double max;
@@ -114,7 +115,7 @@ public class DataModel extends Observable {
                 out.print(" val = ");out.println(comboArray.f_val[j][i]);
                 //Notifying progress bar
                 setChanged();
-                notifyObservers((int) (((double) i/numOfPoints)*100));
+                notifyObservers((int) (((double) ((i + 1)*numOfPoints + j + 1)/Math.pow(numOfPoints + 1,2))*100));
             }
         }
         out.println("Outside buildNewPoints");
