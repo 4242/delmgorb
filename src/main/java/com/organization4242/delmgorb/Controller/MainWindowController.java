@@ -47,7 +47,6 @@ public class MainWindowController {
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
         this.view = view;
-        dialogWindowView = new DialogWindowView(view);
         for (JTextField tf : view.getTextFields()) {
             tf.addFocusListener(focusListener);
         }
@@ -62,9 +61,14 @@ public class MainWindowController {
         });
         view.getNumberOfPoints().addFocusListener(focusListener);
         view.getTimeStep().addFocusListener(focusListener);
+        view.getNumberOfSpheresTextField().addFocusListener(focusListener);
+        view.getPeriodToInterpolate().addFocusListener(focusListener);
+        view.getPhiTextField().addFocusListener(focusListener);
+        view.getPsiTextField().addFocusListener(focusListener);
+        view.getThetaTextField().addFocusListener(focusListener);
     }
 
-    private class Task extends SwingWorker<Void, Integer> implements Observer{
+    private class Task extends SwingWorker<Void, Integer> implements Observer {
 
         @Override
         protected Void doInBackground() throws Exception {
@@ -78,13 +82,15 @@ public class MainWindowController {
         }
 
         public void done() {
-            dialogWindowView.dispose();
             view.setEnabled(true);
         }
 
         @Override
         public void update(Observable o, Object arg) {
-            dialogWindowView.getProgressBar().setValue((Integer) arg);
+            if (arg.getClass().equals(Integer.class))
+                dialogWindowView.getProgressBar().setValue((Integer) arg);
+            if (arg.getClass().equals(String.class))
+                dialogWindowView.dispose();
         }
     }
 
@@ -96,6 +102,7 @@ public class MainWindowController {
                 final Task task = new Task();
                 task.execute();
                 view.setEnabled(false);
+                dialogWindowView = new DialogWindowView(view);
                 dialogWindowView.display();
                 changes = new PropertyChangeSupport(this);
                 changes.addPropertyChangeListener(builder);

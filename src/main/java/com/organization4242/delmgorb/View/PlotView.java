@@ -22,6 +22,13 @@ public class PlotView extends JPanel {
         setLayout(new BorderLayout());
         SwingWorker task = model.getModel().plot();
         task.execute();
+        dialogWindowView = new DialogWindowView(this);
+        dialogWindowView.setTitle("Drawing...");
+        dialogWindowView.setVisible(true);
+        while (!task.isDone()) {
+            dialogWindowView.getProgressBar().setValue(task.getProgress());
+        }
+        dialogWindowView.dispose();
         surfacePanel.setBackground(Color.white);
         surfacePanel.setConfigurationVisible(true);
         add(surfacePanel, BorderLayout.CENTER);

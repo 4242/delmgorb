@@ -1,5 +1,6 @@
-package com.organization4242.delmgorb.Model;
+package com.organization4242.delmgorb.Controller;
 
+import com.organization4242.delmgorb.Model.*;
 import com.organization4242.delmgorb.View.PlotView;
 import org.apache.commons.math3.analysis.MultivariateFunction;
 
@@ -29,9 +30,11 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         PointsArray p = dataModel.buildPoints(numberOfPoints, buildingAngle, timePeriod, timeStep,
                 phi0, theta0, psi0, integrationMethod, xMin, xMax, yMin, yMax);
         MultivariateFunction function = interpolatorModel.interpolate(p, interpolationMethod, numberOfSpheres);
+        setChanged();
+        notifyObservers("calculated");
         plotModel = new PlotModel(function, (float) xMin, (float) xMax, (float) yMin, (float) yMax);
         plotView = new PlotView();
-        plotView.setTitleText(buildingAngle.toString());
+        plotView.setTitleText("X -> Epsilon, Y -> Delta, Z -> " + buildingAngle);
         plotView.setModel(plotModel);
         return plotView;
     }

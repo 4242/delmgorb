@@ -31,7 +31,7 @@ public class DialogWindowView extends JDialog {
 
     private void init() {
         setSize(200, 100);
-        setTitle("Computing..");
+        setTitle("Computing...");
 
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
