@@ -47,7 +47,6 @@ public class MainWindowView extends JFrame {
     private JTextField phiTextField;
     private JTextField psiTextField;
     private JTextField thetaTextField;
-    private JProgressBar progressBar;
     private JButton button;
 
     //Getters
@@ -97,10 +96,6 @@ public class MainWindowView extends JFrame {
 
     public JComboBox<BuildingAngle> getBuildingAngleJComboBox() {
         return buildingAngleJComboBox;
-    }
-
-    public JProgressBar getProgressBar() {
-        return progressBar;
     }
 
     public MainWindowView() {
@@ -166,11 +161,6 @@ public class MainWindowView extends JFrame {
         buildingAngleJComboBox = new JComboBox<BuildingAngle>(BuildingAngle.values());
         buildingAngleJComboBox.setSelectedItem(BuildingAngle.Psi);
         buildingAngleJComboBox.setEditable(false);
-        progressBar = new JProgressBar();
-        progressBar.setStringPainted(true);
-        progressBar.setMinimum(0);
-        progressBar.setMaximum(100);
-        progressBar.setValue(0);
     }
 
     /**
@@ -428,15 +418,11 @@ public class MainWindowView extends JFrame {
         constraints.weighty = 1;
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
-        gridBagLayout.setConstraints(progressBar, constraints);
-        progressBar.setIndeterminate(false);
-
         constraints.fill = GridBagConstraints.NONE;
         constraints.gridy++;
         gridBagLayout.setConstraints(button, constraints);
 
         buttonsPanel.add(button);
-        buttonsPanel.add(progressBar);
     }
 
     private void placeControls() {

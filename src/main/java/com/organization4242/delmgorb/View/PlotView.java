@@ -11,6 +11,7 @@ import java.awt.*;
  */
 public class PlotView extends JPanel {
     JSurfacePanel surfacePanel;
+    DialogWindowView dialogWindowView;
 
     public PlotView() {
         surfacePanel = new JSurfacePanel();
@@ -19,7 +20,8 @@ public class PlotView extends JPanel {
     public void setModel(PlotModel model) {
         surfacePanel.setModel(model.getModel());
         setLayout(new BorderLayout());
-        model.getModel().plot().execute();
+        SwingWorker task = model.getModel().plot();
+        task.execute();
         surfacePanel.setBackground(Color.white);
         surfacePanel.setConfigurationVisible(true);
         add(surfacePanel, BorderLayout.CENTER);
