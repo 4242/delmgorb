@@ -16,7 +16,7 @@ public class PlotView extends JPanel {
         initComponents();
     }
     
-    public void setTitleText(text) {
+    public void setTitleText(String text) {
         surfacePanel.setTitleText(text);
     }
 
