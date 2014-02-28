@@ -10,6 +10,12 @@ import static java.lang.Math.*;
 import static java.lang.System.out;
 
 public class DataModel extends Observable {
+    private Boolean stop = false;
+
+    public void Stop() {
+        stop = true;
+    }
+
     public DataModel() {
 
     }
@@ -87,12 +93,12 @@ public class DataModel extends Observable {
         for (int i = 0; i < numOfPoints; i++) {
             eps = yMin + 1.0 * i * (yMax - yMin) / (numOfPoints - 1);
             comboArray.y_val[i] = eps;
-            System.out.println("y_val = " + comboArray.y_val[i]);
+            //System.out.println("y_val = " + comboArray.y_val[i]);
         }
         for (int j = 0; j < numOfPoints; j++) {
             del = xMin + 1.0 * j * (xMax - xMin) / (numOfPoints - 1);
             comboArray.x_val[j] = del;
-            System.out.println("x_val = " + comboArray.x_val[j]);
+            //System.out.println("x_val = " + comboArray.x_val[j]);
         }
         //comboArray.x_val = DoFragmentation(xMin, xMax, numOfPoints);
         //comboArray.y_val = DoFragmentation(yMin, yMax, numOfPoints);
@@ -129,6 +135,8 @@ public class DataModel extends Observable {
                             break;
                         }
                     }
+                    if (stop)
+                        return null;
                     if (angleToPlot >= max) max = angleToPlot;
                 }
                 comboArray.f_val[j][i] = max;

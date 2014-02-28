@@ -3,13 +3,15 @@ package com.organization4242.delmgorb.Model;
 import com.organization4242.delmgorb.View.PlotView;
 import org.apache.commons.math3.analysis.MultivariateFunction;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Observable;
 import java.util.Observer;
 
 /**
  * Created by ilya-murzinov on 26.02.14.
  */
-public class PlotBuilder extends Observable implements Observer {
+public class PlotBuilder extends Observable implements Observer, PropertyChangeListener {
     DataModel dataModel;
     InterpolatorModel interpolatorModel = new InterpolatorModel();
     PlotModel plotModel;
@@ -38,5 +40,10 @@ public class PlotBuilder extends Observable implements Observer {
     public void update(Observable o, Object arg) {
         setChanged();
         notifyObservers(arg);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        dataModel.Stop();
     }
 }

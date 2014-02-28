@@ -9,6 +9,8 @@ import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
 import javax.swing.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeSupport;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -37,7 +39,10 @@ public class MainWindowController {
     private int numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
 
-    DialogWindowView dialogWindowView;
+    private DialogWindowView dialogWindowView;
+
+    private PropertyChangeSupport changes;
+    private PlotBuilder builder;
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
@@ -63,7 +68,7 @@ public class MainWindowController {
 
         @Override
         protected Void doInBackground() throws Exception {
-            PlotBuilder builder = new PlotBuilder();
+            builder = new PlotBuilder();
             builder.addObserver(this);
             PlotView plotView = builder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
                     integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
@@ -92,10 +97,13 @@ public class MainWindowController {
                 task.execute();
                 view.setEnabled(false);
                 dialogWindowView.display();
+                changes = new PropertyChangeSupport(this);
+                changes.addPropertyChangeListener(builder);
                 dialogWindowView.getButton().addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        task.cancel(true);
+                        PropertyChangeEvent ev = new PropertyChangeEvent(this, "interrupt", "false", "true");
+                        changes.firePropertyChange(ev);
                         dialogWindowView.dispose();
                     }
                 });
