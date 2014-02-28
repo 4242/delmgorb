@@ -7,7 +7,6 @@ import org.apache.commons.math3.ode.nonstiff.*;
 import java.util.Observable;
 
 import static java.lang.Math.*;
-import static java.lang.System.out;
 
 public class DataModel extends Observable {
     private Boolean stop = false;
@@ -81,7 +80,6 @@ public class DataModel extends Observable {
     private PointsArray buildNewPoints (int numOfPoints, BuildingAngle buildingAngle,
                                         double time, double timeStep, double phi0, double theta0, double psi0,
                                         IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
-        out.println("Inside buildNewPoints");
         PointsArray comboArray;
         comboArray = new PointsArray(numOfPoints, numOfPoints);
         FirstOrderIntegrator integrator = GetIntegrationMethod(method);
@@ -145,7 +143,8 @@ public class DataModel extends Observable {
                 notifyObservers((int) (((double) (i*numOfPoints + j + 1)/Math.pow(numOfPoints,2))*100));
             }
         }
-        out.println("Outside buildNewPoints");
+        setChanged();
+        notifyObservers("calculated");
         return comboArray;
     }
 }

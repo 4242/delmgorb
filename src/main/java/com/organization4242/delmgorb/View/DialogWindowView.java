@@ -19,19 +19,19 @@ public class DialogWindowView extends JDialog {
         return progressBar;
     }
 
-    public DialogWindowView(JPanel parent) {
-        init();
+    public DialogWindowView(JFrame parent, String title, Boolean addCancelButton) {
+        init(title, addCancelButton);
         setLocationRelativeTo(parent);
     }
 
-    public DialogWindowView(JFrame parent) {
-        init();
+    public DialogWindowView(JPanel parent, String title, Boolean addCancelButton) {
+        init(title, addCancelButton);
         setLocationRelativeTo(parent);
     }
 
-    private void init() {
+    private void init(String title, Boolean addCancelButton) {
         setSize(200, 100);
-        setTitle("Computing...");
+        setTitle(title);
 
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -63,7 +63,8 @@ public class DialogWindowView extends JDialog {
         constraints.gridy++;
         gridBagLayout.setConstraints(button, constraints);
 
-        add(button);
+        if (addCancelButton)
+            add(button);
         add(progressBar);
     }
 

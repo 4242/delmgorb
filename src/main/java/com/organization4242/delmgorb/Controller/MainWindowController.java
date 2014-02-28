@@ -89,8 +89,9 @@ public class MainWindowController {
         public void update(Observable o, Object arg) {
             if (arg.getClass().equals(Integer.class))
                 dialogWindowView.getProgressBar().setValue((Integer) arg);
-            if (arg.getClass().equals(String.class))
+            if (arg.getClass().equals(String.class)) {
                 dialogWindowView.dispose();
+            }
         }
     }
 
@@ -102,7 +103,7 @@ public class MainWindowController {
                 final Task task = new Task();
                 task.execute();
                 view.setEnabled(false);
-                dialogWindowView = new DialogWindowView(view);
+                dialogWindowView = new DialogWindowView(view, "Calculating...", true);
                 dialogWindowView.display();
                 changes = new PropertyChangeSupport(this);
                 changes.addPropertyChangeListener(builder);
