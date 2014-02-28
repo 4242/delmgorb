@@ -81,8 +81,7 @@ public class MainWindowController {
     private void drawPlot() {
         canDraw = true;
 
-        if (!isPlotGenerating) {
-            validate();
+        if (!isPlotGenerating && validate()) {
             isPlotGenerating = true;
         } else {
             return;
@@ -110,7 +109,7 @@ public class MainWindowController {
         }
     }
 
-    private void validate() {
+    private Boolean validate() {
         String validationMessage = "";
 
         for (JTextField tf : view.getTextFields()) {
@@ -168,7 +167,10 @@ public class MainWindowController {
         }
         if (!canDraw) {
             JOptionPane.showMessageDialog(view, validationMessage);
+            return false;
         }
+        
+        return true;
     }
 
     private FocusListener focusListener = new FocusAdapter() {
