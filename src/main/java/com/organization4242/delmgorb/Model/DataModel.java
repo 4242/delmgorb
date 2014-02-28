@@ -21,12 +21,7 @@ public class DataModel extends Observable {
                 phi0, theta0, psi0, method, xMin, xMax, yMin, yMax);
     }
 
-    private PointsArray buildNewPoints (int numOfPoints, BuildingAngle buildingAngle,
-                                        double time, double timeStep, double phi0, double theta0, double psi0,
-                                        IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
-        out.println("Inside buildNewPoints");
-        PointsArray comboArray;
-        comboArray = new PointsArray(numOfPoints, numOfPoints);
+    private FirstOrderIntegrator GetIntegrationMethod (IntegrationMethods method){
         FirstOrderIntegrator integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
         switch (method) {
             case Euler: integrator = new EulerIntegrator(0.01); break;
@@ -41,9 +36,12 @@ public class DataModel extends Observable {
             case AdamsBashforth: integrator = new AdamsBashforthIntegrator(3, 0.01, 0.05, 1.0, 0.5); break;
             case AdamsMoulton: integrator = new AdamsMoultonIntegrator(2, 0.01, 0.05, 1.0, 0.5); break;
         }
+        return integrator;
+    }
 
+    private double[] GetInitialVector (double phi0, double theta0, double psi0){
         /*вычисляем начальные условия. на входе они в самолетных углах, а нужны в кватернионах*/
-
+        double[] y0; // initial state
         double sPh0 = sin((phi0 * PI) / 2);
         double sPs0 = sin((psi0 * PI) / 2);
         double sTh0 = sin((theta0 * PI) / 2);
@@ -55,6 +53,32 @@ public class DataModel extends Observable {
         double lambda1 = sPh0*cPs0*cTh0 - cPh0*sPs0*sTh0;
         double lambda2 = cPh0*cPs0*sTh0 + sPh0*sPs0*cTh0;
         double lambda3 = cPh0*sPs0*cTh0 - sPh0*cPs0*sTh0;
+        y0 = new double[] { lambda0, lambda1, lambda2, lambda3, 0, 1, 0 };
+        return y0;
+    }
+
+    private double[] DoFragmentation (double aMin, double aMax, int points){
+        double[] array = new double[points];
+        double eps = 0;
+        for (int i = 0; i < points; i++) {
+            eps = aMin + 1.0 * i * (aMax - aMin) / (points - 1);
+            array[i] = eps;
+        }
+        return array;
+    }
+
+    private double GetMaxValue () {
+        double max = 0;
+        return max;
+    }
+
+    private PointsArray buildNewPoints (int numOfPoints, BuildingAngle buildingAngle,
+                                        double time, double timeStep, double phi0, double theta0, double psi0,
+                                        IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
+        out.println("Inside buildNewPoints");
+        PointsArray comboArray;
+        comboArray = new PointsArray(numOfPoints, numOfPoints);
+        FirstOrderIntegrator integrator = GetIntegrationMethod(method);
 
         /*строим разбиение треугольника Белецкого (по сути плоскость параметров эпсилон-дельта) на точки*/
 
@@ -64,29 +88,27 @@ public class DataModel extends Observable {
             eps = yMin + 1.0 * i * (yMax - yMin) / (numOfPoints - 1);
             comboArray.y_val[i] = eps;
             System.out.println("y_val = " + comboArray.y_val[i]);
-            }
+        }
         for (int j = 0; j < numOfPoints; j++) {
             del = xMin + 1.0 * j * (xMax - xMin) / (numOfPoints - 1);
             comboArray.x_val[j] = del;
             System.out.println("x_val = " + comboArray.x_val[j]);
         }
-        out.print(comboArray.x_val[0]);out.print(" ");out.println(comboArray.x_val[numOfPoints - 1]);
-        out.print(comboArray.y_val[0]);out.print(" ");out.println(comboArray.y_val[numOfPoints-1]);
-        double pointsCounted = 0;
+        //comboArray.x_val = DoFragmentation(xMin, xMax, numOfPoints);
+        //comboArray.y_val = DoFragmentation(yMin, yMax, numOfPoints);
+        double[] initialState = GetInitialVector(phi0, psi0, theta0);
         for (int i = 0; i < numOfPoints; i++) {
             for (int j = 0; j < numOfPoints; j++) {
                 double max;
                 max = 0;
                 for (int t = 1; t <= time/timeStep; t++) {
-                    double[] y0; // initial state
-                    y0 = new double[] { lambda0, lambda1, lambda2, lambda3, 0, 1, 0 };
                     double[] y1; // final state
                     y1 = new double[] { 0, 0, 0, 0, 0, 0, 0 };
                     double time_state;
                     time_state = 1.0*t*timeStep;
                     FirstOrderDifferentialEquations ode = new LibrationODE(1000, comboArray.y_val[i],
                             comboArray.x_val[j], 0.001078011072);
-                    integrator.integrate(ode, 0.0, y0, time_state, y1);// now y1 contains final state at time t/100
+                    integrator.integrate(ode, 0.0, initialState, time_state, y1);// now y1 contains final state at time t/100
                     double angleToPlot = 0;
                     switch (buildingAngle) {
                         case Psi: {
@@ -110,9 +132,6 @@ public class DataModel extends Observable {
                     if (angleToPlot >= max) max = angleToPlot;
                 }
                 comboArray.f_val[j][i] = max;
-                out.print("eps = ");out.print(comboArray.y_val[i]);
-                out.print(" del = ");out.print(comboArray.x_val[j]);
-                out.print(" val = ");out.println(comboArray.f_val[j][i]);
                 //Notifying progress bar
                 setChanged();
                 notifyObservers((int) (((double) (i*numOfPoints + j + 1)/Math.pow(numOfPoints,2))*100));
