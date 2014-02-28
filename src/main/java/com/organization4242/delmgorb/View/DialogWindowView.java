@@ -32,7 +32,8 @@ public class DialogWindowView extends JDialog {
     private void init() {
         setSize(200, 100);
         setTitle("Computing..");
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setAlwaysOnTop(true);
 
         button = new JButton("Cancel");
