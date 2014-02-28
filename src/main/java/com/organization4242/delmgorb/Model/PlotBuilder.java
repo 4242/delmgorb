@@ -28,7 +28,9 @@ public class PlotBuilder extends Observable implements Observer {
                 phi0, theta0, psi0, integrationMethod, xMin, xMax, yMin, yMax);
         MultivariateFunction function = interpolatorModel.interpolate(p, interpolationMethod, numberOfSpheres);
         plotModel = new PlotModel(function, (float) xMin, (float) xMax, (float) yMin, (float) yMax);
-        plotView = new PlotView(plotModel);
+        plotView = new PlotView();
+        plotView.setTitleText(buildingAngle.toString());
+        plotView.setModel(plotModel);
         return plotView;
     }
 
