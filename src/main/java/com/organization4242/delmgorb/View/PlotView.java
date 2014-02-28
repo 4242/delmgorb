@@ -12,7 +12,11 @@ import java.awt.*;
 public class PlotView extends JPanel {
     JSurfacePanel surfacePanel;
 
-    public PlotView(PlotModel model) {
+    public PlotView() {
+        surfacePanel = new JSurfacePanel();
+    }
+    
+    public setModel(PlotModel model) {
         surfacePanel = new JSurfacePanel(model.getModel());
         setLayout(new BorderLayout());
         model.getModel().plot().execute();
