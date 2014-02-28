@@ -74,6 +74,7 @@ public class MainWindowController {
 
         public void done() {
             dialogWindowView.dispose();
+            view.setEnabled(true);
         }
 
         @Override
