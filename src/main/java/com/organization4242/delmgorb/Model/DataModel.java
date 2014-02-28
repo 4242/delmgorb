@@ -72,6 +72,30 @@ public class DataModel extends Observable {
         return array;
     }
 
+    private double GetAngleToPlot (double[] y1, BuildingAngle buildingAngle){
+        double angleToPlot = 0;
+        switch (buildingAngle) {
+            case Psi: {
+                double alpha_1  = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
+                double beta_1 = 2*(y1[1]*y1[2] + y1[0]*y1[3]);
+                angleToPlot = atan(beta_1 / alpha_1);
+                break;
+            }
+            case Phi: {
+                double gamma_2 = 2*(y1[2]*y1[3] + y1[0]*y1[1]);
+                double gamma_3 = y1[0]*y1[0] - y1[1]*y1[1] - y1[2]*y1[2] + y1[3]*y1[3];
+                angleToPlot = atan(gamma_2/gamma_3);
+                break;
+            }
+            case Theta: {
+                double gamma_1 = 2*(y1[1]*y1[3] - y1[0]*y1[2]);
+                angleToPlot = -asin(gamma_1);
+                break;
+            }
+        }
+        return angleToPlot;
+    }
+
     private double GetMaxValue () {
         double max = 0;
         return max;
@@ -83,23 +107,10 @@ public class DataModel extends Observable {
         PointsArray comboArray;
         comboArray = new PointsArray(numOfPoints, numOfPoints);
         FirstOrderIntegrator integrator = GetIntegrationMethod(method);
-
-        /*строим разбиение треугольника Белецкого (по сути плоскость параметров эпсилон-дельта) на точки*/
-
-        double eps = 0;
-        double del = 0;
-        for (int i = 0; i < numOfPoints; i++) {
-            eps = yMin + 1.0 * i * (yMax - yMin) / (numOfPoints - 1);
-            comboArray.y_val[i] = eps;
-            //System.out.println("y_val = " + comboArray.y_val[i]);
-        }
-        for (int j = 0; j < numOfPoints; j++) {
-            del = xMin + 1.0 * j * (xMax - xMin) / (numOfPoints - 1);
-            comboArray.x_val[j] = del;
-            //System.out.println("x_val = " + comboArray.x_val[j]);
-        }
-        //comboArray.x_val = DoFragmentation(xMin, xMax, numOfPoints);
-        //comboArray.y_val = DoFragmentation(yMin, yMax, numOfPoints);
+        comboArray.x_val = new double[numOfPoints];
+        comboArray.y_val = new double[numOfPoints];
+        comboArray.x_val = DoFragmentation(xMin, xMax, numOfPoints);
+        comboArray.y_val = DoFragmentation(yMin, yMax, numOfPoints);
         double[] initialState = GetInitialVector(phi0, psi0, theta0);
         for (int i = 0; i < numOfPoints; i++) {
             for (int j = 0; j < numOfPoints; j++) {
@@ -113,26 +124,7 @@ public class DataModel extends Observable {
                     FirstOrderDifferentialEquations ode = new LibrationODE(1000, comboArray.y_val[i],
                             comboArray.x_val[j], 0.001078011072);
                     integrator.integrate(ode, 0.0, initialState, time_state, y1);// now y1 contains final state at time t/100
-                    double angleToPlot = 0;
-                    switch (buildingAngle) {
-                        case Psi: {
-                            double alpha_1  = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
-                            double beta_1 = 2*(y1[1]*y1[2] + y1[0]*y1[3]);
-                            angleToPlot = atan(beta_1 / alpha_1);
-                            break;
-                        }
-                        case Phi: {
-                            double gamma_2 = 2*(y1[2]*y1[3] + y1[0]*y1[1]);
-                            double gamma_3 = y1[0]*y1[0] - y1[1]*y1[1] - y1[2]*y1[2] + y1[3]*y1[3];
-                            angleToPlot = atan(gamma_2/gamma_3);
-                            break;
-                        }
-                        case Theta: {
-                            double gamma_1 = 2*(y1[1]*y1[3] - y1[0]*y1[2]);
-                            angleToPlot = -asin(gamma_1);
-                            break;
-                        }
-                    }
+                    double angleToPlot = GetAngleToPlot(y1, buildingAngle);
                     if (stop)
                         return null;
                     if (angleToPlot >= max) max = angleToPlot;
