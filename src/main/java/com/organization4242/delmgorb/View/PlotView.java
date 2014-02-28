@@ -17,7 +17,7 @@ public class PlotView extends JPanel {
     }
     
     public void setModel(PlotModel model) {
-        surfacePanel = new JSurfacePanel(model.getModel());
+        surfacePanel.setModel(model.getModel());
         setLayout(new BorderLayout());
         model.getModel().plot().execute();
         surfacePanel.setBackground(Color.white);
