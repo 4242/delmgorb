@@ -116,7 +116,7 @@ public class MainWindowController {
             if (tf.getText().equals("")) {
                 canDraw = false;
                 JOptionPane.showMessageDialog(view, "Please fill all fields");
-                return;
+                return false;
             }
         }
 
