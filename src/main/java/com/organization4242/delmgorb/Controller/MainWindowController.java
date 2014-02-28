@@ -1,9 +1,10 @@
 package com.organization4242.delmgorb.Controller;
 
 import com.organization4242.delmgorb.Model.*;
+import com.organization4242.delmgorb.View.DialogWindowView;
+import com.organization4242.delmgorb.View.MainWindowView;
 import com.organization4242.delmgorb.View.PlotView;
 import com.organization4242.delmgorb.View.PlotWindowView;
-import com.organization4242.delmgorb.View.MainWindowView;
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
 import javax.swing.*;
@@ -18,7 +19,6 @@ public class MainWindowController {
     private MainWindowModel model;
     private MainWindowView view;
     private Boolean canDraw = true;
-    private Boolean isPlotGenerating = false;
 
     private String[] bounds;
 
@@ -37,7 +37,30 @@ public class MainWindowController {
     private int numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
 
+    DialogWindowView dialogWindowView;
+
+    public MainWindowController(MainWindowView view, MainWindowModel model) {
+        this.model = model;
+        this.view = view;
+        dialogWindowView = new DialogWindowView(view);
+        for (JTextField tf : view.getTextFields()) {
+            tf.addFocusListener(focusListener);
+        }
+        for (JTextField tf : view.getBoundsTextFields()) {
+            tf.addFocusListener(focusListener);
+        }
+        view.getButton().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                drawPlot();
+            }
+        });
+        view.getNumberOfPoints().addFocusListener(focusListener);
+        view.getTimeStep().addFocusListener(focusListener);
+    }
+
     private class Task extends SwingWorker<Void, Integer> implements Observer{
+
         @Override
         protected Void doInBackground() throws Exception {
             PlotBuilder builder = new PlotBuilder();
@@ -46,63 +69,35 @@ public class MainWindowController {
                     integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
             plotWindowView.display();
-            isPlotGenerating = false;
-            view.getProgressBar().setValue(0);
             return null;
+        }
+
+        public void done() {
+            dialogWindowView.dispose();
         }
 
         @Override
         public void update(Observable o, Object arg) {
-            view.getProgressBar().setValue((Integer) arg);
+            dialogWindowView.getProgressBar().setValue((Integer) arg);
         }
     }
-
-    public MainWindowController(MainWindowView view, MainWindowModel model) {
-        this.model = model;
-        this.view = view;
-        for (JTextField tf : view.getTextFields()) {
-            tf.addFocusListener(focusListener);
-        }
-        for (JTextField tf : view.getBoundsTextFields()) {
-            tf.addFocusListener(focusListener);
-        }
-        view.getButton().addMouseListener(mouseListener);
-        view.getNumberOfPoints().addFocusListener(focusListener);
-        view.getTimeStep().addFocusListener(focusListener);
-    }
-
-    private MouseListener mouseListener = new MouseAdapter() {
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            drawPlot();
-        }
-    };
 
     private void drawPlot() {
-        canDraw = true;
-
-        if (!isPlotGenerating && validate()) {
-            isPlotGenerating = true;
-        } else {
-            return;
-        }
+        canDraw = validate();
 
         if (canDraw) {
-            System.out.println("Drawing plot:");
-            System.out.println("    number of points = " + numberOfPoints);
-            System.out.println("    time step = " + timeStep);
-            System.out.println("    time period = " + timePeriod);
-            System.out.println("    method = " + integrationMethod);
-            System.out.println("    xMin = " + xMin);
-            System.out.println("    xMax = " + xMax);
-            System.out.println("    yMin = " + yMin);
-            System.out.println("    yMax = " + yMax);
-            System.out.println("  Phi(0) = " + phi0);
-            System.out.println("  Psi(0) = " + psi0);
-            System.out.println("  Theta(0) = " + theta0);
-
             try {
-                new Task().execute();
+                final Task task = new Task();
+                task.execute();
+                view.setEnabled(false);
+                dialogWindowView.display();
+                dialogWindowView.getButton().addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        task.cancel(true);
+                        dialogWindowView.dispose();
+                    }
+                });
             } catch (NumberIsTooSmallException ex) {
                 JOptionPane.showMessageDialog(view, "Number of points is too small");
             }
@@ -111,14 +106,6 @@ public class MainWindowController {
 
     private Boolean validate() {
         String validationMessage = "";
-
-        for (JTextField tf : view.getTextFields()) {
-            if (tf.getText().equals("")) {
-                canDraw = false;
-                JOptionPane.showMessageDialog(view, "Please fill all fields");
-                return false;
-            }
-        }
 
         try {
             bounds = new String[]{view.getBoundsTextFields()[0].getText(),
@@ -141,8 +128,7 @@ public class MainWindowController {
             numberOfSpheres = Integer.parseInt(view.getNumberOfSpheresTextField().getText());
             interpolationMethod = InterpolationMethods.Microsphere;
         } catch (Exception ex) {
-            canDraw = false;
-            validationMessage = validationMessage.concat(ex.toString());
+            validationMessage = validationMessage.concat("Check your parameters");
             JOptionPane.showMessageDialog(view, validationMessage);
             return false;
         }
