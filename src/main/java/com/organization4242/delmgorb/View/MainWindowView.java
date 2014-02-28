@@ -145,7 +145,7 @@ public class MainWindowView extends JFrame {
         boundsTextFields[3].setText("1");
 
         numberOfPointsTextField = new JTextField(4);
-        numberOfPointsTextField.setText("4");
+        numberOfPointsTextField.setText("10");
         timeStepTextField = new JTextField(4);
         timeStepTextField.setText("0.5");
         periodToInterpolateTextField = new JTextField(6);

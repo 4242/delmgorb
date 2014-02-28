@@ -115,7 +115,7 @@ public class DataModel extends Observable {
                 out.print(" val = ");out.println(comboArray.f_val[j][i]);
                 //Notifying progress bar
                 setChanged();
-                notifyObservers((int) (((double) ((i + 1)*numOfPoints + j + 1)/Math.pow(numOfPoints + 1,2))*100));
+                notifyObservers((int) (((double) (i*numOfPoints + j + 1)/Math.pow(numOfPoints,2))*100));
             }
         }
         out.println("Outside buildNewPoints");
