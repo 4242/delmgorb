@@ -96,8 +96,20 @@ public class DataModel extends Observable {
         return angleToPlot;
     }
 
-    private double GetMaxValue () {
+    private double GetMaxValue (BuildingAngle buildingAngle,
+                                double time, double timeStep, double epsilon, double delta,
+                                FirstOrderIntegrator integrator, double[] initialState) {
         double max = 0;
+        for (int t = 1; t <= time/timeStep; t++) {
+            double[] finalState;
+            finalState = new double[] { 0, 0, 0, 0, 0, 0, 0 };
+            double time_state;
+            time_state = 1.0*t*timeStep;
+            FirstOrderDifferentialEquations ode = new LibrationODE(1000, epsilon, delta, 0.001078011072);
+            integrator.integrate(ode, 0.0, initialState, time_state, finalState);
+            double angleToPlot = GetAngleToPlot(finalState, buildingAngle);
+            if (angleToPlot >= max) max = angleToPlot;
+        }
         return max;
     }
 
@@ -114,22 +126,10 @@ public class DataModel extends Observable {
         double[] initialState = GetInitialVector(phi0, psi0, theta0);
         for (int i = 0; i < numOfPoints; i++) {
             for (int j = 0; j < numOfPoints; j++) {
-                double max;
-                max = 0;
-                for (int t = 1; t <= time/timeStep; t++) {
-                    double[] y1; // final state
-                    y1 = new double[] { 0, 0, 0, 0, 0, 0, 0 };
-                    double time_state;
-                    time_state = 1.0*t*timeStep;
-                    FirstOrderDifferentialEquations ode = new LibrationODE(1000, comboArray.y_val[i],
-                            comboArray.x_val[j], 0.001078011072);
-                    integrator.integrate(ode, 0.0, initialState, time_state, y1);// now y1 contains final state at time t/100
-                    double angleToPlot = GetAngleToPlot(y1, buildingAngle);
-                    if (stop)
-                        return null;
-                    if (angleToPlot >= max) max = angleToPlot;
-                }
-                comboArray.f_val[j][i] = max;
+                comboArray.f_val[j][i] = GetMaxValue(buildingAngle, time, timeStep,
+                        comboArray.y_val[i], comboArray.x_val[j], integrator, initialState);;
+                if (stop)
+                    return null;
                 //Notifying progress bar
                 setChanged();
                 notifyObservers((int) (((double) (i*numOfPoints + j + 1)/Math.pow(numOfPoints,2))*100));
