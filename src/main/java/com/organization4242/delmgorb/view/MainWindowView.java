@@ -10,6 +10,12 @@ import java.awt.*;
  * Created by ilya-murzinov on 22.02.14.
  */
 public class MainWindowView extends JFrame {
+    private static final int NUMBER_OF_EQUATION_PARAMETERS = 14;
+    private static final int HEIGHT = 650;
+    private static final int WIDTH =400;
+    private static final int TEXT_FIELD_MIN_WIDTH = 4;
+    private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
+
     //Internal panels
     private JPanel equationParametersPanel = new JPanel();
     private JPanel integrationParametersPanel = new JPanel();
@@ -35,9 +41,8 @@ public class MainWindowView extends JFrame {
     private JLabel thetaLabel = new JLabel("THETA(0):");
 
     //UI Controls
-    private int parametersNumber = 14;
-    private JTextField[] textFields = new JTextField[parametersNumber];
-    private JTextField[] boundsTextFields = new JTextField[4];
+    private JTextField[] textFields = new JTextField[NUMBER_OF_EQUATION_PARAMETERS];
+    private JTextField[] boundsTextFields = new JTextField[TEXT_FIELD_MIN_WIDTH];
     private JTextField numberOfPointsTextField;
     private JTextField timeStepTextField;
     private JTextField periodToInterpolateTextField;
@@ -101,7 +106,7 @@ public class MainWindowView extends JFrame {
     public MainWindowView() {
         //Setting window parameters
         setTitle("Delmgorb v1.0");
-        setSize(400, 650);
+        setSize(WIDTH, HEIGHT);
         setVisible(true);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -126,31 +131,31 @@ public class MainWindowView extends JFrame {
      */
     private void init() {
 
-        for (int i=0; i<parametersNumber; i++) {
-            textFields[i] = new JTextField(4);
+        for (int i=0; i< NUMBER_OF_EQUATION_PARAMETERS; i++) {
+            textFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
             textFields[i].setText("0");
         }
         for (int i=0; i<4; i++) {
-            boundsTextFields[i] = new JTextField(4);
+            boundsTextFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
         }
         boundsTextFields[0].setText("1");
         boundsTextFields[1].setText("2");
         boundsTextFields[2].setText("0.05");
         boundsTextFields[3].setText("1");
 
-        numberOfPointsTextField = new JTextField(4);
+        numberOfPointsTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         numberOfPointsTextField.setText("10");
-        timeStepTextField = new JTextField(4);
+        timeStepTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         timeStepTextField.setText("0.5");
-        periodToInterpolateTextField = new JTextField(6);
+        periodToInterpolateTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         periodToInterpolateTextField.setText("100");
-        numberOfSpheresTextField = new JTextField(4);
+        numberOfSpheresTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         numberOfSpheresTextField.setText("100");
-        phiTextField = new JTextField(4);
+        phiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         phiTextField.setText("0.05");
-        psiTextField = new JTextField(4);
+        psiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         psiTextField.setText("0.05");
-        thetaTextField = new JTextField(4);
+        thetaTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         thetaTextField.setText("0.05");
 
         button = new JButton("Draw!");
@@ -179,7 +184,7 @@ public class MainWindowView extends JFrame {
 
         //Set GridBagConstraints
         constraints.anchor = GridBagConstraints.NORTHWEST;
-        constraints.insets = new Insets(5,5,5,5);
+        constraints.insets = DEFAULT_INSETS;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1;
@@ -217,21 +222,21 @@ public class MainWindowView extends JFrame {
         //Create GridBagConstraints
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTHWEST;
-        constraints.insets = new Insets(5,5,5,5);
+        constraints.insets = DEFAULT_INSETS;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1;
         constraints.weighty = 1;
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
-        for (int i = 0; i < parametersNumber/2; i++) {
+        for (int i = 0; i < NUMBER_OF_EQUATION_PARAMETERS /2; i++) {
             constraints.gridx = i;
             gridBagLayout.setConstraints(textFields[i], constraints);
             equationParametersPanel.add(textFields[i]);
         }
         constraints.gridy++;
-        for (int i = parametersNumber/2; i < parametersNumber; i++) {
-            constraints.gridx = i - parametersNumber/2;
+        for (int i = NUMBER_OF_EQUATION_PARAMETERS /2; i < NUMBER_OF_EQUATION_PARAMETERS; i++) {
+            constraints.gridx = i - NUMBER_OF_EQUATION_PARAMETERS /2;
             gridBagLayout.setConstraints(textFields[i], constraints);
             equationParametersPanel.add(textFields[i]);
         }
@@ -249,7 +254,7 @@ public class MainWindowView extends JFrame {
         //Create GridBagConstraints
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTHWEST;
-        constraints.insets = new Insets(5,5,5,5);
+        constraints.insets = DEFAULT_INSETS;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1;
@@ -340,7 +345,7 @@ public class MainWindowView extends JFrame {
         //Create GridBagConstraints
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTHWEST;
-        constraints.insets = new Insets(5,5,5,5);
+        constraints.insets = DEFAULT_INSETS;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1;
@@ -363,7 +368,7 @@ public class MainWindowView extends JFrame {
         //Create GridBagConstraints
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.NORTHWEST;
-        constraints.insets = new Insets(5,5,5,5);
+        constraints.insets = DEFAULT_INSETS;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1;
@@ -402,7 +407,7 @@ public class MainWindowView extends JFrame {
         //Create GridBagConstraints
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.anchor = GridBagConstraints.SOUTHEAST;
-        constraints.insets = new Insets(5,5,5,5);
+        constraints.insets = DEFAULT_INSETS;
         constraints.gridx = 0;
         constraints.gridy = 0;
         constraints.weightx = 1;
