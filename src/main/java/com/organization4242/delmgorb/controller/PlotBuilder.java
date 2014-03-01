@@ -32,7 +32,7 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         MultivariateFunction function = interpolatorModel.interpolate(p, interpolationMethod, numberOfSpheres);
         PlotModel plotModel = new PlotModel(function, (float) xMin, (float) xMax, (float) yMin, (float) yMax);
         PlotView plotView = new PlotView();
-        plotView.setTitleText("X -> Epsilon, Y -> Delta, Z -> " + buildingAngle);
+        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + buildingAngle + " " + integrationMethod);
         plotView.setModel(plotModel);
         plotView.getTask().execute();
         DialogWindowView dialogWindowView;

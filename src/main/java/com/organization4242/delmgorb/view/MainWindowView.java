@@ -150,7 +150,7 @@ public class MainWindowView extends JFrame {
         periodToInterpolateTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         periodToInterpolateTextField.setText("100");
         numberOfSpheresTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        numberOfSpheresTextField.setText("100");
+        numberOfSpheresTextField.setText("50");
         phiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         phiTextField.setText("0.05");
         psiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);

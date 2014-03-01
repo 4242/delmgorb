@@ -19,13 +19,6 @@ public class DataModel extends Observable {
 
     }
 
-    public PointsArray buildPoints(int numberOfPoints, BuildingAngle buildingAngle,
-                     double timePeriod, double timeStep, double phi0, double theta0, double psi0,
-                     IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
-        return buildNewPoints(numberOfPoints, buildingAngle, timePeriod, timeStep,
-                phi0, theta0, psi0, method, xMin, xMax, yMin, yMax);
-    }
-
     private FirstOrderIntegrator getIntegrationMethod(IntegrationMethods method){
         FirstOrderIntegrator integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
         switch (method) {
@@ -111,22 +104,37 @@ public class DataModel extends Observable {
                                double time, double timeStep, double epsilon, double delta,
                                FirstOrderIntegrator integrator, double[] initialState) {
         double max = 0;
-        for (int t = 1; t <= time/timeStep; t++) {
+        double timeOfMax = 0;
+        double t = timeStep;
+        while (t <= time){
+            t+=10*timeStep;
             double[] finalState;
             finalState = new double[] { 0, 0, 0, 0, 0, 0, 0 };
-            double timeState;
-            timeState = 1.0*t*timeStep;
             FirstOrderDifferentialEquations ode = new LibrationODE(1000, epsilon, delta, 0.001078011072);
-            integrator.integrate(ode, 0.0, initialState, timeState, finalState);
+            integrator.integrate(ode, 0.0, initialState, t, finalState);
             double angleToPlot = getAngleToPlot(finalState, buildingAngle);
             if (angleToPlot >= max) {
                 max = angleToPlot;
+                timeOfMax = t;
+            }
+        }
+        t = max(timeOfMax - 20, 0.0);
+        while (t <= min(time, timeOfMax + 20)){
+            t+=timeStep;
+            double[] finalState;
+            finalState = new double[] { 0, 0, 0, 0, 0, 0, 0 };
+            FirstOrderDifferentialEquations ode = new LibrationODE(1000, epsilon, delta, 0.001078011072);
+            integrator.integrate(ode, 0.0, initialState, t, finalState);
+            double angleToPlot = getAngleToPlot(finalState, buildingAngle);
+            if (angleToPlot >= max) {
+                max = angleToPlot;
+                timeOfMax = t;
             }
         }
         return max;
     }
 
-    private PointsArray buildNewPoints (int numOfPoints, BuildingAngle buildingAngle,
+    public PointsArray buildPoints (int numOfPoints, BuildingAngle buildingAngle,
                                         double time, double timeStep, double phi0, double theta0, double psi0,
                                         IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
         PointsArray comboArray;
@@ -137,8 +145,8 @@ public class DataModel extends Observable {
         double[] initialState = getInitialVector(phi0, psi0, theta0);
         for (int i = 0; i < numOfPoints; i++) {
             for (int j = 0; j < numOfPoints; j++) {
-                comboArray.getfVal()[i][j] = getMaxValue(buildingAngle, time, timeStep,
-                        comboArray.getxVal()[i], comboArray.getyVal()[j], integrator, initialState);
+                comboArray.getfVal()[j][i] = getMaxValue(buildingAngle, time, timeStep,
+                        comboArray.getyVal()[i], comboArray.getxVal()[j], integrator, initialState);
                 if (stop) {
                     return null;
                 }
