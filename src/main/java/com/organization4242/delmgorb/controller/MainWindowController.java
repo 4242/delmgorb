@@ -1,6 +1,7 @@
 package com.organization4242.delmgorb.controller;
 
 import com.organization4242.delmgorb.model.*;
+import com.organization4242.delmgorb.utils.XmlExporter;
 import com.organization4242.delmgorb.view.DialogWindowView;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.organization4242.delmgorb.view.PlotView;
@@ -100,6 +101,8 @@ public class MainWindowController {
         canDraw = validate();
 
         if (canDraw) {
+            XmlExporter.init();
+            XmlExporter.exportConfig(view);
             try {
                 final Task task = new Task();
                 task.execute();

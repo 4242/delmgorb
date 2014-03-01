@@ -1,5 +1,6 @@
 package com.organization4242.delmgorb.model;
 
+import com.organization4242.delmgorb.utils.XmlExporter;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.*;
@@ -150,6 +151,7 @@ public class DataModel extends Observable {
                 if (stop) {
                     return null;
                 }
+                XmlExporter.exportParameter(comboArray.getxVal()[j], comboArray.getyVal()[i], comboArray.getfVal()[j][i]);
                 //Notifying progress bar
                 setChanged();
                 notifyObservers((int) (((double) (i*numOfPoints + j + 1)/Math.pow(numOfPoints,2))*100));
@@ -157,6 +159,7 @@ public class DataModel extends Observable {
         }
         setChanged();
         notifyObservers("calculated");
+        XmlExporter.close();
         return comboArray;
     }
 }
