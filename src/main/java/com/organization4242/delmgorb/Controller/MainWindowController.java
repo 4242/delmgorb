@@ -74,7 +74,7 @@ public class MainWindowController {
         protected Void doInBackground() throws Exception {
             builder = new PlotBuilder();
             builder.addObserver(this);
-            PlotView plotView = builder.build(numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
+            PlotView plotView = builder.build(view, numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
                     integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
             plotWindowView.display();
