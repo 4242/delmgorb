@@ -16,6 +16,13 @@ public class MainWindowView extends JFrame {
     private static final int TEXT_FIELD_MIN_WIDTH = 4;
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
 
+    //Menu
+    private JMenuBar menuBar = new JMenuBar();
+    private JMenu menu = new JMenu("File");
+    private JMenuItem ImportConfigMenuItem = new JMenuItem("Import Config");
+    private JMenuItem ImportDataMenuItem = new JMenuItem("Import Data and Config");
+    private JMenuItem ExportDataMenuItem = new JMenuItem("Export Data and Config");
+
     //Internal panels
     private JPanel equationParametersPanel = new JPanel();
     private JPanel integrationParametersPanel = new JPanel();
@@ -54,7 +61,19 @@ public class MainWindowView extends JFrame {
     private JTextField thetaTextField;
     private JButton button;
 
-    //Getters
+    //Accessors
+    public JMenuItem getImportConfigMenuItem() {
+        return ImportConfigMenuItem;
+    }
+
+    public JMenuItem getImportDataMenuItem() {
+        return ImportDataMenuItem;
+    }
+
+    public JMenuItem getExportDataMenuItem() {
+        return ExportDataMenuItem;
+    }
+
     public JTextField[] getTextFields() {
         return textFields;
     }
@@ -121,9 +140,20 @@ public class MainWindowView extends JFrame {
 
         init();
 
+        addMenu();
+
         createPanelStructure();
 
         placeControls();
+    }
+
+    private void addMenu() {
+        menu.add(ImportDataMenuItem);
+        menu.add(ImportConfigMenuItem);
+        menu.add(new JSeparator());
+        menu.add(ExportDataMenuItem);
+        menuBar.add(menu);
+        setJMenuBar(menuBar);
     }
 
     /**

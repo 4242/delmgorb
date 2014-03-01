@@ -1,7 +1,9 @@
 package com.organization4242.delmgorb.controller;
 
 import com.organization4242.delmgorb.model.*;
+import com.organization4242.delmgorb.utils.OpenFileHelper;
 import com.organization4242.delmgorb.utils.XmlExporter;
+import com.organization4242.delmgorb.utils.XmlImporter;
 import com.organization4242.delmgorb.view.DialogWindowView;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.organization4242.delmgorb.view.PlotView;
@@ -54,6 +56,9 @@ public class MainWindowController {
         for (JTextField tf : view.getBoundsTextFields()) {
             tf.addFocusListener(focusListener);
         }
+        view.getImportDataMenuItem().addActionListener(menuItemActionListener);
+        view.getImportConfigMenuItem().addActionListener(menuItemActionListener);
+        view.getExportDataMenuItem().addActionListener(menuItemActionListener);
         view.getButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -179,6 +184,21 @@ public class MainWindowController {
         
         return true;
     }
+
+    private ActionListener menuItemActionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource().equals(view.getImportDataMenuItem())) {
+                XmlImporter.importData(view);
+            }
+            else if (e.getSource().equals(view.getImportConfigMenuItem())) {
+                XmlImporter.importConfig(view);
+            }
+            else if (e.getSource().equals(view.getExportDataMenuItem())) {
+                XmlExporter.close(OpenFileHelper.open(view));
+            }
+        }
+    };
 
     private FocusListener focusListener = new FocusAdapter() {
         @Override

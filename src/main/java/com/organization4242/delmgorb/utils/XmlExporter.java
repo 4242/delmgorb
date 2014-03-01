@@ -18,16 +18,18 @@ import java.io.File;
  * Created by ilya-murzinov on 01.03.14.
  */
 public class XmlExporter {
-    static DocumentBuilderFactory docFactory;
-    static DocumentBuilder docBuilder;
-    static Document doc;
-    static Element data;
-    static Element config;
+    private static Document doc;
+    private static Element data;
+    private static Element config;
+
+    public Boolean canExport() {
+        return (doc == null);
+    }
 
     public static void init() {
         try {
-            docFactory = DocumentBuilderFactory.newInstance();
-            docBuilder = docFactory.newDocumentBuilder();
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
             doc = docBuilder.newDocument();
             Element rootElement = doc.createElement("export");
@@ -66,13 +68,13 @@ public class XmlExporter {
         config.appendChild(parameter);
     }
 
-    public static void close() {
+    public static void close(File file) {
         try {
             // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File("file.xml"));
+            StreamResult result = new StreamResult(file);
 
             // Output to console for testing
             // StreamResult result = new StreamResult(System.out);

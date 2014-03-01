@@ -159,7 +159,6 @@ public class DataModel extends Observable {
         }
         setChanged();
         notifyObservers("calculated");
-        XmlExporter.close();
         return comboArray;
     }
 }
