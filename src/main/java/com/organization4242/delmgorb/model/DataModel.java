@@ -132,15 +132,13 @@ public class DataModel extends Observable {
         PointsArray comboArray;
         comboArray = new PointsArray(numOfPoints, numOfPoints);
         FirstOrderIntegrator integrator = getIntegrationMethod(method);
-        comboArray.setxVal(new double[numOfPoints]);
-        comboArray.setyVal(new double[numOfPoints]);
         comboArray.setxVal(doFragmentation(xMin, xMax, numOfPoints));
         comboArray.setyVal(doFragmentation(yMin, yMax, numOfPoints));
         double[] initialState = getInitialVector(phi0, psi0, theta0);
         for (int i = 0; i < numOfPoints; i++) {
             for (int j = 0; j < numOfPoints; j++) {
                 comboArray.getfVal()[i][j] = getMaxValue(buildingAngle, time, timeStep,
-                        comboArray.getyVal()[i], comboArray.getxVal()[j], integrator, initialState);
+                        comboArray.getxVal()[i], comboArray.getyVal()[j], integrator, initialState);
                 if (stop) {
                     return null;
                 }

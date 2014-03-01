@@ -24,9 +24,9 @@ public class PointsArray {
 
     public void setxVal(double[] newXVal) {
         if (newXVal == null) {
-            this.yVal = new double[0];
+            this.xVal = new double[0];
         } else {
-            this.yVal = Arrays.copyOf(newXVal, newXVal.length);
+            this.xVal = Arrays.copyOf(newXVal, newXVal.length);
         }
     }
 
