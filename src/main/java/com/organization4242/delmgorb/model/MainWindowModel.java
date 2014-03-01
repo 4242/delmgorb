@@ -1,4 +1,4 @@
-package com.organization4242.delmgorb.Model;
+package com.organization4242.delmgorb.model;
 
 /**
  * Created by ilya-murzinov on 22.02.14.

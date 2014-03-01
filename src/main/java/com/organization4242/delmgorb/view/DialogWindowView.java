@@ -1,4 +1,4 @@
-package com.organization4242.delmgorb.View;
+package com.organization4242.delmgorb.view;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,8 +63,9 @@ public class DialogWindowView extends JDialog {
         constraints.gridy++;
         gridBagLayout.setConstraints(button, constraints);
 
-        if (addCancelButton)
+        if (addCancelButton) {
             add(button);
+        }
         add(progressBar);
     }
 

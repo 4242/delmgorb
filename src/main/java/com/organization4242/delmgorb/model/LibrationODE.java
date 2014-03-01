@@ -1,23 +1,21 @@
-package com.organization4242.delmgorb.Model;
+package com.organization4242.delmgorb.model;
 
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
-
-import static java.lang.System.out;
 
 /**
  * Created by ilya-murzinov on 19.02.14.
  */
 class LibrationODE implements FirstOrderDifferentialEquations {
-    private double A;
+    private double a;
     private double epsilon;
     private double delta;
-    private double omega_0;
+    private double omega0;
 
-    public LibrationODE(double A, double epsilon, double delta, double omega_0) {
-        this.A       = A;
+    public LibrationODE(double a, double epsilon, double delta, double omega0) {
+        this.a = a;
         this.epsilon = epsilon;
         this.delta   = delta;
-        this.omega_0 = omega_0;
+        this.omega0 = omega0;
     }
 
     public int getDimension() {

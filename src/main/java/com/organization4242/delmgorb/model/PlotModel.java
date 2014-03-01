@@ -1,4 +1,4 @@
-package com.organization4242.delmgorb.Model;
+package com.organization4242.delmgorb.model;
 
 import net.ericaro.surfaceplotter.DefaultSurfaceModel;
 import net.ericaro.surfaceplotter.Mapper;

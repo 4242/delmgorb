@@ -1,10 +1,10 @@
-package com.organization4242.delmgorb.Model;
+package com.organization4242.delmgorb.model;
 
 /**
  * Created by ilya-murzinov on 24.02.14.
  */
 public enum BuildingAngle {
-    Psi,
-    Phi,
-    Theta,
+    PSI,
+    PHI,
+    THETA,
 }

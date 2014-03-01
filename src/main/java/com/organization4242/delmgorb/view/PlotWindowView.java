@@ -1,4 +1,4 @@
-package com.organization4242.delmgorb.View;
+package com.organization4242.delmgorb.view;
 
 import javax.swing.*;
 
@@ -6,10 +6,7 @@ import javax.swing.*;
  * Created by ilya-murzinov on 22.02.14.
  */
 public class PlotWindowView extends JFrame {
-    private PlotView view;
-
     public PlotWindowView(PlotView view) {
-        this.view = view;
         setTitle("Plot");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

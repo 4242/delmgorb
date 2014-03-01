@@ -1,10 +1,10 @@
-package com.organization4242.delmgorb.Controller;
+package com.organization4242.delmgorb.controller;
 
-import com.organization4242.delmgorb.Model.*;
-import com.organization4242.delmgorb.View.DialogWindowView;
-import com.organization4242.delmgorb.View.MainWindowView;
-import com.organization4242.delmgorb.View.PlotView;
-import com.organization4242.delmgorb.View.PlotWindowView;
+import com.organization4242.delmgorb.model.*;
+import com.organization4242.delmgorb.view.DialogWindowView;
+import com.organization4242.delmgorb.view.MainWindowView;
+import com.organization4242.delmgorb.view.PlotView;
+import com.organization4242.delmgorb.view.PlotWindowView;
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
 import javax.swing.*;
@@ -37,7 +37,7 @@ public class MainWindowController {
     private float yMin;
     private float yMax;
     private int numberOfSpheres;
-    private InterpolationMethods interpolationMethod = InterpolationMethods.Microsphere;
+    private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
 
     private DialogWindowView dialogWindowView;
 
@@ -87,8 +87,9 @@ public class MainWindowController {
 
         @Override
         public void update(Observable o, Object arg) {
-            if (arg.getClass().equals(Integer.class))
+            if (arg.getClass().equals(Integer.class)) {
                 dialogWindowView.getProgressBar().setValue((Integer) arg);
+            }
             if (arg.getClass().equals(String.class)) {
                 dialogWindowView.dispose();
             }
@@ -143,7 +144,7 @@ public class MainWindowController {
             yMin = Float.parseFloat(bounds[2]);
             yMax = Float.parseFloat(bounds[3]);
             numberOfSpheres = Integer.parseInt(view.getNumberOfSpheresTextField().getText());
-            interpolationMethod = InterpolationMethods.Microsphere;
+            interpolationMethod = InterpolationMethods.MICROSPHERE;
         } catch (Exception ex) {
             validationMessage = validationMessage.concat("Check your parameters");
             JOptionPane.showMessageDialog(view, validationMessage);

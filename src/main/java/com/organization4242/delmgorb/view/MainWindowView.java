@@ -1,7 +1,7 @@
-package com.organization4242.delmgorb.View;
+package com.organization4242.delmgorb.view;
 
-import com.organization4242.delmgorb.Model.BuildingAngle;
-import com.organization4242.delmgorb.Model.IntegrationMethods;
+import com.organization4242.delmgorb.model.BuildingAngle;
+import com.organization4242.delmgorb.model.IntegrationMethods;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,7 +16,7 @@ public class MainWindowView extends JFrame {
     private JPanel interpolationParametersPanel = new JPanel();
     private JPanel initialConditionsPanel = new JPanel();
     private JPanel buttonsPanel = new JPanel();
-    GridBagLayout gridBagLayout = new GridBagLayout();
+    private GridBagLayout gridBagLayout = new GridBagLayout();
 
     //Labels
     private JLabel integrationMethodLabel = new JLabel("Method:");
@@ -30,9 +30,9 @@ public class MainWindowView extends JFrame {
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
     private JLabel integrationAngle = new JLabel("Angle to plot:");
     private JLabel periodToInterpolateLabel = new JLabel("Period:");
-    private JLabel phiLabel = new JLabel("Phi(0):");
-    private JLabel psiLabel = new JLabel("Psi(0):");
-    private JLabel thetaLabel = new JLabel("Theta(0):");
+    private JLabel phiLabel = new JLabel("PHI(0):");
+    private JLabel psiLabel = new JLabel("PSI(0):");
+    private JLabel thetaLabel = new JLabel("THETA(0):");
 
     //UI Controls
     private int parametersNumber = 14;
@@ -111,8 +111,7 @@ public class MainWindowView extends JFrame {
         {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         }
-        catch(Exception e){
-            System.out.println(e);
+        catch(Exception e) {
         }
 
         init();
@@ -156,10 +155,10 @@ public class MainWindowView extends JFrame {
 
         button = new JButton("Draw!");
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
-        integrationMethodsComboBox.setSelectedItem(IntegrationMethods.DormandPrince8);
+        integrationMethodsComboBox.setSelectedItem(IntegrationMethods.DORMAND_PRINCE_8);
         integrationMethodsComboBox.setEditable(false);
         buildingAngleJComboBox = new JComboBox<BuildingAngle>(BuildingAngle.values());
-        buildingAngleJComboBox.setSelectedItem(BuildingAngle.Psi);
+        buildingAngleJComboBox.setSelectedItem(BuildingAngle.PSI);
         buildingAngleJComboBox.setEditable(false);
     }
 
@@ -388,14 +387,6 @@ public class MainWindowView extends JFrame {
         gridBagLayout.setConstraints(thetaLabel, constraints);
         constraints.gridx++;
         gridBagLayout.setConstraints(thetaTextField, constraints);
-
-        /*constraints.gridy++;
-        constraints.gridx = 0;
-        gridBagLayout.setConstraints(phiTextField, constraints);
-        constraints.gridy++;
-        gridBagLayout.setConstraints(psiTextField, constraints);
-        constraints.gridy++;
-        gridBagLayout.setConstraints(thetaTextField, constraints);*/
 
         initialConditionsPanel.add(phiLabel);
         initialConditionsPanel.add(phiTextField);

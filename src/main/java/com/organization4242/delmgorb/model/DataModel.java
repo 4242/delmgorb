@@ -1,4 +1,4 @@
-package com.organization4242.delmgorb.Model;
+package com.organization4242.delmgorb.model;
 
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
@@ -11,7 +11,7 @@ import static java.lang.Math.*;
 public class DataModel extends Observable {
     private Boolean stop = false;
 
-    public void Stop() {
+    public void stop() {
         stop = true;
     }
 
@@ -26,25 +26,36 @@ public class DataModel extends Observable {
                 phi0, theta0, psi0, method, xMin, xMax, yMin, yMax);
     }
 
-    private FirstOrderIntegrator GetIntegrationMethod (IntegrationMethods method){
+    private FirstOrderIntegrator getIntegrationMethod(IntegrationMethods method){
         FirstOrderIntegrator integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
         switch (method) {
-            case Euler: integrator = new EulerIntegrator(0.01); break;
-            case Midpoint: integrator = new MidpointIntegrator(0.05); break;
-            case ClassicalRungeKutta: integrator = new ClassicalRungeKuttaIntegrator(0.1); break;
-            case Gill: integrator = new GillIntegrator(0.1); break;
-            case ThreeEights: integrator = new ThreeEighthesIntegrator(0.05); break;
-            case HighamAndHall: integrator = new HighamHall54Integrator(0.05, 0.1, 1.0, 0.5);break;
-            case DormandPrince5: integrator = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);break;
-            case DormandPrince8: integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10); break;
-            case GraggBulirschStoer: integrator = new GraggBulirschStoerIntegrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10); break;
-            case AdamsBashforth: integrator = new AdamsBashforthIntegrator(3, 0.01, 0.05, 1.0, 0.5); break;
-            case AdamsMoulton: integrator = new AdamsMoultonIntegrator(2, 0.01, 0.05, 1.0, 0.5); break;
+            case EULER: integrator = new EulerIntegrator(0.01);
+                break;
+            case MIDPOINT: integrator = new MidpointIntegrator(0.05);
+                break;
+            case CLASSICAL_RUNGE_KUTTA: integrator = new ClassicalRungeKuttaIntegrator(0.1);
+                break;
+            case GILL: integrator = new GillIntegrator(0.1);
+                break;
+            case THREE_EIGHTS: integrator = new ThreeEighthesIntegrator(0.05);
+                break;
+            case HIGHAM_AND_HALL: integrator = new HighamHall54Integrator(0.05, 0.1, 1.0, 0.5);
+                break;
+            case DORMAND_PRINCE_5: integrator = new DormandPrince54Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+                break;
+            case DORMAND_PRINCE_8: integrator = new DormandPrince853Integrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+                break;
+            case GRAGG_BULIRSCH_STOER: integrator = new GraggBulirschStoerIntegrator(1.0e-8, 100.0, 1.0e-10, 1.0e-10);
+                break;
+            case ADAMS_BASHFORTH: integrator = new AdamsBashforthIntegrator(3, 0.01, 0.05, 1.0, 0.5);
+                break;
+            case ADAMS_MOULTON: integrator = new AdamsMoultonIntegrator(2, 0.01, 0.05, 1.0, 0.5);
+                break;
         }
         return integrator;
     }
 
-    private double[] GetInitialVector (double phi0, double theta0, double psi0){
+    private double[] getInitialVector(double phi0, double theta0, double psi0){
         /*вычисляем начальные условия. на входе они в самолетных углах, а нужны в кватернионах*/
         double[] y0; // initial state
         double sPh0 = sin((phi0 * PI) / 2);
@@ -62,7 +73,7 @@ public class DataModel extends Observable {
         return y0;
     }
 
-    private double[] DoFragmentation (double aMin, double aMax, int points){
+    private double[] doFragmentation(double aMin, double aMax, int points){
         double[] array = new double[points];
         double eps = 0;
         for (int i = 0; i < points; i++) {
@@ -72,43 +83,45 @@ public class DataModel extends Observable {
         return array;
     }
 
-    private double GetAngleToPlot (double[] y1, BuildingAngle buildingAngle){
+    private double getAngleToPlot(double[] y1, BuildingAngle buildingAngle){
         double angleToPlot = 0;
         switch (buildingAngle) {
-            case Psi: {
-                double alpha_1  = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
-                double beta_1 = 2*(y1[1]*y1[2] + y1[0]*y1[3]);
-                angleToPlot = atan(beta_1 / alpha_1);
+            case PSI: {
+                double alpha1  = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
+                double beta1 = 2*(y1[1]*y1[2] + y1[0]*y1[3]);
+                angleToPlot = atan(beta1 / alpha1);
                 break;
             }
-            case Phi: {
-                double gamma_2 = 2*(y1[2]*y1[3] + y1[0]*y1[1]);
-                double gamma_3 = y1[0]*y1[0] - y1[1]*y1[1] - y1[2]*y1[2] + y1[3]*y1[3];
-                angleToPlot = atan(gamma_2/gamma_3);
+            case PHI: {
+                double gamma2 = 2*(y1[2]*y1[3] + y1[0]*y1[1]);
+                double gamma3 = y1[0]*y1[0] - y1[1]*y1[1] - y1[2]*y1[2] + y1[3]*y1[3];
+                angleToPlot = atan(gamma2/gamma3);
                 break;
             }
-            case Theta: {
-                double gamma_1 = 2*(y1[1]*y1[3] - y1[0]*y1[2]);
-                angleToPlot = -asin(gamma_1);
+            case THETA: {
+                double gamma1 = 2*(y1[1]*y1[3] - y1[0]*y1[2]);
+                angleToPlot = -asin(gamma1);
                 break;
             }
         }
         return angleToPlot;
     }
 
-    private double GetMaxValue (BuildingAngle buildingAngle,
-                                double time, double timeStep, double epsilon, double delta,
-                                FirstOrderIntegrator integrator, double[] initialState) {
+    private double getMaxValue(BuildingAngle buildingAngle,
+                               double time, double timeStep, double epsilon, double delta,
+                               FirstOrderIntegrator integrator, double[] initialState) {
         double max = 0;
         for (int t = 1; t <= time/timeStep; t++) {
             double[] finalState;
             finalState = new double[] { 0, 0, 0, 0, 0, 0, 0 };
-            double time_state;
-            time_state = 1.0*t*timeStep;
+            double timeState;
+            timeState = 1.0*t*timeStep;
             FirstOrderDifferentialEquations ode = new LibrationODE(1000, epsilon, delta, 0.001078011072);
-            integrator.integrate(ode, 0.0, initialState, time_state, finalState);
-            double angleToPlot = GetAngleToPlot(finalState, buildingAngle);
-            if (angleToPlot >= max) max = angleToPlot;
+            integrator.integrate(ode, 0.0, initialState, timeState, finalState);
+            double angleToPlot = getAngleToPlot(finalState, buildingAngle);
+            if (angleToPlot >= max) {
+                max = angleToPlot;
+            }
         }
         return max;
     }
@@ -118,18 +131,19 @@ public class DataModel extends Observable {
                                         IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
         PointsArray comboArray;
         comboArray = new PointsArray(numOfPoints, numOfPoints);
-        FirstOrderIntegrator integrator = GetIntegrationMethod(method);
-        comboArray.x_val = new double[numOfPoints];
-        comboArray.y_val = new double[numOfPoints];
-        comboArray.x_val = DoFragmentation(xMin, xMax, numOfPoints);
-        comboArray.y_val = DoFragmentation(yMin, yMax, numOfPoints);
-        double[] initialState = GetInitialVector(phi0, psi0, theta0);
+        FirstOrderIntegrator integrator = getIntegrationMethod(method);
+        comboArray.setxVal(new double[numOfPoints]);
+        comboArray.setyVal(new double[numOfPoints]);
+        comboArray.setxVal(doFragmentation(xMin, xMax, numOfPoints));
+        comboArray.setyVal(doFragmentation(yMin, yMax, numOfPoints));
+        double[] initialState = getInitialVector(phi0, psi0, theta0);
         for (int i = 0; i < numOfPoints; i++) {
             for (int j = 0; j < numOfPoints; j++) {
-                comboArray.f_val[j][i] = GetMaxValue(buildingAngle, time, timeStep,
-                        comboArray.y_val[i], comboArray.x_val[j], integrator, initialState);;
-                if (stop)
+                comboArray.getfVal()[i][j] = getMaxValue(buildingAngle, time, timeStep,
+                        comboArray.getyVal()[i], comboArray.getxVal()[j], integrator, initialState);
+                if (stop) {
                     return null;
+                }
                 //Notifying progress bar
                 setChanged();
                 notifyObservers((int) (((double) (i*numOfPoints + j + 1)/Math.pow(numOfPoints,2))*100));
