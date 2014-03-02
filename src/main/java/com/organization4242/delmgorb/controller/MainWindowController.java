@@ -1,21 +1,25 @@
 package com.organization4242.delmgorb.controller;
 
+import com.organization4242.delmgorb.application.Application;
 import com.organization4242.delmgorb.model.*;
-import com.organization4242.delmgorb.model.OpenFileHelper;
-import com.organization4242.delmgorb.model.XmlExporter;
-import com.organization4242.delmgorb.model.XmlImporter;
 import com.organization4242.delmgorb.view.DialogWindowView;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.organization4242.delmgorb.view.PlotView;
 import com.organization4242.delmgorb.view.PlotWindowView;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
 
 /**
  * Created by ilya-murzinov on 22.02.14.
@@ -30,6 +34,9 @@ public class MainWindowController {
     private PropertyChangeSupport changes;
     private PlotBuilder builder = new PlotBuilder();
 
+    private MainWindowModelConverter mainWindowModelConverter = new MainWindowModelConverter();
+    XStream xStream = new XStream(new DomDriver());
+
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
         this.view = view;
@@ -40,7 +47,6 @@ public class MainWindowController {
             tf.addFocusListener(focusListener);
         }
         view.getImportDataMenuItem().addActionListener(menuItemActionListener);
-        view.getImportConfigMenuItem().addActionListener(menuItemActionListener);
         view.getExportDataMenuItem().addActionListener(menuItemActionListener);
         view.getButton().addMouseListener(new MouseAdapter() {
             @Override
@@ -87,8 +93,6 @@ public class MainWindowController {
         canDraw = validate();
 
         if (canDraw) {
-            XmlExporter.init();
-            XmlExporter.exportConfig(view);
             if (model.getPointsArray() == null) {
                 try {
                     final Task task = new Task();
@@ -117,24 +121,28 @@ public class MainWindowController {
         }
     }
 
+    private void updateModel() {
+        model.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
+        model.setBuildingAngle((BuildingAngle) view.getBuildingAngleJComboBox().getSelectedItem());
+        model.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
+        model.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
+        model.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
+        model.setPhi0(Double.parseDouble(view.getPhiTextField().getText()));
+        model.setPsi0(Double.parseDouble(view.getPsiTextField().getText()));
+        model.setTheta0(Double.parseDouble(view.getThetaTextField().getText()));
+        model.setxMin(Float.parseFloat(view.getBoundsTextFields()[0].getText()));
+        model.setxMax(Float.parseFloat(view.getBoundsTextFields()[1].getText()));
+        model.setyMin(Float.parseFloat(view.getBoundsTextFields()[2].getText()));
+        model.setyMax(Float.parseFloat(view.getBoundsTextFields()[3].getText()));
+        model.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
+        model.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
+    }
+
     private Boolean validate() {
         String validationMessage = "";
 
         try {
-            model.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
-            model.setBuildingAngle((BuildingAngle) view.getBuildingAngleJComboBox().getSelectedItem());
-            model.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
-            model.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
-            model.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
-            model.setPhi0(Double.parseDouble(view.getPhiTextField().getText()));
-            model.setPsi0(Double.parseDouble(view.getPsiTextField().getText()));
-            model.setTheta0(Double.parseDouble(view.getThetaTextField().getText()));
-            model.setxMin(Float.parseFloat(view.getBoundsTextFields()[0].getText()));
-            model.setxMax(Float.parseFloat(view.getBoundsTextFields()[1].getText()));
-            model.setyMin(Float.parseFloat(view.getBoundsTextFields()[2].getText()));
-            model.setyMax(Float.parseFloat(view.getBoundsTextFields()[3].getText()));
-            model.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
-            model.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
+            updateModel();
         } catch (Exception ex) {
             validationMessage = validationMessage.concat("Check your parameters");
             JOptionPane.showMessageDialog(view, validationMessage);
@@ -183,18 +191,21 @@ public class MainWindowController {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(view.getImportDataMenuItem())) {
-                model = XmlImporter.importData(view);
-                updateView();
-            }
-            else if (e.getSource().equals(view.getImportConfigMenuItem())) {
-                model = XmlImporter.importConfig(view);
+                //model = xStream.fromXML();
                 updateView();
             }
             else if (e.getSource().equals(view.getExportDataMenuItem())) {
-                if (XmlExporter.canExport()) {
-                    XmlExporter.close(OpenFileHelper.open(view));
-                } else {
+                try {
+                    File file = OpenFileHelper.open(view);
+                    FileOutputStream fos = new FileOutputStream(file);
+                    xStream.registerConverter(mainWindowModelConverter);
+                    xStream.toXML(MainWindowController.this.model, fos);
+                    JOptionPane.showMessageDialog(view, "Data was exported to " + file.getAbsolutePath());
+                } catch (NullPointerException ex) {
+                    Application.logger.log(Level.SEVERE, ex.getMessage());
                     JOptionPane.showMessageDialog(view, "No data to export.");
+                } catch (FileNotFoundException ex) {
+                    Application.logger.log(Level.SEVERE, ex.getMessage());
                 }
             }
         }

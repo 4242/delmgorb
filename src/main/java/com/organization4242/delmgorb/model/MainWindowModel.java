@@ -1,9 +1,11 @@
 package com.organization4242.delmgorb.model;
 
+import java.io.Serializable;
+
 /**
  * Created by ilya-murzinov on 22.02.14.
  */
-public class MainWindowModel {
+public class MainWindowModel implements Serializable {
     private PointsArray pointsArray;
 
     private IntegrationMethods integrationMethod;

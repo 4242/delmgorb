@@ -47,6 +47,7 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         }
         dialogWindowView.dispose();
         plotView.display();
+        model.setPointsArray(pointsArray);
         return plotView;
     }
 

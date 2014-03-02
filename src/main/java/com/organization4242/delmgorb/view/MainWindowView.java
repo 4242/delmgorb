@@ -24,7 +24,6 @@ public class MainWindowView extends JFrame {
     //Menu
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menu = new JMenu("File");
-    private JMenuItem importConfigMenuItem = new JMenuItem("Import Config");
     private JMenuItem importDataMenuItem = new JMenuItem("Import Data and Config");
     private JMenuItem exportDataMenuItem = new JMenuItem("Export Data and Config");
 
@@ -67,9 +66,6 @@ public class MainWindowView extends JFrame {
     private JButton button;
 
     //Accessors
-    public JMenuItem getImportConfigMenuItem() {
-        return importConfigMenuItem;
-    }
 
     public JMenuItem getImportDataMenuItem() {
         return importDataMenuItem;
@@ -155,7 +151,6 @@ public class MainWindowView extends JFrame {
 
     private void addMenu() {
         menu.add(importDataMenuItem);
-        menu.add(importConfigMenuItem);
         menu.add(new JSeparator());
         menu.add(exportDataMenuItem);
         menuBar.add(menu);
