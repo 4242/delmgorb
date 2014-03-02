@@ -2,6 +2,7 @@ language: java
 
 env:
   - secure: "gYQLJvPPA5cPDVEFgOUSNmFONy2Sz9uAvaR7+/JC5BYuBFKebsKkSeFqgOuqD2qfKF5rWaGBYo+aI9HDxSuXSXgsxBjf7hI1v8uLO0esrooO7piahvEzGAxTQwKu3f/yFTxt3dEaMZNO1iD4MxpVqve+AmwNGlUrRXsOxJHKk/w="
+  - secure: "Iv7naYnA7hDv4bIvDr63mSQZDe7YR/YJsZhU8jYPWyqjM0IEzWZ7w+PQVhhGUKCTIc4k0BTrVql+pUz5YaP9PA7/BaNq9aArfLduuSEaBF7nwb4NR57M1t5KhYqPz7fHrCzUwO6hs2x2Qxlh9Sc8c4kJQyIFXqpuUlFcH6ffQCg="
 
 notifications:
   email:
@@ -9,6 +10,16 @@ notifications:
     - 42_@mail.ru
   on_success: always
   on_failure: always
+
+addons:
+  coverity_scan:
+    project:
+      name: "4242/delmgorb"
+      description: "Your project description here"
+    notification_email: murz42@gmail.com
+    build_command_prepend:
+    build_command:
+    branch_pattern: coverity_scan
 
 before_install:
   - sudo add-apt-repository -y ppa:ricotz/testing
