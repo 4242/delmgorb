@@ -1,10 +1,12 @@
 package com.organization4242.delmgorb.view;
 
+import com.organization4242.delmgorb.application.Application;
 import com.organization4242.delmgorb.model.BuildingAngle;
 import com.organization4242.delmgorb.model.IntegrationMethods;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.logging.Level;
 
 /**
  * Created by ilya-murzinov on 22.02.14.
@@ -15,13 +17,15 @@ public class MainWindowView extends JFrame {
     private static final int WIDTH =400;
     private static final int TEXT_FIELD_MIN_WIDTH = 4;
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
+    private static final String X_MIN_VALUE = "0.05";
+    private static final String ANGLE_DEFAULT_VALUE = "0.05";
 
     //Menu
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menu = new JMenu("File");
-    private JMenuItem ImportConfigMenuItem = new JMenuItem("Import Config");
-    private JMenuItem ImportDataMenuItem = new JMenuItem("Import Data and Config");
-    private JMenuItem ExportDataMenuItem = new JMenuItem("Export Data and Config");
+    private JMenuItem importConfigMenuItem = new JMenuItem("Import Config");
+    private JMenuItem importDataMenuItem = new JMenuItem("Import Data and Config");
+    private JMenuItem exportDataMenuItem = new JMenuItem("Export Data and Config");
 
     //Internal panels
     private JPanel equationParametersPanel = new JPanel();
@@ -63,15 +67,15 @@ public class MainWindowView extends JFrame {
 
     //Accessors
     public JMenuItem getImportConfigMenuItem() {
-        return ImportConfigMenuItem;
+        return importConfigMenuItem;
     }
 
     public JMenuItem getImportDataMenuItem() {
-        return ImportDataMenuItem;
+        return importDataMenuItem;
     }
 
     public JMenuItem getExportDataMenuItem() {
-        return ExportDataMenuItem;
+        return exportDataMenuItem;
     }
 
     public JTextField[] getTextFields() {
@@ -135,7 +139,8 @@ public class MainWindowView extends JFrame {
         {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         }
-        catch(Exception e) {
+        catch(Exception ex) {
+            Application.logger.log(Level.WARNING, ex.getMessage());
         }
 
         init();
@@ -148,10 +153,10 @@ public class MainWindowView extends JFrame {
     }
 
     private void addMenu() {
-        menu.add(ImportDataMenuItem);
-        menu.add(ImportConfigMenuItem);
+        menu.add(importDataMenuItem);
+        menu.add(importConfigMenuItem);
         menu.add(new JSeparator());
-        menu.add(ExportDataMenuItem);
+        menu.add(exportDataMenuItem);
         menuBar.add(menu);
         setJMenuBar(menuBar);
     }
@@ -170,7 +175,7 @@ public class MainWindowView extends JFrame {
         }
         boundsTextFields[0].setText("1");
         boundsTextFields[1].setText("2");
-        boundsTextFields[2].setText("0.05");
+        boundsTextFields[2].setText(X_MIN_VALUE);
         boundsTextFields[3].setText("1");
 
         numberOfPointsTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
@@ -182,11 +187,11 @@ public class MainWindowView extends JFrame {
         numberOfSpheresTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         numberOfSpheresTextField.setText("50");
         phiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        phiTextField.setText("0.05");
+        phiTextField.setText(ANGLE_DEFAULT_VALUE);
         psiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        psiTextField.setText("0.05");
+        psiTextField.setText(ANGLE_DEFAULT_VALUE);
         thetaTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        thetaTextField.setText("0.05");
+        thetaTextField.setText(ANGLE_DEFAULT_VALUE);
 
         button = new JButton("Draw!");
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());

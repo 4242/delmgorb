@@ -1,5 +1,6 @@
 package com.organization4242.delmgorb.utils;
 
+import com.organization4242.delmgorb.application.Application;
 import com.organization4242.delmgorb.model.PointsArray;
 import com.organization4242.delmgorb.view.MainWindowView;
 import org.xml.sax.Attributes;
@@ -13,11 +14,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
 
 /**
  * Created by ilya-murzinov on 02.03.14.
  */
-public class XmlImporter {
+public final class XmlImporter {
+    private final static String VALUE = "value";
+
     private static PointsArray array;
 
     private XmlImporter() {
@@ -33,11 +37,11 @@ public class XmlImporter {
             InputStream stream = new FileInputStream(file);
             parser.parse(stream, handler);
         } catch (SAXException ex) {
-
+            Application.logger.log(Level.SEVERE, ex.getMessage());
         } catch (IOException ex) {
-
+            Application.logger.log(Level.SEVERE, ex.getMessage());
         } catch (ParserConfigurationException ex) {
-
+            Application.logger.log(Level.SEVERE, ex.getMessage());
         }
     }
 
@@ -60,17 +64,19 @@ public class XmlImporter {
                                  String qName, Attributes attributes)
                 throws SAXException {
             if (qName.equals("NumberOfPoints")) {
-                int n = Integer.parseInt(attributes.getValue("value"));
+                int n = Integer.parseInt(attributes.getValue(VALUE));
                 xVal = new Double[n];
                 yVal = new Double[n];
                 fVal = new Double[n][n];
             } else if (qName.equals("xVal")) {
-                xVal[Integer.parseInt(attributes.getValue("i"))] = Double.parseDouble(attributes.getValue("value"));
+                xVal[Integer.parseInt(attributes.getValue("i"))] =
+                        Double.parseDouble(attributes.getValue(VALUE));
             } else if (qName.equals("yVal")) {
-                yVal[Integer.parseInt(attributes.getValue("j"))] = Double.parseDouble(attributes.getValue("value"));
+                yVal[Integer.parseInt(attributes.getValue("j"))] =
+                        Double.parseDouble(attributes.getValue(VALUE));
             } else if (qName.equals("fVal")) {
                 fVal[Integer.parseInt(attributes.getValue("i"))][Integer.parseInt(attributes.getValue("j"))] =
-                        Double.parseDouble(attributes.getValue("value"));
+                        Double.parseDouble(attributes.getValue(VALUE));
             }
         }
 

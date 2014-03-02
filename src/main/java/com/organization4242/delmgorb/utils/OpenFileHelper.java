@@ -6,7 +6,7 @@ import java.io.File;
 /**
  * Created by ilya-murzinov on 02.03.14.
  */
-public class OpenFileHelper {
+public final class OpenFileHelper {
     private static JFileChooser chooser = new JFileChooser();
     private static File file;
 

@@ -1,5 +1,7 @@
 package com.organization4242.delmgorb.model;
 
+import java.util.Arrays;
+
 /**
  * Created by ilya-murzinov on 22.02.14.
  */
@@ -91,8 +93,8 @@ public class MainWindowModel {
         return interpolationMethod;
     }
 
-    public void setBounds(String[] bounds) {
-        this.bounds = bounds;
+    public void setBounds(String[] newBounds) {
+        this.bounds = Arrays.copyOf(newBounds, newBounds.length);
     }
 
     public void setIntegrationMethod(IntegrationMethods integrationMethod) {

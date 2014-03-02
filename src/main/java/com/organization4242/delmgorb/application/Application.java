@@ -4,13 +4,17 @@ import com.organization4242.delmgorb.controller.MainWindowController;
 import com.organization4242.delmgorb.model.MainWindowModel;
 import com.organization4242.delmgorb.view.MainWindowView;
 
+import java.util.logging.Logger;
+
 /**
  * Created by ilya-murzinov on 19.02.14.
  */
-public class Application {
+public final class Application {
     private Application() {
 
     }
+
+    public static final Logger logger = Logger.getLogger("Delmgorb.logger");
 
     public static void main(String[] args) {
         MainWindowView view = new MainWindowView();

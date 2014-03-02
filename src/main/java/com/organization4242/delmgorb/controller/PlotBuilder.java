@@ -24,7 +24,7 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
     }
 
     public PlotView build(MainWindowView view, MainWindowModel model) {
-        PointsArray pointsArray = null;
+        PointsArray pointsArray;
         if (model.getPointsArray() == null) {
             pointsArray = dataModel.buildPoints(model.getNumberOfPoints(), model.getBuildingAngle(), model.getTimePeriod(), model.getTimeStep(),
                 model.getPhi0(), model.getTheta0(), model.getPsi0(), model.getIntegrationMethod(),
