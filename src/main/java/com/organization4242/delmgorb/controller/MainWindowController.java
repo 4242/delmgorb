@@ -1,9 +1,9 @@
 package com.organization4242.delmgorb.controller;
 
 import com.organization4242.delmgorb.model.*;
-import com.organization4242.delmgorb.utils.OpenFileHelper;
-import com.organization4242.delmgorb.utils.XmlExporter;
-import com.organization4242.delmgorb.utils.XmlImporter;
+import com.organization4242.delmgorb.model.OpenFileHelper;
+import com.organization4242.delmgorb.model.XmlExporter;
+import com.organization4242.delmgorb.model.XmlImporter;
 import com.organization4242.delmgorb.view.DialogWindowView;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.organization4242.delmgorb.view.PlotView;
@@ -121,11 +121,6 @@ public class MainWindowController {
         String validationMessage = "";
 
         try {
-            model.setBounds(new String[]{view.getBoundsTextFields()[0].getText(),
-                    view.getBoundsTextFields()[1].getText(),
-                    view.getBoundsTextFields()[2].getText(),
-                    view.getBoundsTextFields()[3].getText()});
-
             model.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
             model.setBuildingAngle((BuildingAngle) view.getBuildingAngleJComboBox().getSelectedItem());
             model.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
@@ -134,10 +129,10 @@ public class MainWindowController {
             model.setPhi0(Double.parseDouble(view.getPhiTextField().getText()));
             model.setPsi0(Double.parseDouble(view.getPsiTextField().getText()));
             model.setTheta0(Double.parseDouble(view.getThetaTextField().getText()));
-            model.setxMin(Float.parseFloat(model.getBounds()[0]));
-            model.setxMax(Float.parseFloat(model.getBounds()[1]));
-            model.setyMin(Float.parseFloat(model.getBounds()[2]));
-            model.setyMax(Float.parseFloat(model.getBounds()[3]));
+            model.setxMin(Float.parseFloat(view.getBoundsTextFields()[0].getText()));
+            model.setxMax(Float.parseFloat(view.getBoundsTextFields()[1].getText()));
+            model.setyMin(Float.parseFloat(view.getBoundsTextFields()[2].getText()));
+            model.setyMax(Float.parseFloat(view.getBoundsTextFields()[3].getText()));
             model.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
             model.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
         } catch (Exception ex) {
@@ -146,20 +141,20 @@ public class MainWindowController {
             return false;
         }
 
-        if (model.getBounds()[0].equals("0") || model.getBounds()[1].equals("0")
-                || model.getBounds()[2].equals("0") || model.getBounds()[3].equals("0")
-                || (Double.parseDouble(model.getBounds()[0])*Double.parseDouble(model.getBounds()[1])<0)
-                || (Double.parseDouble(model.getBounds()[2])*Double.parseDouble(model.getBounds()[3])<0)) {
+        if (model.getxMin().equals(0f) || model.getxMax().equals(0f)
+                || model.getyMin().equals(0f) || model.getyMax().equals(0f)
+                || model.getxMin()*model.getxMax()<0
+                || model.getyMin()*model.getyMax()<0) {
             canDraw = false;
             validationMessage = validationMessage.concat("Both x and y can't be zero!");
             validationMessage = validationMessage.concat("\n");
         }
-        if ((Double.parseDouble(model.getBounds()[0])>Double.parseDouble(model.getBounds()[1]))) {
+        if (model.getxMin() > model.getxMax()) {
             canDraw = false;
             validationMessage = validationMessage.concat("XMax should be greater then XMin!");
             validationMessage = validationMessage.concat("\n");
         }
-        if ((Double.parseDouble(model.getBounds()[2])>Double.parseDouble(model.getBounds()[3]))) {
+        if (model.getyMin() > model.getyMax()) {
             canDraw = false;
             validationMessage = validationMessage.concat("YMax should be greater then YMin!");
             validationMessage = validationMessage.concat("\n");
@@ -172,14 +167,28 @@ public class MainWindowController {
         return true;
     }
 
+    private void updateView() {
+        view.getNumberOfPoints().setText(model.getNumberOfPoints().toString());
+        view.getBoundsTextFields()[0].setText(model.getxMin().toString());
+        view.getBoundsTextFields()[1].setText(model.getxMax().toString());
+        view.getBoundsTextFields()[2].setText(model.getyMin().toString());
+        view.getBoundsTextFields()[3].setText(model.getyMax().toString());
+        view.getIntegrationMethodsComboBox().setSelectedItem(model.getIntegrationMethod());
+        view.getPeriodToInterpolate().setText(model.getTimePeriod().toString());
+        view.getTimeStep().setText(model.getTimeStep().toString());
+        view.getBuildingAngleJComboBox().setSelectedItem(model.getBuildingAngle());
+    }
+
     private ActionListener menuItemActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(view.getImportDataMenuItem())) {
-                model.setPointsArray(XmlImporter.importData(view));
+                model = XmlImporter.importData(view);
+                updateView();
             }
             else if (e.getSource().equals(view.getImportConfigMenuItem())) {
-                XmlImporter.importConfig(view);
+                model = XmlImporter.importConfig(view);
+                updateView();
             }
             else if (e.getSource().equals(view.getExportDataMenuItem())) {
                 if (XmlExporter.canExport()) {

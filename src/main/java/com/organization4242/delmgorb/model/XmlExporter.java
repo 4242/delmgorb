@@ -1,7 +1,6 @@
-package com.organization4242.delmgorb.utils;
+package com.organization4242.delmgorb.model;
 
 import com.organization4242.delmgorb.application.Application;
-import com.organization4242.delmgorb.model.PointsArray;
 import com.organization4242.delmgorb.view.MainWindowView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -79,8 +78,32 @@ public final class XmlExporter {
     }
 
     public static void exportConfig(MainWindowView view) {
-        Element parameter = doc.createElement("NumberOfPoints");
+        Element parameter = doc.createElement("numberOfPoints");
         parameter.setAttribute(VALUE, view.getNumberOfPoints().getText());
+        config.appendChild(parameter);
+        parameter = doc.createElement("timeStep");
+        parameter.setAttribute(VALUE, view.getTimeStep().getText());
+        config.appendChild(parameter);
+        parameter = doc.createElement("timePeriod");
+        parameter.setAttribute(VALUE, view.getPeriodToInterpolate().getText());
+        config.appendChild(parameter);
+        parameter = doc.createElement("integrationMethod");
+        parameter.setAttribute(VALUE, view.getIntegrationMethodsComboBox().getSelectedItem().toString());
+        config.appendChild(parameter);
+        parameter = doc.createElement("angleToPlot");
+        parameter.setAttribute(VALUE, view.getBuildingAngleJComboBox().getSelectedItem().toString());
+        config.appendChild(parameter);
+        parameter = doc.createElement("xMin");
+        parameter.setAttribute(VALUE, view.getBoundsTextFields()[0].getText());
+        config.appendChild(parameter);
+        parameter = doc.createElement("xMax");
+        parameter.setAttribute(VALUE, view.getBoundsTextFields()[1].getText());
+        config.appendChild(parameter);
+        parameter = doc.createElement("yMin");
+        parameter.setAttribute(VALUE, view.getBoundsTextFields()[2].getText());
+        config.appendChild(parameter);
+        parameter = doc.createElement("yMax");
+        parameter.setAttribute(VALUE, view.getBoundsTextFields()[3].getText());
         config.appendChild(parameter);
     }
 
@@ -95,6 +118,6 @@ public final class XmlExporter {
         } catch (TransformerException ex) {
             Application.logger.log(Level.SEVERE, ex.getMessage());
         }
-        JOptionPane.showMessageDialog(null, "Data exported to " + file.getAbsolutePath());
+        JOptionPane.showMessageDialog(null, "Data was exported to " + file.getAbsolutePath());
     }
 }

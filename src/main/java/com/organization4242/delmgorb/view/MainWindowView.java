@@ -17,6 +17,7 @@ public class MainWindowView extends JFrame {
     private static final int WIDTH =400;
     private static final int TEXT_FIELD_MIN_WIDTH = 4;
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
+    private static final Insets EMPTY_INSETS = new Insets(0,0,0,0);
     private static final String X_MIN_VALUE = "0.05";
     private static final String ANGLE_DEFAULT_VALUE = "0.05";
 
@@ -275,6 +276,50 @@ public class MainWindowView extends JFrame {
             gridBagLayout.setConstraints(textFields[i], constraints);
             equationParametersPanel.add(textFields[i]);
         }
+
+        JPanel internalPane = new JPanel();
+        internalPane.setLayout(gridBagLayout);
+        constraints.gridx = 0;
+        constraints.gridy++;
+        constraints.insets = EMPTY_INSETS;
+        constraints.gridwidth = NUMBER_OF_EQUATION_PARAMETERS/2;
+        gridBagLayout.setConstraints(internalPane, constraints);
+
+        constraints.insets = DEFAULT_INSETS;
+        constraints.gridy = 0;
+        constraints.gridwidth = 1;
+        gridBagLayout.setConstraints(boundsLabel, constraints);
+
+        constraints.gridy++;
+        gridBagLayout.setConstraints(xLabel, constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(boundsTextFields[0], constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(yToLabel, constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(boundsTextFields[1], constraints);
+
+        constraints.gridx = 0;
+        constraints.gridy++;
+        gridBagLayout.setConstraints(yLabel, constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(boundsTextFields[2], constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(xToLabel, constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(boundsTextFields[3], constraints);
+
+        for (int i = 0; i < 4; i++) {
+            internalPane.add(boundsTextFields[i]);
+        }
+
+        internalPane.add(xLabel);
+        internalPane.add(yLabel);
+        internalPane.add(xToLabel);
+        internalPane.add(yToLabel);
+        internalPane.add(boundsLabel);
+
+        equationParametersPanel.add(internalPane);
     }
 
     /**
@@ -297,28 +342,6 @@ public class MainWindowView extends JFrame {
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
         //Set constraints to all UI controls
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        gridBagLayout.setConstraints(boundsLabel, constraints);
-        constraints.gridy++;
-        gridBagLayout.setConstraints(xLabel, constraints);
-        constraints.gridx++;
-        gridBagLayout.setConstraints(boundsTextFields[0], constraints);
-        constraints.gridx++;
-        gridBagLayout.setConstraints(yToLabel, constraints);
-        constraints.gridx++;
-        gridBagLayout.setConstraints(boundsTextFields[1], constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy++;
-        gridBagLayout.setConstraints(yLabel, constraints);
-        constraints.gridx++;
-        gridBagLayout.setConstraints(boundsTextFields[2], constraints);
-        constraints.gridx++;
-        gridBagLayout.setConstraints(xToLabel, constraints);
-        constraints.gridx++;
-        gridBagLayout.setConstraints(boundsTextFields[3], constraints);
-
         constraints.gridy++;
         constraints.gridx = 0;
         gridBagLayout.setConstraints(numLabel, constraints);
@@ -351,14 +374,6 @@ public class MainWindowView extends JFrame {
         constraints.gridwidth = 4;
         gridBagLayout.setConstraints(buildingAngleJComboBox, constraints);
 
-        integrationParametersPanel.add(xLabel);
-        integrationParametersPanel.add(yLabel);
-        integrationParametersPanel.add(xToLabel);
-        integrationParametersPanel.add(yToLabel);
-        integrationParametersPanel.add(boundsLabel);
-        for (int i = 0; i < 4; i++) {
-            integrationParametersPanel.add(boundsTextFields[i]);
-        }
         integrationParametersPanel.add(numLabel);
         integrationParametersPanel.add(numberOfPointsTextField);
         integrationParametersPanel.add(timeLabel);

@@ -1,28 +1,24 @@
 package com.organization4242.delmgorb.model;
 
-import java.util.Arrays;
-
 /**
  * Created by ilya-murzinov on 22.02.14.
  */
 public class MainWindowModel {
     private PointsArray pointsArray;
 
-    private String[] bounds;
-
     private IntegrationMethods integrationMethod;
     private BuildingAngle buildingAngle;
-    private int numberOfPoints;
+    private Integer numberOfPoints;
     private Double timeStep;
     private Double timePeriod;
     private Double phi0;
     private Double psi0;
     private Double theta0;
-    private float xMin;
-    private float xMax;
-    private float yMin;
-    private float yMax;
-    private int numberOfSpheres;
+    private Float xMin;
+    private Float xMax;
+    private Float yMin;
+    private Float yMax;
+    private Integer numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
 
     public PointsArray getPointsArray() {
@@ -33,10 +29,6 @@ public class MainWindowModel {
         this.pointsArray = pointsArray;
     }
 
-    public String[] getBounds() {
-        return bounds;
-    }
-
     public IntegrationMethods getIntegrationMethod() {
         return integrationMethod;
     }
@@ -45,7 +37,7 @@ public class MainWindowModel {
         return buildingAngle;
     }
 
-    public int getNumberOfPoints() {
+    public Integer getNumberOfPoints() {
         return numberOfPoints;
     }
 
@@ -69,32 +61,28 @@ public class MainWindowModel {
         return theta0;
     }
 
-    public float getxMin() {
+    public Float getxMin() {
         return xMin;
     }
 
-    public float getxMax() {
+    public Float getxMax() {
         return xMax;
     }
 
-    public float getyMin() {
+    public Float getyMin() {
         return yMin;
     }
 
-    public float getyMax() {
+    public Float getyMax() {
         return yMax;
     }
 
-    public int getNumberOfSpheres() {
+    public Integer getNumberOfSpheres() {
         return numberOfSpheres;
     }
 
     public InterpolationMethods getInterpolationMethod() {
         return interpolationMethod;
-    }
-
-    public void setBounds(String[] newBounds) {
-        this.bounds = Arrays.copyOf(newBounds, newBounds.length);
     }
 
     public void setIntegrationMethod(IntegrationMethods integrationMethod) {
@@ -105,7 +93,7 @@ public class MainWindowModel {
         this.buildingAngle = buildingAngle;
     }
 
-    public void setNumberOfPoints(int numberOfPoints) {
+    public void setNumberOfPoints(Integer numberOfPoints) {
         this.numberOfPoints = numberOfPoints;
     }
 
@@ -129,23 +117,23 @@ public class MainWindowModel {
         this.theta0 = theta0;
     }
 
-    public void setxMin(float xMin) {
+    public void setxMin(Float xMin) {
         this.xMin = xMin;
     }
 
-    public void setxMax(float xMax) {
+    public void setxMax(Float xMax) {
         this.xMax = xMax;
     }
 
-    public void setyMin(float yMin) {
+    public void setyMin(Float yMin) {
         this.yMin = yMin;
     }
 
-    public void setyMax(float yMax) {
+    public void setyMax(Float yMax) {
         this.yMax = yMax;
     }
 
-    public void setNumberOfSpheres(int numberOfSpheres) {
+    public void setNumberOfSpheres(Integer numberOfSpheres) {
         this.numberOfSpheres = numberOfSpheres;
     }
 

@@ -1,6 +1,5 @@
 package com.organization4242.delmgorb.model;
 
-import com.organization4242.delmgorb.utils.XmlExporter;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.*;
