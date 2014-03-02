@@ -25,23 +25,6 @@ public class MainWindowController {
     private MainWindowView view;
     private Boolean canDraw = true;
 
-    private String[] bounds;
-
-    private IntegrationMethods integrationMethod;
-    private BuildingAngle buildingAngle;
-    private int numberOfPoints;
-    private Double timeStep;
-    private Double timePeriod;
-    private Double phi0;
-    private Double psi0;
-    private Double theta0;
-    private float xMin;
-    private float xMax;
-    private float yMin;
-    private float yMax;
-    private int numberOfSpheres;
-    private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
-
     private DialogWindowView dialogWindowView;
 
     private PropertyChangeSupport changes;
@@ -79,8 +62,7 @@ public class MainWindowController {
         @Override
         protected Void doInBackground() throws Exception {
             builder.addObserver(this);
-            PlotView plotView = builder.build(view, numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
-                integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
+            PlotView plotView = builder.build(view, model);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
             plotWindowView.display();
             return null;
@@ -128,8 +110,7 @@ public class MainWindowController {
                     JOptionPane.showMessageDialog(view, "Number of points is too small");
                 }
             } else {
-                PlotView plotView = builder.build(view, model.getPointsArray(),
-                        xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
+                PlotView plotView = builder.build(view, model);
                 PlotWindowView plotWindowView = new PlotWindowView(plotView);
                 plotWindowView.display();
             }
@@ -140,45 +121,45 @@ public class MainWindowController {
         String validationMessage = "";
 
         try {
-            bounds = new String[]{view.getBoundsTextFields()[0].getText(),
+            model.setBounds(new String[]{view.getBoundsTextFields()[0].getText(),
                     view.getBoundsTextFields()[1].getText(),
                     view.getBoundsTextFields()[2].getText(),
-                    view.getBoundsTextFields()[3].getText()};
+                    view.getBoundsTextFields()[3].getText()});
 
-            integrationMethod = (IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem();
-            buildingAngle = (BuildingAngle) view.getBuildingAngleJComboBox().getSelectedItem();
-            numberOfPoints = Integer.parseInt(view.getNumberOfPoints().getText());
-            timeStep = Double.parseDouble(view.getTimeStep().getText());
-            timePeriod = Double.parseDouble(view.getPeriodToInterpolate().getText());
-            phi0 = Double.parseDouble(view.getPhiTextField().getText());
-            psi0 = Double.parseDouble(view.getPsiTextField().getText());
-            theta0 = Double.parseDouble(view.getThetaTextField().getText());
-            xMin = Float.parseFloat(bounds[0]);
-            xMax = Float.parseFloat(bounds[1]);
-            yMin = Float.parseFloat(bounds[2]);
-            yMax = Float.parseFloat(bounds[3]);
-            numberOfSpheres = Integer.parseInt(view.getNumberOfSpheresTextField().getText());
-            interpolationMethod = InterpolationMethods.MICROSPHERE;
+            model.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
+            model.setBuildingAngle((BuildingAngle) view.getBuildingAngleJComboBox().getSelectedItem());
+            model.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
+            model.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
+            model.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
+            model.setPhi0(Double.parseDouble(view.getPhiTextField().getText()));
+            model.setPsi0(Double.parseDouble(view.getPsiTextField().getText()));
+            model.setTheta0(Double.parseDouble(view.getThetaTextField().getText()));
+            model.setxMin(Float.parseFloat(model.getBounds()[0]));
+            model.setxMax(Float.parseFloat(model.getBounds()[1]));
+            model.setyMin(Float.parseFloat(model.getBounds()[2]));
+            model.setyMax(Float.parseFloat(model.getBounds()[3]));
+            model.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
+            model.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
         } catch (Exception ex) {
             validationMessage = validationMessage.concat("Check your parameters");
             JOptionPane.showMessageDialog(view, validationMessage);
             return false;
         }
 
-        if (bounds[0].equals("0") || bounds[1].equals("0")
-                || bounds[2].equals("0") || bounds[3].equals("0")
-                || (Double.parseDouble(bounds[0])*Double.parseDouble(bounds[1])<0)
-                || (Double.parseDouble(bounds[2])*Double.parseDouble(bounds[3])<0)) {
+        if (model.getBounds()[0].equals("0") || model.getBounds()[1].equals("0")
+                || model.getBounds()[2].equals("0") || model.getBounds()[3].equals("0")
+                || (Double.parseDouble(model.getBounds()[0])*Double.parseDouble(model.getBounds()[1])<0)
+                || (Double.parseDouble(model.getBounds()[2])*Double.parseDouble(model.getBounds()[3])<0)) {
             canDraw = false;
             validationMessage = validationMessage.concat("Both x and y can't be zero!");
             validationMessage = validationMessage.concat("\n");
         }
-        if ((Double.parseDouble(bounds[0])>Double.parseDouble(bounds[1]))) {
+        if ((Double.parseDouble(model.getBounds()[0])>Double.parseDouble(model.getBounds()[1]))) {
             canDraw = false;
             validationMessage = validationMessage.concat("XMax should be greater then XMin!");
             validationMessage = validationMessage.concat("\n");
         }
-        if ((Double.parseDouble(bounds[2])>Double.parseDouble(bounds[3]))) {
+        if ((Double.parseDouble(model.getBounds()[2])>Double.parseDouble(model.getBounds()[3]))) {
             canDraw = false;
             validationMessage = validationMessage.concat("YMax should be greater then YMin!");
             validationMessage = validationMessage.concat("\n");
@@ -187,7 +168,7 @@ public class MainWindowController {
             JOptionPane.showMessageDialog(view, validationMessage);
             return false;
         }
-        
+
         return true;
     }
 

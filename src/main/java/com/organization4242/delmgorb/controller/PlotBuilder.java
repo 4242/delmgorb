@@ -23,16 +23,20 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         dataModel.addObserver(this);
     }
 
-    public PlotView build(MainWindowView view, int numberOfPoints, BuildingAngle buildingAngle, double timePeriod, double timeStep,
-                                 double phi0, double theta0, double psi0, IntegrationMethods integrationMethod,
-                                 double xMin, double xMax, double yMin, double yMax,
-                                 InterpolationMethods interpolationMethod, int numberOfSpheres) {
-        PointsArray p = dataModel.buildPoints(numberOfPoints, buildingAngle, timePeriod, timeStep,
-                phi0, theta0, psi0, integrationMethod, xMin, xMax, yMin, yMax);
-        MultivariateFunction function = interpolatorModel.interpolate(p, interpolationMethod, numberOfSpheres);
-        PlotModel plotModel = new PlotModel(function, (float) xMin, (float) xMax, (float) yMin, (float) yMax);
+    public PlotView build(MainWindowView view, MainWindowModel model) {
+        PointsArray pointsArray = null;
+        if (model.getPointsArray() == null) {
+            pointsArray = dataModel.buildPoints(model.getNumberOfPoints(), model.getBuildingAngle(), model.getTimePeriod(), model.getTimeStep(),
+                model.getPhi0(), model.getTheta0(), model.getPsi0(), model.getIntegrationMethod(),
+                model.getxMin(), model.getxMax(), model.getyMin(), model.getyMax());
+        } else {
+            pointsArray = model.getPointsArray();
+        }
+
+        MultivariateFunction function = interpolatorModel.interpolate(pointsArray, model.getInterpolationMethod(), model.getNumberOfSpheres());
+        PlotModel plotModel = new PlotModel(function, model.getxMin(), model.getxMax(), model.getyMin(), model.getyMax());
         PlotView plotView = new PlotView();
-        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + buildingAngle + " " + integrationMethod);
+        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + model.getBuildingAngle());
         plotView.setModel(plotModel);
         plotView.getTask().execute();
         DialogWindowView dialogWindowView;
@@ -46,24 +50,6 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         return plotView;
     }
 
-    public PlotView build(MainWindowView view, PointsArray pointsArray, double xMin, double xMax, double yMin, double yMax,
-                          InterpolationMethods interpolationMethod, int numberOfSpheres) {
-        MultivariateFunction function = interpolatorModel.interpolate(pointsArray, interpolationMethod, numberOfSpheres);
-        PlotModel plotModel = new PlotModel(function, (float) xMin, (float) xMax, (float) yMin, (float) yMax);
-        PlotView plotView = new PlotView();
-        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> ");
-        plotView.setModel(plotModel);
-        plotView.getTask().execute();
-        DialogWindowView dialogWindowView;
-        dialogWindowView = new DialogWindowView(view, "Drawing...", false);
-        dialogWindowView.display();
-        while (!plotView.getTask().isDone()) {
-            dialogWindowView.getProgressBar().setValue(plotView.getTask().getProgress());
-        }
-        dialogWindowView.dispose();
-        plotView.display();
-        return plotView;
-    }
     @Override
     public void update(Observable o, Object arg) {
         setChanged();
