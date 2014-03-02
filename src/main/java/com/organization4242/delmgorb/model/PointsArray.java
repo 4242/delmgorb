@@ -6,41 +6,47 @@ import java.util.Arrays;
  * Created by ilya-murzinov on 19.02.14.
  */
 public class PointsArray {
-    private double[] xVal;
-    private double[] yVal;
-    private double[][] fVal;
+    private Double[] xVal;
+    private Double[] yVal;
+    private Double[][] fVal;
 
-    public double[] getxVal() {
+    public Double[] getxVal() {
         return xVal;
     }
 
-    public double[] getyVal() {
+    public Double[] getyVal() {
         return yVal;
     }
 
-    public double[][] getfVal() {
+    public Double[][] getfVal() {
         return fVal;
     }
 
-    public void setxVal(double[] newXVal) {
+    public void setxVal(Double[] newXVal) {
         if (newXVal == null) {
-            this.xVal = new double[0];
+            this.xVal = new Double[0];
         } else {
             this.xVal = Arrays.copyOf(newXVal, newXVal.length);
         }
     }
 
-    public void setyVal(double[] newYVal) {
+    public void setyVal(Double[] newYVal) {
         if (newYVal == null) {
-            this.yVal = new double[0];
+            this.yVal = new Double[0];
         } else {
             this.yVal = Arrays.copyOf(newYVal, newYVal.length);
         }
     }
 
     PointsArray(int a, int b) {
-        this.xVal = new double[a];
-        this.yVal = new double[b];
-        this.fVal = new double[a][b];
+        this.xVal = new Double[a];
+        this.yVal = new Double[b];
+        this.fVal = new Double[a][b];
+    }
+
+    public PointsArray(Double[] newXVal, Double[] newYVal, Double[][] newFVal) {
+        xVal = Arrays.copyOf(newXVal, newXVal.length);
+        yVal = Arrays.copyOf(newYVal, newYVal.length);
+        fVal = Arrays.copyOf(newFVal, newFVal.length);
     }
 }

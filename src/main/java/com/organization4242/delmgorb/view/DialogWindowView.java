@@ -23,12 +23,12 @@ public class DialogWindowView extends JDialog {
         return progressBar;
     }
 
-    public DialogWindowView(JFrame parent, String title, Boolean addCancelButton) {
-        init(title, addCancelButton);
+    public DialogWindowView(JFrame parent, String title, Boolean enableCancel) {
+        init(title, enableCancel);
         setLocationRelativeTo(parent);
     }
 
-    private void init(String title, Boolean addCancelButton) {
+    private void init(String title, Boolean enableCancel) {
         setSize(200, 100);
         setTitle(title);
 
@@ -62,9 +62,10 @@ public class DialogWindowView extends JDialog {
         constraints.gridy++;
         gridBagLayout.setConstraints(button, constraints);
 
-        if (addCancelButton) {
-            add(button);
+        if (!enableCancel) {
+            button.setEnabled(false);
         }
+        add(button);
         add(progressBar);
     }
 

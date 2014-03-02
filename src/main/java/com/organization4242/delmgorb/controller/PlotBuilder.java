@@ -46,6 +46,24 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         return plotView;
     }
 
+    public PlotView build(MainWindowView view, PointsArray pointsArray, double xMin, double xMax, double yMin, double yMax,
+                          InterpolationMethods interpolationMethod, int numberOfSpheres) {
+        MultivariateFunction function = interpolatorModel.interpolate(pointsArray, interpolationMethod, numberOfSpheres);
+        PlotModel plotModel = new PlotModel(function, (float) xMin, (float) xMax, (float) yMin, (float) yMax);
+        PlotView plotView = new PlotView();
+        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> ");
+        plotView.setModel(plotModel);
+        plotView.getTask().execute();
+        DialogWindowView dialogWindowView;
+        dialogWindowView = new DialogWindowView(view, "Drawing...", false);
+        dialogWindowView.display();
+        while (!plotView.getTask().isDone()) {
+            dialogWindowView.getProgressBar().setValue(plotView.getTask().getProgress());
+        }
+        dialogWindowView.dispose();
+        plotView.display();
+        return plotView;
+    }
     @Override
     public void update(Observable o, Object arg) {
         setChanged();

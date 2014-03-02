@@ -67,8 +67,8 @@ public class DataModel extends Observable {
         return y0;
     }
 
-    private double[] doFragmentation(double aMin, double aMax, int points){
-        double[] array = new double[points];
+    private Double[] doFragmentation(double aMin, double aMax, int points){
+        Double[] array = new Double[points];
         double eps = 0;
         for (int i = 0; i < points; i++) {
             eps = aMin + 1.0 * i * (aMax - aMin) / (points - 1);
@@ -151,7 +151,6 @@ public class DataModel extends Observable {
                 if (stop) {
                     return null;
                 }
-                XmlExporter.exportParameter(comboArray.getxVal()[j], comboArray.getyVal()[i], comboArray.getfVal()[j][i]);
                 //Notifying progress bar
                 setChanged();
                 notifyObservers((int) (((double) (i*numOfPoints + j + 1)/Math.pow(numOfPoints,2))*100));
@@ -159,6 +158,7 @@ public class DataModel extends Observable {
         }
         setChanged();
         notifyObservers("calculated");
+        XmlExporter.export(comboArray);
         return comboArray;
     }
 }

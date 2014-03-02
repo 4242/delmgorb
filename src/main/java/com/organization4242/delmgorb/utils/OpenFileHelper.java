@@ -10,11 +10,14 @@ public class OpenFileHelper {
     private static JFileChooser chooser = new JFileChooser();
     private static File file;
 
+    private OpenFileHelper() {
+
+    }
+
     public static File open(JFrame view) {
         int fileChosen = chooser.showDialog(view, "Open file");
         if (fileChosen == JFileChooser.APPROVE_OPTION) {
             file = chooser.getSelectedFile();
-            System.out.println("Chose");
         }
         return file;
     }

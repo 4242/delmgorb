@@ -4,13 +4,13 @@ package com.organization4242.delmgorb.model;
  * Created by ilya-murzinov on 22.02.14.
  */
 public class MainWindowModel {
-    private String inputEquation;
+    private PointsArray pointsArray;
 
-    public String getInputEquation() {
-        return inputEquation;
+    public PointsArray getPointsArray() {
+        return pointsArray;
     }
 
-    public void setInputEquation(String inputEquation) {
-        this.inputEquation = inputEquation;
+    public void setPointsArray(PointsArray pointsArray) {
+        this.pointsArray = pointsArray;
     }
 }

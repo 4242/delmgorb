@@ -1,9 +1,11 @@
 package com.organization4242.delmgorb.utils;
 
+import com.organization4242.delmgorb.model.PointsArray;
 import com.organization4242.delmgorb.view.MainWindowView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,9 +23,16 @@ public class XmlExporter {
     private static Document doc;
     private static Element data;
     private static Element config;
+    private static Element xVal;
+    private static Element yVal;
+    private static Element fVal;
 
-    public Boolean canExport() {
-        return (doc == null);
+    private XmlExporter() {
+
+    }
+
+    public static Boolean canExport() {
+        return (doc != null);
     }
 
     public static void init() {
@@ -46,23 +55,29 @@ public class XmlExporter {
 
     }
 
-    public static void exportParameter(Double xValue, Double yValue, Double fValue) {
-        // shorten way
-        // staff.setAttribute("id", "1");
+    public static void export(PointsArray pointsArray) {
+        for (Integer i = 0; i < pointsArray.getxVal().length; i++) {
+            for (Integer j = 0; j < pointsArray.getxVal().length; j++) {
+                xVal = doc.createElement("xVal");
+                xVal.setAttribute("value", pointsArray.getxVal()[i].toString());
+                xVal.setAttribute("i", i.toString());
+                data.appendChild(xVal);
 
-        // parameter elements
-        Element parameter = doc.createElement("point");
-        parameter.setAttribute("xVal", xValue.toString());
-        parameter.setAttribute("yVal", yValue.toString());
-        parameter.setAttribute("fVal", fValue.toString());
-        data.appendChild(parameter);
+                yVal = doc.createElement("yVal");
+                yVal.setAttribute("value", pointsArray.getyVal()[j].toString());
+                yVal.setAttribute("j", j.toString());
+                data.appendChild(yVal);
+
+                fVal = doc.createElement("fVal");
+                fVal.setAttribute("value", pointsArray.getfVal()[i][j].toString());
+                fVal.setAttribute("i", i.toString());
+                fVal.setAttribute("j", j.toString());
+                data.appendChild(fVal);
+            }
+        }
     }
 
     public static void exportConfig(MainWindowView view) {
-        // shorten way
-        // staff.setAttribute("id", "1");
-
-        // parameter elements
         Element parameter = doc.createElement("NumberOfPoints");
         parameter.setAttribute("value", view.getNumberOfPoints().getText());
         config.appendChild(parameter);
@@ -75,13 +90,10 @@ public class XmlExporter {
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(file);
-
-            // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
-
             transformer.transform(source, result);
         } catch (TransformerException tfe) {
             tfe.printStackTrace();
         }
+        JOptionPane.showMessageDialog(null, "Data exported to " + file.getAbsolutePath());
     }
 }

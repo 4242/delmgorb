@@ -45,7 +45,7 @@ public class MainWindowController {
     private DialogWindowView dialogWindowView;
 
     private PropertyChangeSupport changes;
-    private PlotBuilder builder;
+    private PlotBuilder builder = new PlotBuilder();
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
@@ -78,10 +78,9 @@ public class MainWindowController {
 
         @Override
         protected Void doInBackground() throws Exception {
-            builder = new PlotBuilder();
             builder.addObserver(this);
             PlotView plotView = builder.build(view, numberOfPoints, buildingAngle, timePeriod, timeStep, phi0, theta0, psi0,
-                    integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
+                integrationMethod, xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
             plotWindowView.display();
             return null;
@@ -108,24 +107,31 @@ public class MainWindowController {
         if (canDraw) {
             XmlExporter.init();
             XmlExporter.exportConfig(view);
-            try {
-                final Task task = new Task();
-                task.execute();
-                view.setEnabled(false);
-                dialogWindowView = new DialogWindowView(view, "Calculating...", true);
-                dialogWindowView.display();
-                changes = new PropertyChangeSupport(this);
-                changes.addPropertyChangeListener(builder);
-                dialogWindowView.getButton().addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        PropertyChangeEvent ev = new PropertyChangeEvent(this, "interrupt", "false", "true");
-                        changes.firePropertyChange(ev);
-                        dialogWindowView.dispose();
-                    }
-                });
-            } catch (NumberIsTooSmallException ex) {
-                JOptionPane.showMessageDialog(view, "Number of points is too small");
+            if (model.getPointsArray() == null) {
+                try {
+                    final Task task = new Task();
+                    task.execute();
+                    view.setEnabled(false);
+                    dialogWindowView = new DialogWindowView(view, "Calculating...", true);
+                    dialogWindowView.display();
+                    changes = new PropertyChangeSupport(this);
+                    changes.addPropertyChangeListener(builder);
+                    dialogWindowView.getButton().addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            PropertyChangeEvent ev = new PropertyChangeEvent(this, "interrupt", "false", "true");
+                            changes.firePropertyChange(ev);
+                            dialogWindowView.dispose();
+                        }
+                    });
+                } catch (NumberIsTooSmallException ex) {
+                    JOptionPane.showMessageDialog(view, "Number of points is too small");
+                }
+            } else {
+                PlotView plotView = builder.build(view, model.getPointsArray(),
+                        xMin, xMax, yMin, yMax, interpolationMethod, numberOfSpheres);
+                PlotWindowView plotWindowView = new PlotWindowView(plotView);
+                plotWindowView.display();
             }
         }
     }
@@ -189,13 +195,17 @@ public class MainWindowController {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(view.getImportDataMenuItem())) {
-                XmlImporter.importData(view);
+                model.setPointsArray(XmlImporter.importData(view));
             }
             else if (e.getSource().equals(view.getImportConfigMenuItem())) {
                 XmlImporter.importConfig(view);
             }
             else if (e.getSource().equals(view.getExportDataMenuItem())) {
-                XmlExporter.close(OpenFileHelper.open(view));
+                if (XmlExporter.canExport()) {
+                    XmlExporter.close(OpenFileHelper.open(view));
+                } else {
+                    JOptionPane.showMessageDialog(view, "No data to export.");
+                }
             }
         }
     };
