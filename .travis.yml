@@ -17,7 +17,7 @@ addons:
       name: "4242/delmgorb"
       description: "Your project description here"
     notification_email: murz42@gmail.com
-    build_command_prepend: "./"
+    build_command_prepend:
     build_command: "mvn package"
     branch_pattern: master
 
