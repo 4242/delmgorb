@@ -1,8 +1,9 @@
 language: java
 
 env:
-  - secure: "gYQLJvPPA5cPDVEFgOUSNmFONy2Sz9uAvaR7+/JC5BYuBFKebsKkSeFqgOuqD2qfKF5rWaGBYo+aI9HDxSuXSXgsxBjf7hI1v8uLO0esrooO7piahvEzGAxTQwKu3f/yFTxt3dEaMZNO1iD4MxpVqve+AmwNGlUrRXsOxJHKk/w="
-  - secure: "Iv7naYnA7hDv4bIvDr63mSQZDe7YR/YJsZhU8jYPWyqjM0IEzWZ7w+PQVhhGUKCTIc4k0BTrVql+pUz5YaP9PA7/BaNq9aArfLduuSEaBF7nwb4NR57M1t5KhYqPz7fHrCzUwO6hs2x2Qxlh9Sc8c4kJQyIFXqpuUlFcH6ffQCg="
+  global:
+    - secure: "gYQLJvPPA5cPDVEFgOUSNmFONy2Sz9uAvaR7+/JC5BYuBFKebsKkSeFqgOuqD2qfKF5rWaGBYo+aI9HDxSuXSXgsxBjf7hI1v8uLO0esrooO7piahvEzGAxTQwKu3f/yFTxt3dEaMZNO1iD4MxpVqve+AmwNGlUrRXsOxJHKk/w="
+    - secure: "Iv7naYnA7hDv4bIvDr63mSQZDe7YR/YJsZhU8jYPWyqjM0IEzWZ7w+PQVhhGUKCTIc4k0BTrVql+pUz5YaP9PA7/BaNq9aArfLduuSEaBF7nwb4NR57M1t5KhYqPz7fHrCzUwO6hs2x2Qxlh9Sc8c4kJQyIFXqpuUlFcH6ffQCg="
 
 notifications:
   email:
@@ -18,7 +19,7 @@ addons:
       description: "Your project description here"
     notification_email: murz42@gmail.com
     build_command_prepend:
-    build_command: "cov-build --dir COV mvn compile"
+    build_command: "cov-build --dir cov-int mvn compile"
     branch_pattern: master
 
 before_install:
