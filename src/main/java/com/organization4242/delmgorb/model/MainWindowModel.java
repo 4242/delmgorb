@@ -142,4 +142,6 @@ public class MainWindowModel implements Serializable {
     public void setInterpolationMethod(InterpolationMethods interpolationMethod) {
         this.interpolationMethod = interpolationMethod;
     }
+
+
 }

@@ -15,6 +15,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Observable;
@@ -191,12 +192,19 @@ public class MainWindowController {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(view.getImportDataMenuItem())) {
-                //model = xStream.fromXML();
+                try {
+                    model = (MainWindowModel) xStream.fromXML(new FileInputStream(OpenFileHelper.open(view)));
+                } catch (FileNotFoundException ex) {
+                    Application.logger.log(Level.SEVERE, ex.getMessage());
+                }
                 updateView();
             }
             else if (e.getSource().equals(view.getExportDataMenuItem())) {
                 try {
                     File file = OpenFileHelper.open(view);
+                    if (file.exists()) {
+                        file = new File(file.getAbsolutePath());
+                    }
                     FileOutputStream fos = new FileOutputStream(file);
                     xStream.registerConverter(mainWindowModelConverter);
                     xStream.toXML(MainWindowController.this.model, fos);
