@@ -18,7 +18,7 @@ addons:
       description: "Your project description here"
     notification_email: murz42@gmail.com
     build_command_prepend:
-    build_command: "mvn package"
+    build_command: "mvn compile"
     branch_pattern: master
 
 before_install:
