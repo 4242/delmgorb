@@ -91,8 +91,10 @@ public class MainWindowController {
     }
 
     private void drawPlot() {
-        calculateFromScratch = JOptionPane.showOptionDialog(view, "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
+        if (model.getPointsArray() != null) {
+            calculateFromScratch = JOptionPane.showOptionDialog(view, "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
+        }
 
         canDraw = validate();
 
