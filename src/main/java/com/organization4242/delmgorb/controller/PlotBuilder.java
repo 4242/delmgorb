@@ -23,11 +23,11 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         dataModel.addObserver(this);
     }
 
-    public PlotView build(MainWindowView view, MainWindowModel model) {
+    public PlotView build(MainWindowView view, MainWindowModel model, Boolean calculateFromScratch) {
         PointsArray pointsArray;
-        if (model.getPointsArray() == null) {
-            pointsArray = dataModel.buildPoints(model.getNumberOfPoints(), model.getBuildingAngle(), model.getTimePeriod(), model.getTimeStep(),
-                model.getPhi0(), model.getTheta0(), model.getPsi0(), model.getIntegrationMethod(),
+        if (calculateFromScratch) {
+            pointsArray = dataModel.buildPoints(model.getNumberOfPoints(), model.getAngle(), model.getTimePeriod(), model.getTimeStep(),
+                model.getPhi(), model.getTheta(), model.getPsi(), model.getIntegrationMethod(),
                 model.getxMin(), model.getxMax(), model.getyMin(), model.getyMax());
         } else {
             pointsArray = model.getPointsArray();
@@ -36,7 +36,7 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         MultivariateFunction function = interpolatorModel.interpolate(pointsArray, model.getInterpolationMethod(), model.getNumberOfSpheres());
         PlotModel plotModel = new PlotModel(function, model.getxMin(), model.getxMax(), model.getyMin(), model.getyMax());
         PlotView plotView = new PlotView();
-        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + model.getBuildingAngle());
+        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + model.getAngle());
         plotView.setModel(plotModel);
         plotView.getTask().execute();
         DialogWindowView dialogWindowView;

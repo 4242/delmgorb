@@ -44,9 +44,7 @@ public class PointsArray {
         this.fVal = new Double[a][b];
     }
 
-    public PointsArray(Double[] newXVal, Double[] newYVal, Double[][] newFVal) {
-        xVal = Arrays.copyOf(newXVal, newXVal.length);
-        yVal = Arrays.copyOf(newYVal, newYVal.length);
-        fVal = Arrays.copyOf(newFVal, newFVal.length);
+    public PointsArray() {
+
     }
 }

@@ -119,7 +119,7 @@ public class MainWindowView extends JFrame {
         return integrationMethodsComboBox;
     }
 
-    public JComboBox<BuildingAngle> getBuildingAngleJComboBox() {
+    public JComboBox<BuildingAngle> getAngleJComboBox() {
         return buildingAngleJComboBox;
     }
 

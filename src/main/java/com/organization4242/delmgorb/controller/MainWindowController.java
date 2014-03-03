@@ -29,13 +29,13 @@ public class MainWindowController {
     private MainWindowModel model;
     private MainWindowView view;
     private Boolean canDraw = true;
+    private Boolean calculateFromScratch = true;
 
     private DialogWindowView dialogWindowView;
 
     private PropertyChangeSupport changes;
     private PlotBuilder builder = new PlotBuilder();
 
-    private MainWindowModelConverter mainWindowModelConverter = new MainWindowModelConverter();
     XStream xStream = new XStream(new DomDriver());
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
@@ -69,7 +69,7 @@ public class MainWindowController {
         @Override
         protected Void doInBackground() throws Exception {
             builder.addObserver(this);
-            PlotView plotView = builder.build(view, model);
+            PlotView plotView = builder.build(view, model, calculateFromScratch);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
             plotWindowView.display();
             return null;
@@ -91,13 +91,16 @@ public class MainWindowController {
     }
 
     private void drawPlot() {
+        calculateFromScratch = JOptionPane.showOptionDialog(view, "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
+
         canDraw = validate();
 
         if (canDraw) {
-            if (model.getPointsArray() == null) {
-                try {
-                    final Task task = new Task();
-                    task.execute();
+            try {
+                final Task task = new Task();
+                task.execute();
+                if (calculateFromScratch) {
                     view.setEnabled(false);
                     dialogWindowView = new DialogWindowView(view, "Calculating...", true);
                     dialogWindowView.display();
@@ -108,23 +111,20 @@ public class MainWindowController {
                         public void mouseClicked(MouseEvent e) {
                             PropertyChangeEvent ev = new PropertyChangeEvent(this, "interrupt", "false", "true");
                             changes.firePropertyChange(ev);
+                            model.setPointsArray(null);
                             dialogWindowView.dispose();
                         }
                     });
-                } catch (NumberIsTooSmallException ex) {
-                    JOptionPane.showMessageDialog(view, "Number of points is too small");
                 }
-            } else {
-                PlotView plotView = builder.build(view, model);
-                PlotWindowView plotWindowView = new PlotWindowView(plotView);
-                plotWindowView.display();
+            } catch (NumberIsTooSmallException ex) {
+                JOptionPane.showMessageDialog(view, "Number of points is too small");
             }
         }
     }
 
     private void updateModel() {
         model.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
-        model.setBuildingAngle((BuildingAngle) view.getBuildingAngleJComboBox().getSelectedItem());
+        model.setBuildingAngle((BuildingAngle) view.getAngleJComboBox().getSelectedItem());
         model.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
         model.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
         model.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
@@ -140,6 +140,7 @@ public class MainWindowController {
     }
 
     private Boolean validate() {
+        canDraw = true;
         String validationMessage = "";
 
         try {
@@ -185,7 +186,11 @@ public class MainWindowController {
         view.getIntegrationMethodsComboBox().setSelectedItem(model.getIntegrationMethod());
         view.getPeriodToInterpolate().setText(model.getTimePeriod().toString());
         view.getTimeStep().setText(model.getTimeStep().toString());
-        view.getBuildingAngleJComboBox().setSelectedItem(model.getBuildingAngle());
+        view.getAngleJComboBox().setSelectedItem(model.getAngle());
+        view.getPhiTextField().setText(model.getPhi().toString());
+        view.getPsiTextField().setText(model.getPsi().toString());
+        view.getThetaTextField().setText(model.getTheta().toString());
+        view.getNumberOfSpheresTextField().setText(model.getNumberOfSpheres().toString());
     }
 
     private ActionListener menuItemActionListener = new ActionListener() {
@@ -206,7 +211,6 @@ public class MainWindowController {
                         file = new File(file.getAbsolutePath());
                     }
                     FileOutputStream fos = new FileOutputStream(file);
-                    xStream.registerConverter(mainWindowModelConverter);
                     xStream.toXML(MainWindowController.this.model, fos);
                     JOptionPane.showMessageDialog(view, "Data was exported to " + file.getAbsolutePath());
                 } catch (NullPointerException ex) {

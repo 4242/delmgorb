@@ -35,7 +35,7 @@ public class MainWindowModel implements Serializable {
         return integrationMethod;
     }
 
-    public BuildingAngle getBuildingAngle() {
+    public BuildingAngle getAngle() {
         return buildingAngle;
     }
 
@@ -51,15 +51,15 @@ public class MainWindowModel implements Serializable {
         return timePeriod;
     }
 
-    public Double getPhi0() {
+    public Double getPhi() {
         return phi0;
     }
 
-    public Double getPsi0() {
+    public Double getPsi() {
         return psi0;
     }
 
-    public Double getTheta0() {
+    public Double getTheta() {
         return theta0;
     }
 
