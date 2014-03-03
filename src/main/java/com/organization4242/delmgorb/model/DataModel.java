@@ -148,6 +148,7 @@ public class DataModel extends Observable {
                 comboArray.getfVal()[j][i] = getMaxValue(buildingAngle, time, timeStep,
                         comboArray.getyVal()[i], comboArray.getxVal()[j], integrator, initialState);
                 if (stop) {
+                    stop = false;
                     return null;
                 }
                 //Notifying progress bar
