@@ -1,12 +1,12 @@
 package com.organization4242.delmgorb.view;
 
-import com.organization4242.delmgorb.application.Application;
 import com.organization4242.delmgorb.model.Angle;
 import com.organization4242.delmgorb.model.IntegrationMethods;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by ilya-murzinov on 22.02.14.
@@ -64,6 +64,8 @@ public class MainWindowView extends JFrame {
     private JTextField psiTextField;
     private JTextField thetaTextField;
     private JButton button;
+
+    Logger logger = Logger.getLogger("Delmgorb.logger");
 
     //Accessors
 
@@ -137,7 +139,7 @@ public class MainWindowView extends JFrame {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         }
         catch(Exception ex) {
-            Application.logger.log(Level.WARNING, ex.getMessage());
+            logger.log(Level.WARNING, ex.getMessage());
         }
 
         init();

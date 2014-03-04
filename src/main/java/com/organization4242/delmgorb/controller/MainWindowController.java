@@ -1,6 +1,5 @@
 package com.organization4242.delmgorb.controller;
 
-import com.organization4242.delmgorb.application.Application;
 import com.organization4242.delmgorb.model.*;
 import com.organization4242.delmgorb.view.DialogWindowView;
 import com.organization4242.delmgorb.view.MainWindowView;
@@ -21,6 +20,7 @@ import java.io.FileOutputStream;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by ilya-murzinov on 22.02.14.
@@ -37,6 +37,8 @@ public class MainWindowController {
     private PlotBuilder builder = new PlotBuilder();
 
     XStream xStream = new XStream(new DomDriver());
+
+    Logger logger = Logger.getLogger("Delmgorb.logger");
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;
@@ -202,7 +204,7 @@ public class MainWindowController {
                 try {
                     model = (MainWindowModel) xStream.fromXML(new FileInputStream(OpenFileHelper.open(view)));
                 } catch (FileNotFoundException ex) {
-                    Application.logger.log(Level.SEVERE, ex.getMessage());
+                    logger.log(Level.SEVERE, ex.getMessage());
                 }
                 updateView();
             }
@@ -216,10 +218,10 @@ public class MainWindowController {
                     xStream.toXML(MainWindowController.this.model, fos);
                     JOptionPane.showMessageDialog(view, "Data was exported to " + file.getAbsolutePath());
                 } catch (NullPointerException ex) {
-                    Application.logger.log(Level.SEVERE, ex.getMessage());
+                    logger.log(Level.SEVERE, ex.getMessage());
                     JOptionPane.showMessageDialog(view, "No data to export.");
                 } catch (FileNotFoundException ex) {
-                    Application.logger.log(Level.SEVERE, ex.getMessage());
+                    logger.log(Level.SEVERE, ex.getMessage());
                 }
             }
         }
