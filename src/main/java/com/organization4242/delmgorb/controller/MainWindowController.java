@@ -36,9 +36,9 @@ public class MainWindowController {
     private PropertyChangeSupport changes;
     private PlotBuilder builder = new PlotBuilder();
 
-    XStream xStream = new XStream(new DomDriver());
+    private XStream xStream = new XStream(new DomDriver());
 
-    Logger logger = Logger.getLogger("Delmgorb.logger");
+    private Logger logger = Logger.getLogger("Delmgorb.logger");
 
     public MainWindowController(MainWindowView view, MainWindowModel model) {
         this.model = model;

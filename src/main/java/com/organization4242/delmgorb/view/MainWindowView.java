@@ -65,7 +65,7 @@ public class MainWindowView extends JFrame {
     private JTextField thetaTextField;
     private JButton button;
 
-    Logger logger = Logger.getLogger("Delmgorb.logger");
+    private Logger logger = Logger.getLogger("Delmgorb.logger");
 
     //Accessors
 
