@@ -76,9 +76,9 @@ public class DataModel extends Observable {
         return array;
     }
 
-    private double getAngleToPlot(double[] y1, BuildingAngle buildingAngle){
+    private double getAngleToPlot(double[] y1, Angle angle){
         double angleToPlot = 0;
-        switch (buildingAngle) {
+        switch (angle) {
             case PSI: {
                 double alpha1  = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
                 double beta1 = 2*(y1[1]*y1[2] + y1[0]*y1[3]);
@@ -100,7 +100,7 @@ public class DataModel extends Observable {
         return angleToPlot;
     }
 
-    private double getMaxValue(BuildingAngle buildingAngle,
+    private double getMaxValue(Angle angle,
                                double time, double timeStep, double epsilon, double delta,
                                FirstOrderIntegrator integrator, double[] initialState) {
         double max = 0;
@@ -112,7 +112,7 @@ public class DataModel extends Observable {
             finalState = new double[] { 0, 0, 0, 0, 0, 0, 0 };
             FirstOrderDifferentialEquations ode = new LibrationODE(1000, epsilon, delta, 0.001078011072);
             integrator.integrate(ode, 0.0, initialState, t, finalState);
-            double angleToPlot = getAngleToPlot(finalState, buildingAngle);
+            double angleToPlot = getAngleToPlot(finalState, angle);
             if (angleToPlot >= max) {
                 max = angleToPlot;
                 timeOfMax = t;
@@ -125,7 +125,7 @@ public class DataModel extends Observable {
             finalState = new double[] { 0, 0, 0, 0, 0, 0, 0 };
             FirstOrderDifferentialEquations ode = new LibrationODE(1000, epsilon, delta, 0.001078011072);
             integrator.integrate(ode, 0.0, initialState, t, finalState);
-            double angleToPlot = getAngleToPlot(finalState, buildingAngle);
+            double angleToPlot = getAngleToPlot(finalState, angle);
             if (angleToPlot >= max) {
                 max = angleToPlot;
                 timeOfMax = t;
@@ -134,18 +134,18 @@ public class DataModel extends Observable {
         return max;
     }
 
-    public PointsArray buildPoints (int numOfPoints, BuildingAngle buildingAngle,
+    public Points buildPoints (int numOfPoints, Angle angle,
                                         double time, double timeStep, double phi0, double theta0, double psi0,
                                         IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
-        PointsArray comboArray;
-        comboArray = new PointsArray(numOfPoints, numOfPoints);
+        Points comboArray;
+        comboArray = new Points(numOfPoints, numOfPoints);
         FirstOrderIntegrator integrator = getIntegrationMethod(method);
         comboArray.setxVal(doFragmentation(xMin, xMax, numOfPoints));
         comboArray.setyVal(doFragmentation(yMin, yMax, numOfPoints));
         double[] initialState = getInitialVector(phi0, psi0, theta0);
         for (int i = 0; i < numOfPoints; i++) {
             for (int j = 0; j < numOfPoints; j++) {
-                comboArray.getfVal()[j][i] = getMaxValue(buildingAngle, time, timeStep,
+                comboArray.getfVal()[j][i] = getMaxValue(angle, time, timeStep,
                         comboArray.getyVal()[i], comboArray.getxVal()[j], integrator, initialState);
                 if (stop) {
                     stop = false;

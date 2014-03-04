@@ -6,10 +6,10 @@ import java.io.Serializable;
  * Created by ilya-murzinov on 22.02.14.
  */
 public class MainWindowModel implements Serializable {
-    private PointsArray pointsArray;
+    private Points points;
 
     private IntegrationMethods integrationMethod;
-    private BuildingAngle buildingAngle;
+    private Angle angle;
     private Integer numberOfPoints;
     private Double timeStep;
     private Double timePeriod;
@@ -23,20 +23,20 @@ public class MainWindowModel implements Serializable {
     private Integer numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
 
-    public PointsArray getPointsArray() {
-        return pointsArray;
+    public Points getPoints() {
+        return points;
     }
 
-    public void setPointsArray(PointsArray pointsArray) {
-        this.pointsArray = pointsArray;
+    public void setPoints(Points points) {
+        this.points = points;
     }
 
     public IntegrationMethods getIntegrationMethod() {
         return integrationMethod;
     }
 
-    public BuildingAngle getAngle() {
-        return buildingAngle;
+    public Angle getAngle() {
+        return angle;
     }
 
     public Integer getNumberOfPoints() {
@@ -91,8 +91,8 @@ public class MainWindowModel implements Serializable {
         this.integrationMethod = integrationMethod;
     }
 
-    public void setBuildingAngle(BuildingAngle buildingAngle) {
-        this.buildingAngle = buildingAngle;
+    public void setAngle(Angle angle) {
+        this.angle = angle;
     }
 
     public void setNumberOfPoints(Integer numberOfPoints) {

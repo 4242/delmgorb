@@ -1,7 +1,7 @@
 package com.organization4242.delmgorb.view;
 
 import com.organization4242.delmgorb.application.Application;
-import com.organization4242.delmgorb.model.BuildingAngle;
+import com.organization4242.delmgorb.model.Angle;
 import com.organization4242.delmgorb.model.IntegrationMethods;
 
 import javax.swing.*;
@@ -58,7 +58,7 @@ public class MainWindowView extends JFrame {
     private JTextField timeStepTextField;
     private JTextField periodToInterpolateTextField;
     private JComboBox<IntegrationMethods> integrationMethodsComboBox;
-    private JComboBox<BuildingAngle> buildingAngleJComboBox;
+    private JComboBox<Angle> buildingAngleJComboBox;
     private JTextField numberOfSpheresTextField;
     private JTextField phiTextField;
     private JTextField psiTextField;
@@ -119,7 +119,7 @@ public class MainWindowView extends JFrame {
         return integrationMethodsComboBox;
     }
 
-    public JComboBox<BuildingAngle> getAngleJComboBox() {
+    public JComboBox<Angle> getAngleJComboBox() {
         return buildingAngleJComboBox;
     }
 
@@ -193,8 +193,8 @@ public class MainWindowView extends JFrame {
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
         integrationMethodsComboBox.setSelectedItem(IntegrationMethods.DORMAND_PRINCE_8);
         integrationMethodsComboBox.setEditable(false);
-        buildingAngleJComboBox = new JComboBox<BuildingAngle>(BuildingAngle.values());
-        buildingAngleJComboBox.setSelectedItem(BuildingAngle.PSI);
+        buildingAngleJComboBox = new JComboBox<Angle>(Angle.values());
+        buildingAngleJComboBox.setSelectedItem(Angle.PSI);
         buildingAngleJComboBox.setEditable(false);
     }
 

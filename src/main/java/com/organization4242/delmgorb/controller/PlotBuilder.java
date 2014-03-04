@@ -24,16 +24,16 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
     }
 
     public PlotView build(MainWindowView view, MainWindowModel model, Boolean calculateFromScratch) {
-        PointsArray pointsArray;
+        Points points;
         if (calculateFromScratch) {
-            pointsArray = dataModel.buildPoints(model.getNumberOfPoints(), model.getAngle(), model.getTimePeriod(), model.getTimeStep(),
+            points = dataModel.buildPoints(model.getNumberOfPoints(), model.getAngle(), model.getTimePeriod(), model.getTimeStep(),
                 model.getPhi(), model.getTheta(), model.getPsi(), model.getIntegrationMethod(),
                 model.getxMin(), model.getxMax(), model.getyMin(), model.getyMax());
         } else {
-            pointsArray = model.getPointsArray();
+            points = model.getPoints();
         }
 
-        MultivariateFunction function = interpolatorModel.interpolate(pointsArray, model.getInterpolationMethod(), model.getNumberOfSpheres());
+        MultivariateFunction function = interpolatorModel.interpolate(points, model.getInterpolationMethod(), model.getNumberOfSpheres());
         PlotModel plotModel = new PlotModel(function, model.getxMin(), model.getxMax(), model.getyMin(), model.getyMax());
         PlotView plotView = new PlotView();
         plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + model.getAngle());
@@ -47,7 +47,7 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         }
         dialogWindowView.dispose();
         plotView.display();
-        model.setPointsArray(pointsArray);
+        model.setPoints(points);
         return plotView;
     }
 

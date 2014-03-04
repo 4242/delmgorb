@@ -11,7 +11,7 @@ public enum IntegrationMethods {
     THREE_EIGHTS("Three eights"),
     HIGHAM_AND_HALL("Higham and Hall"),
     DORMAND_PRINCE_5("Dormand-Prince 5"),
-    DORMAND_PRINCE_8("Dormand-Prince 5"),
+    DORMAND_PRINCE_8("Dormand-Prince 8"),
     GRAGG_BULIRSCH_STOER("Grass-Bulirch-Stoer"),
     ADAMS_BASHFORTH("Adams-Bashforth"),
     ADAMS_MOULTON("Adams-Moulton");

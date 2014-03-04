@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Created by ilya-murzinov on 19.02.14.
  */
-public class PointsArray {
+public class Points {
     private Double[] xVal;
     private Double[] yVal;
     private Double[][] fVal;
@@ -38,13 +38,13 @@ public class PointsArray {
         }
     }
 
-    PointsArray(int a, int b) {
+    Points(int a, int b) {
         this.xVal = new Double[a];
         this.yVal = new Double[b];
         this.fVal = new Double[a][b];
     }
 
-    public PointsArray() {
+    public Points() {
 
     }
 }

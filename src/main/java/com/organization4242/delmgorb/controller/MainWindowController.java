@@ -91,7 +91,7 @@ public class MainWindowController {
     }
 
     private void drawPlot() {
-        if (model.getPointsArray() != null) {
+        if (model.getPoints() != null) {
             calculateFromScratch = JOptionPane.showOptionDialog(view, "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
         }
@@ -113,7 +113,7 @@ public class MainWindowController {
                         public void mouseClicked(MouseEvent e) {
                             PropertyChangeEvent ev = new PropertyChangeEvent(this, "interrupt", "false", "true");
                             changes.firePropertyChange(ev);
-                            model.setPointsArray(null);
+                            model.setPoints(null);
                             dialogWindowView.dispose();
                         }
                     });
@@ -126,7 +126,7 @@ public class MainWindowController {
 
     private void updateModel() {
         model.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
-        model.setBuildingAngle((BuildingAngle) view.getAngleJComboBox().getSelectedItem());
+        model.setAngle((Angle) view.getAngleJComboBox().getSelectedItem());
         model.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
         model.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
         model.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
