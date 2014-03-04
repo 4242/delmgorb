@@ -47,9 +47,9 @@ public class MainWindowView extends JFrame {
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
     private JLabel integrationAngle = new JLabel("Angle to plot:");
     private JLabel periodToInterpolateLabel = new JLabel("Period:");
-    private JLabel phiLabel = new JLabel("PHI(0):");
-    private JLabel psiLabel = new JLabel("PSI(0):");
-    private JLabel thetaLabel = new JLabel("THETA(0):");
+    private JLabel phiLabel = new JLabel(Angle.PHI + "(0):");
+    private JLabel psiLabel = new JLabel(Angle.PSI + "(0):");
+    private JLabel thetaLabel = new JLabel(Angle.THETA + "(0):");
 
     //UI Controls
     private JTextField[] textFields = new JTextField[NUMBER_OF_EQUATION_PARAMETERS];
@@ -169,10 +169,10 @@ public class MainWindowView extends JFrame {
         for (int i=0; i<4; i++) {
             boundsTextFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
         }
-        boundsTextFields[0].setText("1");
-        boundsTextFields[1].setText("2");
+        boundsTextFields[0].setText("1.0");
+        boundsTextFields[1].setText("2.0");
         boundsTextFields[2].setText(X_MIN_VALUE);
-        boundsTextFields[3].setText("1");
+        boundsTextFields[3].setText("1.0");
 
         numberOfPointsTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         numberOfPointsTextField.setText("10");

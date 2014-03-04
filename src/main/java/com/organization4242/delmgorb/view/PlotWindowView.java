@@ -16,14 +16,12 @@ public class PlotWindowView extends JFrame {
         getContentPane().add(view);
     }
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            setVisible(true);
-        }
-    };
-
     public void display() {
-        SwingUtilities.invokeLater(runnable);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setVisible(true);
+            }
+        });
     }
 }

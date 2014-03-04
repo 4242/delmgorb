@@ -1,5 +1,7 @@
 package com.organization4242.delmgorb.view;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -24,16 +26,16 @@ public class DialogWindowView extends JDialog {
     }
 
     public DialogWindowView(JFrame parent, String title, Boolean enableCancel) {
-        init(title, enableCancel);
+        super(parent, title);
+        init(enableCancel);
         setLocationRelativeTo(parent);
     }
 
-    private void init(String title, Boolean enableCancel) {
+    private void init(Boolean enableCancel) {
         setSize(200, 100);
-        setTitle(title);
 
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        setAlwaysOnTop(true);
+        //setAlwaysOnTop(true);
 
         button = new JButton("Cancel");
         progressBar = new JProgressBar();
@@ -70,6 +72,12 @@ public class DialogWindowView extends JDialog {
     }
 
     public void display() {
-        setVisible(true);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setModalityType(ModalityType.APPLICATION_MODAL);
+                setVisible(true);
+            }
+        });
     }
 }

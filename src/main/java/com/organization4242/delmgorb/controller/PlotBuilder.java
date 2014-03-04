@@ -39,15 +39,17 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
         plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + model.getAngle());
         plotView.setModel(plotModel);
         plotView.getTask().execute();
+        view.setEnabled(false);
         DialogWindowView dialogWindowView;
         dialogWindowView = new DialogWindowView(view, "Drawing...", false);
-        dialogWindowView.setVisible(true);
+        dialogWindowView.display();
         while (!plotView.getTask().isDone()) {
             dialogWindowView.getProgressBar().setValue(plotView.getTask().getProgress());
         }
         dialogWindowView.dispose();
         plotView.display();
         model.setPoints(points);
+        view.setEnabled(true);
         return plotView;
     }
 
