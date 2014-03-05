@@ -17,29 +17,43 @@ import java.util.Observer;
 public class PlotBuilder extends Observable implements Observer, PropertyChangeListener {
     private DataModel dataModel;
     private InterpolatorModel interpolatorModel = new InterpolatorModel();
+    private MainWindowView view;
+    private PlotView plotView;
 
     public PlotBuilder() {
-        dataModel = new DataModel();
-        dataModel.addObserver(this);
+
     }
 
-    public PlotView build(MainWindowView view, MainWindowModel model, Boolean calculateFromScratch) {
+    public PlotView build(MainWindowView view, MainWindowModel mainWindowModel, DataModel dataModel,
+                          Boolean calculateFromScratch) {
+        this.view = view;
+        this.dataModel = dataModel;
+        this.dataModel.addObserver(this);
         Points points;
         if (calculateFromScratch) {
-            points = dataModel.buildPoints(model.getNumberOfPoints(), model.getAngle(), model.getTimePeriod(), model.getTimeStep(),
-                model.getPhi(), model.getTheta(), model.getPsi(), model.getIntegrationMethod(),
-                model.getxMin(), model.getxMax(), model.getyMin(), model.getyMax());
+            points = dataModel.buildPoints(mainWindowModel.getNumberOfPoints(), mainWindowModel.getAngle(),
+                    mainWindowModel.getTimePeriod(), mainWindowModel.getTimeStep(),
+                mainWindowModel.getPhi(), mainWindowModel.getTheta(), mainWindowModel.getPsi(), mainWindowModel.getIntegrationMethod(),
+                mainWindowModel.getxMin(), mainWindowModel.getxMax(), mainWindowModel.getyMin(), mainWindowModel.getyMax());
         } else {
-            points = model.getPoints();
+            points = dataModel.getPoints();
         }
 
-        MultivariateFunction function = interpolatorModel.interpolate(points, model.getInterpolationMethod(), model.getNumberOfSpheres());
-        PlotModel plotModel = new PlotModel(function, model.getxMin(), model.getxMax(), model.getyMin(), model.getyMax());
-        PlotView plotView = new PlotView();
-        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + model.getAngle());
+        MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getInterpolationMethod(), mainWindowModel.getNumberOfSpheres());
+        PlotModel plotModel = new PlotModel(function, mainWindowModel.getxMin(), mainWindowModel.getxMax(), mainWindowModel.getyMin(), mainWindowModel.getyMax());
+        plotView = new PlotView();
+        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + mainWindowModel.getAngle());
         plotView.setModel(plotModel);
         plotView.getTask().execute();
+        showDialog();
         view.setEnabled(false);
+        plotView.display();
+        dataModel.setPoints(points);
+        view.setEnabled(true);
+        return plotView;
+    }
+
+    private void showDialog() {
         DialogWindowView dialogWindowView;
         dialogWindowView = new DialogWindowView(view, "Drawing...", false);
         dialogWindowView.display();
@@ -47,10 +61,6 @@ public class PlotBuilder extends Observable implements Observer, PropertyChangeL
             dialogWindowView.getProgressBar().setValue(plotView.getTask().getProgress());
         }
         dialogWindowView.dispose();
-        plotView.display();
-        model.setPoints(points);
-        view.setEnabled(true);
-        return plotView;
     }
 
     @Override

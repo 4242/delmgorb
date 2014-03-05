@@ -26,7 +26,8 @@ import java.util.logging.Logger;
  * Created by ilya-murzinov on 22.02.14.
  */
 public class MainWindowController {
-    private MainWindowModel model;
+    private MainWindowModel mainWindowModel;
+    private DataModel dataModel;
     private MainWindowView view;
     private Boolean canDraw = true;
     private Boolean calculateFromScratch = true;
@@ -40,8 +41,9 @@ public class MainWindowController {
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
-    public MainWindowController(MainWindowView view, MainWindowModel model) {
-        this.model = model;
+    public MainWindowController(MainWindowView view, MainWindowModel mainWindowModel, DataModel dataModel) {
+        this.mainWindowModel = mainWindowModel;
+        this.dataModel = dataModel;
         this.view = view;
         for (JTextField tf : view.getTextFields()) {
             tf.addFocusListener(focusListener);
@@ -71,7 +73,7 @@ public class MainWindowController {
         @Override
         protected Void doInBackground() throws Exception {
             builder.addObserver(this);
-            PlotView plotView = builder.build(view, model, calculateFromScratch);
+            PlotView plotView = builder.build(view, mainWindowModel, dataModel, calculateFromScratch);
             PlotWindowView plotWindowView = new PlotWindowView(plotView);
             plotWindowView.display();
             return null;
@@ -93,7 +95,7 @@ public class MainWindowController {
     }
 
     private void drawPlot() {
-        if (model.getPoints() != null) {
+        if (dataModel.getPoints() != null) {
             calculateFromScratch = JOptionPane.showOptionDialog(view, "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
         }
@@ -115,7 +117,7 @@ public class MainWindowController {
                         public void mouseClicked(MouseEvent e) {
                             PropertyChangeEvent ev = new PropertyChangeEvent(this, "interrupt", "false", "true");
                             changes.firePropertyChange(ev);
-                            model.setPoints(null);
+                            dataModel.setPoints(null);
                             dialogWindowView.dispose();
                         }
                     });
@@ -127,20 +129,20 @@ public class MainWindowController {
     }
 
     private void updateModel() {
-        model.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
-        model.setAngle((Angle) view.getAngleJComboBox().getSelectedItem());
-        model.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
-        model.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
-        model.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
-        model.setPhi0(Double.parseDouble(view.getPhiTextField().getText()));
-        model.setPsi0(Double.parseDouble(view.getPsiTextField().getText()));
-        model.setTheta0(Double.parseDouble(view.getThetaTextField().getText()));
-        model.setxMin(Float.parseFloat(view.getBoundsTextFields()[0].getText()));
-        model.setxMax(Float.parseFloat(view.getBoundsTextFields()[1].getText()));
-        model.setyMin(Float.parseFloat(view.getBoundsTextFields()[2].getText()));
-        model.setyMax(Float.parseFloat(view.getBoundsTextFields()[3].getText()));
-        model.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
-        model.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
+        mainWindowModel.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
+        mainWindowModel.setAngle((Angle) view.getAngleJComboBox().getSelectedItem());
+        mainWindowModel.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
+        mainWindowModel.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
+        mainWindowModel.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
+        mainWindowModel.setPhi0(Double.parseDouble(view.getPhiTextField().getText()));
+        mainWindowModel.setPsi0(Double.parseDouble(view.getPsiTextField().getText()));
+        mainWindowModel.setTheta0(Double.parseDouble(view.getThetaTextField().getText()));
+        mainWindowModel.setxMin(Float.parseFloat(view.getBoundsTextFields()[0].getText()));
+        mainWindowModel.setxMax(Float.parseFloat(view.getBoundsTextFields()[1].getText()));
+        mainWindowModel.setyMin(Float.parseFloat(view.getBoundsTextFields()[2].getText()));
+        mainWindowModel.setyMax(Float.parseFloat(view.getBoundsTextFields()[3].getText()));
+        mainWindowModel.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
+        mainWindowModel.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
     }
 
     private Boolean validate() {
@@ -155,20 +157,20 @@ public class MainWindowController {
             return false;
         }
 
-        if (model.getxMin().equals(0f) || model.getxMax().equals(0f)
-                || model.getyMin().equals(0f) || model.getyMax().equals(0f)
-                || model.getxMin()*model.getxMax()<0
-                || model.getyMin()*model.getyMax()<0) {
+        if (mainWindowModel.getxMin().equals(0f) || mainWindowModel.getxMax().equals(0f)
+                || mainWindowModel.getyMin().equals(0f) || mainWindowModel.getyMax().equals(0f)
+                || mainWindowModel.getxMin()* mainWindowModel.getxMax()<0
+                || mainWindowModel.getyMin()* mainWindowModel.getyMax()<0) {
             canDraw = false;
             validationMessage = validationMessage.concat("Both x and y can't be zero!");
             validationMessage = validationMessage.concat("\n");
         }
-        if (model.getxMin() > model.getxMax()) {
+        if (mainWindowModel.getxMin() > mainWindowModel.getxMax()) {
             canDraw = false;
             validationMessage = validationMessage.concat("XMax should be greater then XMin!");
             validationMessage = validationMessage.concat("\n");
         }
-        if (model.getyMin() > model.getyMax()) {
+        if (mainWindowModel.getyMin() > mainWindowModel.getyMax()) {
             canDraw = false;
             validationMessage = validationMessage.concat("YMax should be greater then YMin!");
             validationMessage = validationMessage.concat("\n");
@@ -182,19 +184,19 @@ public class MainWindowController {
     }
 
     private void updateView() {
-        view.getNumberOfPoints().setText(model.getNumberOfPoints().toString());
-        view.getBoundsTextFields()[0].setText(model.getxMin().toString());
-        view.getBoundsTextFields()[1].setText(model.getxMax().toString());
-        view.getBoundsTextFields()[2].setText(model.getyMin().toString());
-        view.getBoundsTextFields()[3].setText(model.getyMax().toString());
-        view.getIntegrationMethodsComboBox().setSelectedItem(model.getIntegrationMethod());
-        view.getPeriodToInterpolate().setText(model.getTimePeriod().toString());
-        view.getTimeStep().setText(model.getTimeStep().toString());
-        view.getAngleJComboBox().setSelectedItem(model.getAngle());
-        view.getPhiTextField().setText(model.getPhi().toString());
-        view.getPsiTextField().setText(model.getPsi().toString());
-        view.getThetaTextField().setText(model.getTheta().toString());
-        view.getNumberOfSpheresTextField().setText(model.getNumberOfSpheres().toString());
+        view.getNumberOfPoints().setText(mainWindowModel.getNumberOfPoints().toString());
+        view.getBoundsTextFields()[0].setText(mainWindowModel.getxMin().toString());
+        view.getBoundsTextFields()[1].setText(mainWindowModel.getxMax().toString());
+        view.getBoundsTextFields()[2].setText(mainWindowModel.getyMin().toString());
+        view.getBoundsTextFields()[3].setText(mainWindowModel.getyMax().toString());
+        view.getIntegrationMethodsComboBox().setSelectedItem(mainWindowModel.getIntegrationMethod());
+        view.getPeriodToInterpolate().setText(mainWindowModel.getTimePeriod().toString());
+        view.getTimeStep().setText(mainWindowModel.getTimeStep().toString());
+        view.getAngleJComboBox().setSelectedItem(mainWindowModel.getAngle());
+        view.getPhiTextField().setText(mainWindowModel.getPhi().toString());
+        view.getPsiTextField().setText(mainWindowModel.getPsi().toString());
+        view.getThetaTextField().setText(mainWindowModel.getTheta().toString());
+        view.getNumberOfSpheresTextField().setText(mainWindowModel.getNumberOfSpheres().toString());
     }
 
     private ActionListener menuItemActionListener = new ActionListener() {
@@ -202,7 +204,10 @@ public class MainWindowController {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(view.getImportDataMenuItem())) {
                 try {
-                    model = (MainWindowModel) xStream.fromXML(new FileInputStream(OpenFileHelper.open(view)));
+                    Serializator serializator =
+                            (Serializator) xStream.fromXML(new FileInputStream(OpenFileHelper.open(view)));
+                    mainWindowModel = serializator.mainWindowModel;
+                    dataModel = serializator.dataModel;
                 } catch (FileNotFoundException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
                 }
@@ -215,7 +220,10 @@ public class MainWindowController {
                         file = new File(file.getAbsolutePath());
                     }
                     FileOutputStream fos = new FileOutputStream(file);
-                    xStream.toXML(MainWindowController.this.model, fos);
+                    Serializator serializator = new Serializator(mainWindowModel, dataModel);
+                    xStream.omitField(Observable.class, "obs");
+                    xStream.omitField(Observable.class, "changed");
+                    xStream.toXML(serializator, fos);
                     JOptionPane.showMessageDialog(view, "Data was exported to " + file.getAbsolutePath());
                 } catch (NullPointerException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());

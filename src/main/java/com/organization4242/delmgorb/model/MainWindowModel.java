@@ -6,8 +6,6 @@ import java.io.Serializable;
  * Created by ilya-murzinov on 22.02.14.
  */
 public class MainWindowModel implements Serializable {
-    private Points points;
-
     private IntegrationMethods integrationMethod;
     private Angle angle;
     private Integer numberOfPoints;
@@ -22,14 +20,6 @@ public class MainWindowModel implements Serializable {
     private Float yMax;
     private Integer numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
-
-    public Points getPoints() {
-        return points;
-    }
-
-    public void setPoints(Points points) {
-        this.points = points;
-    }
 
     public IntegrationMethods getIntegrationMethod() {
         return integrationMethod;
