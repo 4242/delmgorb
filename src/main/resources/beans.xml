@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="mainWindowModel" class="com.organization4242.delmgorb.model.MainWindowModel">
+        <property name="numberOfPoints" value="10"/>
+        <property name="timeStep" value="0.5"/>
+        <property name="timePeriod" value="100"/>
+        <property name="xMin" value="1"/>
+        <property name="xMax" value="2"/>
+        <property name="yMin" value="0.05"/>
+        <property name="yMax" value="1"/>
+        <property name="angle" value="PSI"/>
+        <property name="integrationMethod" value="DORMAND_PRINCE_8"/>
+        <property name="psi0" value="0.05"/>
+        <property name="phi0" value="0.05"/>
+        <property name="theta0" value="0.05"/>
+        <property name="numberOfSpheres" value="10"/>
+    </bean>
+
+    <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView">
+
+    </bean>
+
+    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel">
+
+    </bean>
+
+    <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">
+        <constructor-arg ref="mainWindowView"/>
+        <constructor-arg ref="mainWindowModel"/>
+        <constructor-arg ref="dataModel"/>
+    </bean>
+</beans>

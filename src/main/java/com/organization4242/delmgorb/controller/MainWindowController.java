@@ -45,6 +45,20 @@ public class MainWindowController {
         this.mainWindowModel = mainWindowModel;
         this.dataModel = dataModel;
         this.view = view;
+        updateView();
+        FocusListener focusListener = new FocusAdapter() {
+            @Override
+            public void focusGained(final FocusEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JTextField tf = (JTextField) e.getComponent();
+                        tf.selectAll();
+                    }
+                });
+            }
+        };
+
         for (JTextField tf : view.getTextFields()) {
             tf.addFocusListener(focusListener);
         }
@@ -235,16 +249,4 @@ public class MainWindowController {
         }
     };
 
-    private FocusListener focusListener = new FocusAdapter() {
-        @Override
-        public void focusGained(final FocusEvent e) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    JTextField tf = (JTextField) e.getComponent();
-                    tf.selectAll();
-                }
-            });
-        }
-    };
 }

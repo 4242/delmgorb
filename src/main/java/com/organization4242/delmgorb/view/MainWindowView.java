@@ -129,7 +129,6 @@ public class MainWindowView extends JFrame {
         //Setting window parameters
         setTitle("Delmgorb v1.0");
         setSize(WIDTH, HEIGHT);
-        setVisible(true);
         setResizable(false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -166,37 +165,35 @@ public class MainWindowView extends JFrame {
 
         for (int i=0; i< NUMBER_OF_EQUATION_PARAMETERS; i++) {
             textFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
-            textFields[i].setText("0");
+            //textFields[i].setText("0");
         }
         for (int i=0; i<4; i++) {
             boundsTextFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
         }
-        boundsTextFields[0].setText("1.0");
-        boundsTextFields[1].setText("2.0");
-        boundsTextFields[2].setText(X_MIN_VALUE);
-        boundsTextFields[3].setText("1.0");
+        //boundsTextFields[0].setText("1.0");
+        //boundsTextFields[1].setText("2.0");
+        //boundsTextFields[2].setText(X_MIN_VALUE);
+        //boundsTextFields[3].setText("1.0");
 
         numberOfPointsTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        numberOfPointsTextField.setText("10");
+        //numberOfPointsTextField.setText("10");
         timeStepTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        timeStepTextField.setText("0.5");
+        //timeStepTextField.setText("0.5");
         periodToInterpolateTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        periodToInterpolateTextField.setText("100");
+        //periodToInterpolateTextField.setText("100");
         numberOfSpheresTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        numberOfSpheresTextField.setText("50");
+        //numberOfSpheresTextField.setText("50");
         phiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        phiTextField.setText(ANGLE_DEFAULT_VALUE);
+        //phiTextField.setText(ANGLE_DEFAULT_VALUE);
         psiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        psiTextField.setText(ANGLE_DEFAULT_VALUE);
+        //psiTextField.setText(ANGLE_DEFAULT_VALUE);
         thetaTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        thetaTextField.setText(ANGLE_DEFAULT_VALUE);
+        //thetaTextField.setText(ANGLE_DEFAULT_VALUE);
 
         button = new JButton("Draw!");
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
-        integrationMethodsComboBox.setSelectedItem(IntegrationMethods.DORMAND_PRINCE_8);
         integrationMethodsComboBox.setEditable(false);
         buildingAngleJComboBox = new JComboBox<Angle>(Angle.values());
-        buildingAngleJComboBox.setSelectedItem(Angle.PSI);
         buildingAngleJComboBox.setEditable(false);
     }
 
