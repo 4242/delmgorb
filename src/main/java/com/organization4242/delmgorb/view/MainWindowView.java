@@ -9,17 +9,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by ilya-murzinov on 22.02.14.
+ * Class represents main window with all UI controls.
+ * It uses 5 panels to place UI controls ans then place all panel inside the main panel.
+ *
+ * All controls are empty in the resutling window, use {@link controller.MainWindowController}
+ * to set all values.
+ * 
+ * @author Murzinov Ilya
  */
 public class MainWindowView extends JFrame {
     private static final int NUMBER_OF_EQUATION_PARAMETERS = 14;
     private static final int HEIGHT = 650;
-    private static final int WIDTH =400;
+    private static final int WIDTH = 400;
     private static final int TEXT_FIELD_MIN_WIDTH = 4;
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
     private static final Insets EMPTY_INSETS = new Insets(0,0,0,0);
-    private static final String X_MIN_VALUE = "0.05";
-    private static final String ANGLE_DEFAULT_VALUE = "0.05";
 
     //Menu
     private JMenuBar menuBar = new JMenuBar();
@@ -68,7 +72,6 @@ public class MainWindowView extends JFrame {
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
     //Accessors
-
     public JMenuItem getImportDataMenuItem() {
         return importDataMenuItem;
     }
@@ -125,6 +128,9 @@ public class MainWindowView extends JFrame {
         return buildingAngleJComboBox;
     }
 
+    /**
+    * Initializes main window and xreates its structure without showing it.
+    */
     public MainWindowView() {
         //Setting window parameters
         setTitle("Delmgorb v1.0");
@@ -142,11 +148,8 @@ public class MainWindowView extends JFrame {
         }
 
         init();
-
         addMenu();
-
         createPanelStructure();
-
         placeControls();
     }
 
@@ -159,36 +162,24 @@ public class MainWindowView extends JFrame {
     }
 
     /**
-     * Initializes all controls in the window
+     * Initializes all controls in the window.
      */
     private void init() {
 
         for (int i=0; i< NUMBER_OF_EQUATION_PARAMETERS; i++) {
             textFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
-            //textFields[i].setText("0");
         }
         for (int i=0; i<4; i++) {
             boundsTextFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
         }
-        //boundsTextFields[0].setText("1.0");
-        //boundsTextFields[1].setText("2.0");
-        //boundsTextFields[2].setText(X_MIN_VALUE);
-        //boundsTextFields[3].setText("1.0");
 
         numberOfPointsTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        //numberOfPointsTextField.setText("10");
         timeStepTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        //timeStepTextField.setText("0.5");
         periodToInterpolateTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        //periodToInterpolateTextField.setText("100");
         numberOfSpheresTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        //numberOfSpheresTextField.setText("50");
         phiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        //phiTextField.setText(ANGLE_DEFAULT_VALUE);
         psiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        //psiTextField.setText(ANGLE_DEFAULT_VALUE);
         thetaTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        //thetaTextField.setText(ANGLE_DEFAULT_VALUE);
 
         button = new JButton("Draw!");
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
@@ -198,7 +189,7 @@ public class MainWindowView extends JFrame {
     }
 
     /**
-     * Creates main panel, internal panels and places internal panels inside main
+     * Creates main panel, internal panels and places internal panels inside main panel.
      */
     private void createPanelStructure() {
         JPanel mainPanel = new JPanel();
@@ -244,7 +235,7 @@ public class MainWindowView extends JFrame {
     }
 
     /**
-     * Places all UI controls to equation parameters panel
+     * Places all UI controls to equation parameters panel.
      */
     private void placeEquationParameters() {
         equationParametersPanel.setLayout(gridBagLayout);
@@ -317,7 +308,7 @@ public class MainWindowView extends JFrame {
     }
 
     /**
-     * Places all UI controls to integration parameters panel
+     * Places all UI controls to integration parameters panel.
      */
     private void placeIntegrationParameters() {
         //Set layout to all internal panels
@@ -381,7 +372,7 @@ public class MainWindowView extends JFrame {
     }
 
     /**
-     * Places all UI controls to interpolation parameters panel
+     * Places all UI controls to interpolation parameters panel.
      */
     private void placeInterpolationParameters() {
         interpolationParametersPanel.setLayout(gridBagLayout);
@@ -406,6 +397,9 @@ public class MainWindowView extends JFrame {
         interpolationParametersPanel.add(numberOfSpheresTextField);
     }
 
+    /**
+     * Places all UI controls to initial conditions panel.
+     */
     private void placeInitialConditions() {
         initialConditionsPanel.setLayout(gridBagLayout);
 
@@ -445,6 +439,9 @@ public class MainWindowView extends JFrame {
         initialConditionsPanel.add(thetaTextField);
     }
 
+    /**
+     * Places all UI controls to buttons panel.
+     */
     private void placeButtonControls() {
         buttonsPanel.setLayout(gridBagLayout);
 
@@ -465,6 +462,9 @@ public class MainWindowView extends JFrame {
         buttonsPanel.add(button);
     }
 
+    /**
+    * Combines all controls in main window panel.
+    */
     private void placeControls() {
         placeEquationParameters();
         placeIntegrationParameters();
@@ -473,14 +473,15 @@ public class MainWindowView extends JFrame {
         placeButtonControls();
     }
 
-    private Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            setVisible(true);
-        }
-    };
-
+    /**
+    * Shows main window.
+    */
     public void display() {
-        SwingUtilities.invokeLater(runnable);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                setVisible(true);
+            }
+        });    
     }
 }

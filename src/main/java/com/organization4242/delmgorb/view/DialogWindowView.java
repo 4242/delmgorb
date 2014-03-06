@@ -6,7 +6,14 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by ilya-murzinov on 28.02.14.
+ * Class represents dialog window with progress bar and cancel button.
+ * It is used to display progress of long-going operations such as calculating
+ * maximal values or interpolating set of points.
+ * Also it provides ability to interrupt whose operations.
+ * 
+ * By default cancel button doesn't have any action listener.
+ * 
+ * @author Murzinov Ilya
  */
 public class DialogWindowView extends JDialog {
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
@@ -15,16 +22,23 @@ public class DialogWindowView extends JDialog {
 
     private JButton button;
 
+    private JProgressBar progressBar;
+    
     public JButton getButton() {
         return button;
-    }
-
-    private JProgressBar progressBar;
+    }    
 
     public JProgressBar getProgressBar() {
         return progressBar;
     }
 
+    /**
+    * Initializes dialog window without showing it.
+    * 
+    * @param parent - parent JFrame which creates dialog
+    * @param title - title of dialog window
+    * @param enableCancel - indicates whether cancel button should be enabled
+    */
     public DialogWindowView(JFrame parent, String title, Boolean enableCancel) {
         super(parent, title);
         init(enableCancel);
@@ -71,6 +85,9 @@ public class DialogWindowView extends JDialog {
         add(progressBar);
     }
 
+    /**
+    * Shows dialog.
+    */
     public void display() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
