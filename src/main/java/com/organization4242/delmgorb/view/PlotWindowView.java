@@ -3,7 +3,9 @@ package com.organization4242.delmgorb.view;
 import javax.swing.*;
 
 /**
- * Created by ilya-murzinov on 22.02.14.
+ * Represents window with resulting plot.
+ *
+ * @author Murzinov Ilya
  */
 public class PlotWindowView extends JFrame {
     private static final int HEIGHT = 600;

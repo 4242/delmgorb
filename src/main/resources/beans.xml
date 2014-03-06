@@ -21,15 +21,15 @@
     </bean>
 
     <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView">
-
     </bean>
 
     <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel">
-
+        <property name="mainWindowModel" ref="mainWindowModel"/>
     </bean>
 
     <bean id="plotBuilder" class="com.organization4242.delmgorb.controller.PlotBuilder" lazy-init="true">
-
+        <property name="mainWindowModel" ref="mainWindowModel"/>
+        <property name="dataModel" ref="dataModel"/>
     </bean>
 
     <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">
@@ -37,5 +37,6 @@
         <constructor-arg ref="mainWindowModel"/>
         <constructor-arg ref="dataModel"/>
         <constructor-arg ref="plotBuilder"/>
+        <property name="plotBuilder" ref="plotBuilder"/>
     </bean>
 </beans>

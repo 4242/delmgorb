@@ -22,7 +22,7 @@ public class MainWindowController {
     private MainWindowModel mainWindowModel;
     private DataModel dataModel;
     private MainWindowView view;
-    private PlotBuilder builder;
+    private PlotBuilder plotBuilder;
     private Boolean canDraw = true;
     private Boolean calculateFromScratch = true;
 
@@ -30,12 +30,15 @@ public class MainWindowController {
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
+    public void setPlotBuilder(PlotBuilder plotBuilder) {
+        this.plotBuilder = plotBuilder;
+    }
+
     public MainWindowController(MainWindowView view, MainWindowModel mainWindowModel,
                                 DataModel dataModel, PlotBuilder plotBuilder) {
         this.mainWindowModel = mainWindowModel;
         this.dataModel = dataModel;
         this.view = view;
-        this.builder = plotBuilder;
         updateView();
         FocusListener focusListener = new FocusAdapter() {
             @Override
@@ -67,8 +70,7 @@ public class MainWindowController {
                             "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
                 }
-                builder.build(MainWindowController.this.mainWindowModel,
-                        MainWindowController.this.dataModel, calculateFromScratch).display();
+                MainWindowController.this.plotBuilder.build(calculateFromScratch).display();
             }
         });
         view.getNumberOfPoints().addFocusListener(focusListener);

@@ -3,7 +3,10 @@ package com.organization4242.delmgorb.model;
 import java.io.Serializable;
 
 /**
- * Created by ilya-murzinov on 22.02.14.
+ * Class is used for storing values from {@link com.organization4242.delmgorb.view.MainWindowView}
+ * and pass it to {@link com.organization4242.delmgorb.model.DataModel}.
+ *
+ * @author Murzinov Ilya
  */
 public class MainWindowModel implements Serializable {
     private IntegrationMethods integrationMethod;

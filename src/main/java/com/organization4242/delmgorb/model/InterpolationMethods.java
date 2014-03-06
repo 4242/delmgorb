@@ -1,7 +1,7 @@
 package com.organization4242.delmgorb.model;
 
 /**
- * Created by ilya-murzinov on 26.02.14.
+ * @author Murzinov Ilya
  */
 public enum InterpolationMethods {
     BICUBIC_SPLINE,

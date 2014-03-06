@@ -5,7 +5,10 @@ import net.ericaro.surfaceplotter.Mapper;
 import org.apache.commons.math3.analysis.MultivariateFunction;
 
 /**
- * Created by ilya-murzinov on 22.02.14.
+ * Represents the function created by {@link com.organization4242.delmgorb.model.DataModel}.
+ * Used to pass to {@link com.organization4242.delmgorb.view.PlotView}
+ *
+ * @author Murzinov Ilya
  */
 public class PlotModel {
     private DefaultSurfaceModel model;

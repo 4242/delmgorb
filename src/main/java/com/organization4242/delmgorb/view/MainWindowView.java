@@ -12,8 +12,8 @@ import java.util.logging.Logger;
  * Class represents main window with all UI controls.
  * It uses 5 panels to place UI controls ans then place all panel inside the main panel.
  *
- * All controls are empty in the resutling window, use {@link controller.MainWindowController}
- * to set all values.
+ * All controls are empty in the resulting window, use
+ * {@link com.organization4242.delmgorb.controller.MainWindowController} to set all values.
  * 
  * @author Murzinov Ilya
  */
@@ -129,7 +129,7 @@ public class MainWindowView extends JFrame {
     }
 
     /**
-    * Initializes main window and xreates its structure without showing it.
+    * Initializes main window and creates its structure without showing it.
     */
     public MainWindowView() {
         //Setting window parameters

@@ -3,7 +3,10 @@ package com.organization4242.delmgorb.model;
 import java.util.Arrays;
 
 /**
- * Created by ilya-murzinov on 19.02.14.
+ * Data structure used to conveniently pass to
+ * {@link org.apache.commons.math3.analysis.interpolation.MicrosphereInterpolator}
+ *
+ * @author Murzinov Ilya
  */
 public class Points {
     private Double[] xVal;

@@ -4,27 +4,37 @@ import org.apache.commons.math3.analysis.MultivariateFunction;
 import org.apache.commons.math3.analysis.interpolation.MicrosphereInterpolator;
 
 /**
- * Created by ilya-murzinov on 24.02.14.
+ * Util class used for interpolation points from {@link com.organization4242.delmgorb.model.DataModel}
+ *
+ * @author Murzinov Ilya
  */
 public class InterpolatorModel {
-    public MultivariateFunction interpolate(Points arrays,
+    /**
+     * Produces function which is passed to {@link com.organization4242.delmgorb.view.PlotView}
+     *
+     * @param points set of points to be interpolated
+     * @param interpolationMethods {@link com.organization4242.delmgorb.model.InterpolationMethods}
+     * @param numberOfSpheres parameter of {@link org.apache.commons.math3.analysis.interpolation.MicrosphereInterpolator}
+     * @return {@link org.apache.commons.math3.analysis.MultivariateFunction}
+     */
+    public MultivariateFunction interpolate(Points points,
                                             InterpolationMethods interpolationMethods, int numberOfSpheres) {
-        int length = arrays.getxVal().length;
-        double[][] points = new double[length*length][2];
+        int length = points.getxVal().length;
+        double[][] fVals = new double[length*length][2];
         double[] values = new double[length*length];
 
         int c = 0;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
-                points[c][0] = arrays.getxVal()[i];
-                points[c][1] = arrays.getyVal()[j];
-                values[c] = arrays.getfVal()[i][j];
+                fVals[c][0] = points.getxVal()[i];
+                fVals[c][1] = points.getyVal()[j];
+                values[c] = points.getfVal()[i][j];
                 c++;
             }
         }
 
 
         MicrosphereInterpolator interpolator = new MicrosphereInterpolator(numberOfSpheres, 2);
-        return interpolator.interpolate(points, values);
+        return interpolator.interpolate(fVals, values);
     }
 }

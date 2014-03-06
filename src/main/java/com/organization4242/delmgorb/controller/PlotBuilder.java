@@ -6,20 +6,30 @@ import com.organization4242.delmgorb.view.PlotWindowView;
 import org.apache.commons.math3.analysis.MultivariateFunction;
 
 /**
- * Created by ilya-murzinov on 26.02.14.
+ * Util class which represents all logic.
+ *
+ * @author Murzinov Ilya
  */
 public class PlotBuilder {
     private InterpolatorModel interpolatorModel = new InterpolatorModel();
+    private MainWindowModel mainWindowModel;
+    private  DataModel dataModel;
+
+    public void setMainWindowModel(MainWindowModel mainWindowModel) {
+        this.mainWindowModel = mainWindowModel;
+    }
+
+    public void setDataModel(DataModel dataModel) {
+        this.dataModel = dataModel;
+    }
 
     public PlotBuilder() {
 
     }
 
-    public PlotWindowView build(MainWindowModel mainWindowModel, DataModel dataModel,
-                          Boolean calculateFromScratch) {
+    public PlotWindowView build(Boolean calculateFromScratch) {
         Points points;
         if (calculateFromScratch) {
-            dataModel.setMainWindowModel(mainWindowModel);
             dataModel.buildPoints();
             points = dataModel.getPoints();
         } else {

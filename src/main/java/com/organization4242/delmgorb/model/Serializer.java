@@ -3,7 +3,10 @@ package com.organization4242.delmgorb.model;
 import java.io.Serializable;
 
 /**
- * Created by ilya-murzinov on 05.03.14.
+ * Util class used to serialize both {@link com.organization4242.delmgorb.model.MainWindowModel}
+ * and {@link com.organization4242.delmgorb.model.DataModel}.
+ *
+ * @author Murzinov Ilya
  */
 public class Serializer implements Serializable {
     public Serializer(MainWindowModel mainWindowModel, DataModel dataModel) {

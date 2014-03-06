@@ -2,9 +2,6 @@ package com.organization4242.delmgorb.model;
 
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 
-/**
- * Created by ilya-murzinov on 19.02.14.
- */
 class LibrationODE implements FirstOrderDifferentialEquations {
     private double a;
     private double epsilon;
