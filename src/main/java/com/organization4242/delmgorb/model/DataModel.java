@@ -11,15 +11,15 @@ import static java.lang.Math.*;
 
 public class DataModel extends Observable implements Serializable {
     private Points points;
-
+    private MainWindowModel mainWindowModel;
     private transient Boolean stop = false;
 
     public Points getPoints() {
         return points;
     }
 
-    public void setPoints(Points points) {
-        this.points = points;
+    public void setMainWindowModel(MainWindowModel mainWindowModel) {
+        this.mainWindowModel = mainWindowModel;
     }
 
     public void stop() {
@@ -124,6 +124,10 @@ public class DataModel extends Observable implements Serializable {
         double timeOfMax = 0;
         double t = timeStep;
         while (t <= time){
+            if (stop) {
+                stop = false;
+                return 0;
+            }
             t+=10*timeStep;
             double[] finalState;
             finalState = new double[] { 0, 0, 0, 0, 0, 0, 0 };
@@ -137,6 +141,10 @@ public class DataModel extends Observable implements Serializable {
         }
         t = max(timeOfMax - 20, 0.0);
         while (t <= min(time, timeOfMax + 20)){
+            if (stop) {
+                stop = false;
+                return 0;
+            }
             t+=timeStep;
             double[] finalState;
             finalState = new double[] { 0, 0, 0, 0, 0, 0, 0 };
@@ -151,30 +159,27 @@ public class DataModel extends Observable implements Serializable {
         return max;
     }
 
-    public Points buildPoints (int numOfPoints, Angle angle,
-                                        double time, double timeStep, double phi0, double theta0, double psi0,
-                                        IntegrationMethods method, double xMin, double xMax, double yMin, double yMax) {
+    public void buildPoints() {
         Points comboArray;
-        comboArray = new Points(numOfPoints, numOfPoints);
-        FirstOrderIntegrator integrator = IntegratorFactory.createFor(method);
-        comboArray.setxVal(doFragmentation(xMin, xMax, numOfPoints));
-        comboArray.setyVal(doFragmentation(yMin, yMax, numOfPoints));
-        double[] initialState = InitialConditionsFactory.createConditions(phi0, psi0, theta0);
-        for (int i = 0; i < numOfPoints; i++) {
-            for (int j = 0; j < numOfPoints; j++) {
-                comboArray.getfVal()[j][i] = getMaxValue(angle, time, timeStep,
-                        comboArray.getyVal()[i], comboArray.getxVal()[j], integrator, initialState);
+        comboArray = new Points(mainWindowModel.getNumberOfPoints(), mainWindowModel.getNumberOfPoints());
+        FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
+        comboArray.setxVal(doFragmentation(mainWindowModel.getxMin(), mainWindowModel.getxMax(), mainWindowModel.getNumberOfPoints()));
+        comboArray.setyVal(doFragmentation(mainWindowModel.getyMin(), mainWindowModel.getyMax(), mainWindowModel.getNumberOfPoints()));
+        double[] initialState = InitialConditionsFactory.createConditions(mainWindowModel.getPhi(), mainWindowModel.getPsi(),
+                mainWindowModel.getTheta());
+        for (int i = 0; i < mainWindowModel.getNumberOfPoints(); i++) {
+            for (int j = 0; j < mainWindowModel.getNumberOfPoints(); j++) {
+                comboArray.getfVal()[j][i] = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
+                        mainWindowModel.getTimeStep(), comboArray.getyVal()[i], comboArray.getxVal()[j], integrator, initialState);
                 if (stop) {
                     stop = false;
-                    return null;
+                    return;
                 }
-                //Notifying progress bar
                 setChanged();
-                notifyObservers((int) (((double) (i*numOfPoints + j + 1)/Math.pow(numOfPoints,2))*100));
+                notifyObservers((int) (((double)
+                        (i*mainWindowModel.getNumberOfPoints() + j + 1)/Math.pow(mainWindowModel.getNumberOfPoints(),2))*100));
             }
         }
-        setChanged();
-        notifyObservers("calculated");
-        return comboArray;
+        points = comboArray;
     }
 }

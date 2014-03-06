@@ -28,9 +28,14 @@
 
     </bean>
 
+    <bean id="plotBuilder" class="com.organization4242.delmgorb.controller.PlotBuilder" lazy-init="true">
+
+    </bean>
+
     <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">
         <constructor-arg ref="mainWindowView"/>
         <constructor-arg ref="mainWindowModel"/>
         <constructor-arg ref="dataModel"/>
+        <constructor-arg ref="plotBuilder"/>
     </bean>
 </beans>

@@ -1,24 +1,17 @@
 package com.organization4242.delmgorb.controller;
 
 import com.organization4242.delmgorb.model.*;
-import com.organization4242.delmgorb.view.DialogWindowView;
 import com.organization4242.delmgorb.view.MainWindowView;
-import com.organization4242.delmgorb.view.PlotView;
-import com.organization4242.delmgorb.view.PlotWindowView;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
-import org.apache.commons.math3.exception.NumberIsTooSmallException;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,22 +22,20 @@ public class MainWindowController {
     private MainWindowModel mainWindowModel;
     private DataModel dataModel;
     private MainWindowView view;
+    private PlotBuilder builder;
     private Boolean canDraw = true;
     private Boolean calculateFromScratch = true;
-
-    private DialogWindowView dialogWindowView;
-
-    private PropertyChangeSupport changes;
-    private PlotBuilder builder = new PlotBuilder();
 
     private XStream xStream = new XStream(new DomDriver());
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
-    public MainWindowController(MainWindowView view, MainWindowModel mainWindowModel, DataModel dataModel) {
+    public MainWindowController(MainWindowView view, MainWindowModel mainWindowModel,
+                                DataModel dataModel, PlotBuilder plotBuilder) {
         this.mainWindowModel = mainWindowModel;
         this.dataModel = dataModel;
         this.view = view;
+        this.builder = plotBuilder;
         updateView();
         FocusListener focusListener = new FocusAdapter() {
             @Override
@@ -70,7 +61,14 @@ public class MainWindowController {
         view.getButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                drawPlot();
+                updateModel();
+                if (MainWindowController.this.dataModel.getPoints() != null) {
+                    calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.view,
+                            "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
+                }
+                builder.build(MainWindowController.this.mainWindowModel,
+                        MainWindowController.this.dataModel, calculateFromScratch).display();
             }
         });
         view.getNumberOfPoints().addFocusListener(focusListener);
@@ -80,66 +78,6 @@ public class MainWindowController {
         view.getPhiTextField().addFocusListener(focusListener);
         view.getPsiTextField().addFocusListener(focusListener);
         view.getThetaTextField().addFocusListener(focusListener);
-    }
-
-    private class Task extends SwingWorker<Void, Integer> implements Observer {
-
-        @Override
-        protected Void doInBackground() throws Exception {
-            builder.addObserver(this);
-            PlotView plotView = builder.build(view, mainWindowModel, dataModel, calculateFromScratch);
-            PlotWindowView plotWindowView = new PlotWindowView(plotView);
-            plotWindowView.display();
-            return null;
-        }
-
-        public void done() {
-            view.setEnabled(true);
-        }
-
-        @Override
-        public void update(Observable o, Object arg) {
-            if (arg.getClass().equals(Integer.class)) {
-                dialogWindowView.getProgressBar().setValue((Integer) arg);
-            }
-            if (arg.getClass().equals(String.class)) {
-                dialogWindowView.dispose();
-            }
-        }
-    }
-
-    private void drawPlot() {
-        if (dataModel.getPoints() != null) {
-            calculateFromScratch = JOptionPane.showOptionDialog(view, "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
-        }
-
-        canDraw = validate();
-
-        if (canDraw) {
-            try {
-                final Task task = new Task();
-                task.execute();
-                if (calculateFromScratch) {
-                    view.setEnabled(false);
-                    dialogWindowView = new DialogWindowView(view, "Calculating...", true);
-                    dialogWindowView.display();
-                    changes = new PropertyChangeSupport(this);
-                    changes.addPropertyChangeListener(builder);
-                    dialogWindowView.getButton().addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            PropertyChangeEvent ev = new PropertyChangeEvent(this, "interrupt", "false", "true");
-                            changes.firePropertyChange(ev);
-                            dataModel.setPoints(null);
-                            dialogWindowView.dispose();
-                        }
-                    });
-                }
-            } catch (NumberIsTooSmallException ex) {
-                JOptionPane.showMessageDialog(view, "Number of points is too small");
-            }
-        }
     }
 
     private void updateModel() {
@@ -157,6 +95,22 @@ public class MainWindowController {
         mainWindowModel.setyMax(Float.parseFloat(view.getBoundsTextFields()[3].getText()));
         mainWindowModel.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
         mainWindowModel.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
+    }
+
+    private void updateView() {
+        view.getNumberOfPoints().setText(mainWindowModel.getNumberOfPoints().toString());
+        view.getBoundsTextFields()[0].setText(mainWindowModel.getxMin().toString());
+        view.getBoundsTextFields()[1].setText(mainWindowModel.getxMax().toString());
+        view.getBoundsTextFields()[2].setText(mainWindowModel.getyMin().toString());
+        view.getBoundsTextFields()[3].setText(mainWindowModel.getyMax().toString());
+        view.getIntegrationMethodsComboBox().setSelectedItem(mainWindowModel.getIntegrationMethod());
+        view.getPeriodToInterpolate().setText(mainWindowModel.getTimePeriod().toString());
+        view.getTimeStep().setText(mainWindowModel.getTimeStep().toString());
+        view.getAngleJComboBox().setSelectedItem(mainWindowModel.getAngle());
+        view.getPhiTextField().setText(mainWindowModel.getPhi().toString());
+        view.getPsiTextField().setText(mainWindowModel.getPsi().toString());
+        view.getThetaTextField().setText(mainWindowModel.getTheta().toString());
+        view.getNumberOfSpheresTextField().setText(mainWindowModel.getNumberOfSpheres().toString());
     }
 
     private Boolean validate() {
@@ -197,31 +151,15 @@ public class MainWindowController {
         return true;
     }
 
-    private void updateView() {
-        view.getNumberOfPoints().setText(mainWindowModel.getNumberOfPoints().toString());
-        view.getBoundsTextFields()[0].setText(mainWindowModel.getxMin().toString());
-        view.getBoundsTextFields()[1].setText(mainWindowModel.getxMax().toString());
-        view.getBoundsTextFields()[2].setText(mainWindowModel.getyMin().toString());
-        view.getBoundsTextFields()[3].setText(mainWindowModel.getyMax().toString());
-        view.getIntegrationMethodsComboBox().setSelectedItem(mainWindowModel.getIntegrationMethod());
-        view.getPeriodToInterpolate().setText(mainWindowModel.getTimePeriod().toString());
-        view.getTimeStep().setText(mainWindowModel.getTimeStep().toString());
-        view.getAngleJComboBox().setSelectedItem(mainWindowModel.getAngle());
-        view.getPhiTextField().setText(mainWindowModel.getPhi().toString());
-        view.getPsiTextField().setText(mainWindowModel.getPsi().toString());
-        view.getThetaTextField().setText(mainWindowModel.getTheta().toString());
-        view.getNumberOfSpheresTextField().setText(mainWindowModel.getNumberOfSpheres().toString());
-    }
-
     private ActionListener menuItemActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(view.getImportDataMenuItem())) {
                 try {
-                    Serializator serializator =
-                            (Serializator) xStream.fromXML(new FileInputStream(OpenFileHelper.open(view)));
-                    mainWindowModel = serializator.mainWindowModel;
-                    dataModel = serializator.dataModel;
+                    Serializer serializer =
+                            (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(view)));
+                    mainWindowModel = serializer.mainWindowModel;
+                    dataModel = serializer.dataModel;
                 } catch (FileNotFoundException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
                 }
@@ -234,10 +172,10 @@ public class MainWindowController {
                         file = new File(file.getAbsolutePath());
                     }
                     FileOutputStream fos = new FileOutputStream(file);
-                    Serializator serializator = new Serializator(mainWindowModel, dataModel);
+                    Serializer serializer = new Serializer(mainWindowModel, dataModel);
                     xStream.omitField(Observable.class, "obs");
                     xStream.omitField(Observable.class, "changed");
-                    xStream.toXML(serializator, fos);
+                    xStream.toXML(serializer, fos);
                     JOptionPane.showMessageDialog(view, "Data was exported to " + file.getAbsolutePath());
                 } catch (NullPointerException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());

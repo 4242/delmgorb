@@ -8,7 +8,7 @@ import java.awt.*;
 
 /**
  * Class represents a panel with plot.
- * It is meant to be placed inside {@link view.PlotWindowView}.
+ * It is meant to be placed inside {@link com.organization4242.delmgorb.view.PlotWindowView}.
  * 
  * @author Murzinov Ilya
  */
@@ -35,6 +35,9 @@ public class PlotView extends JPanel {
         surfacePanel.setModel(model.getModel());
         setLayout(new BorderLayout());
         task = model.getModel().plot();
+        surfacePanel.setBackground(Color.white);
+        surfacePanel.setConfigurationVisible(true);
+        add(surfacePanel, BorderLayout.CENTER);
     }
     
     /**
@@ -44,12 +47,7 @@ public class PlotView extends JPanel {
         surfacePanel.setTitleText(text);
     }
 
-    /**
-    * Shows the panel with plot.
-    */
-    public void display() {
-        surfacePanel.setBackground(Color.white);
-        surfacePanel.setConfigurationVisible(true);
-        add(surfacePanel, BorderLayout.CENTER);
+    public int getProgress() {
+        return task.getProgress();
     }
 }
