@@ -23,19 +23,20 @@ public class MainWindowController {
     private DataModel dataModel;
     private MainWindowView view;
     private PlotBuilder plotBuilder;
-    private Boolean canDraw = true;
     private Boolean calculateFromScratch = true;
 
     private XStream xStream = new XStream(new DomDriver());
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
+    private SwingWorker task;
+
     public void setPlotBuilder(PlotBuilder plotBuilder) {
         this.plotBuilder = plotBuilder;
     }
 
     public MainWindowController(MainWindowView view, MainWindowModel mainWindowModel,
-                                DataModel dataModel, PlotBuilder plotBuilder) {
+                                DataModel dataModel) {
         this.mainWindowModel = mainWindowModel;
         this.dataModel = dataModel;
         this.view = view;
@@ -70,7 +71,12 @@ public class MainWindowController {
                             "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
                 }
-                MainWindowController.this.plotBuilder.build(calculateFromScratch).display();
+                MainWindowController.this.plotBuilder.setDataModel(MainWindowController.this.dataModel);
+                MainWindowController.this.plotBuilder.setMainWindowModel(MainWindowController.this.mainWindowModel);
+                plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.view);
+                plotBuilder.setCalculateFromScratch(calculateFromScratch);
+                task = plotBuilder.getTask();
+                task.execute();
             }
         });
         view.getNumberOfPoints().addFocusListener(focusListener);
@@ -116,7 +122,7 @@ public class MainWindowController {
     }
 
     private Boolean validate() {
-        canDraw = true;
+        Boolean canDraw = true;
         String validationMessage = "";
 
         try {

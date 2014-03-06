@@ -1,12 +1,19 @@
 package com.organization4242.delmgorb.controller;
 
 import com.organization4242.delmgorb.model.*;
+import com.organization4242.delmgorb.view.DialogWindowView;
 import com.organization4242.delmgorb.view.PlotView;
 import com.organization4242.delmgorb.view.PlotWindowView;
 import org.apache.commons.math3.analysis.MultivariateFunction;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Observable;
+import java.util.Observer;
+
 /**
- * Util class which represents all logic.
+ * Util class which combines all logic together.
  *
  * @author Murzinov Ilya
  */
@@ -14,6 +21,9 @@ public class PlotBuilder {
     private InterpolatorModel interpolatorModel = new InterpolatorModel();
     private MainWindowModel mainWindowModel;
     private  DataModel dataModel;
+    private Task task = new Task();
+    private DialogWindowView dialogWindowView;
+    private Boolean calculateFromScratch;
 
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
         this.mainWindowModel = mainWindowModel;
@@ -23,18 +33,38 @@ public class PlotBuilder {
         this.dataModel = dataModel;
     }
 
+    public void setDialogWindowView(DialogWindowView dialogWindowView) {
+        this.dialogWindowView = dialogWindowView;
+    }
+
+    public void setCalculateFromScratch(Boolean calculateFromScratch) {
+        this.calculateFromScratch = calculateFromScratch;
+    }
+
+    public DialogWindowView getDialogWindowView() {
+        return dialogWindowView;
+    }
+
+    public Task getTask() {
+        return task = new Task();
+    }
+
     public PlotBuilder() {
 
     }
 
     public PlotWindowView build(Boolean calculateFromScratch) {
         Points points;
+        dataModel.addObserver(task);
+        dialogWindowView.getTextArea().setText("Calculating...");
+        dialogWindowView.getButton().setEnabled(true);
+        dialogWindowView.getButton().addActionListener(actionListener);
+        dialogWindowView.display();
         if (calculateFromScratch) {
             dataModel.buildPoints();
-            points = dataModel.getPoints();
-        } else {
-            points = dataModel.getPoints();
         }
+
+        points = dataModel.getPoints();
 
         MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getInterpolationMethod(),
                 mainWindowModel.getNumberOfSpheres());
@@ -43,7 +73,37 @@ public class PlotBuilder {
         PlotView plotView = new PlotView();
         plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + mainWindowModel.getAngle());
         plotView.setModel(plotModel);
+        dialogWindowView.getTextArea().setText("Drawing...");
         plotView.getTask().execute();
+        while (!plotView.getTask().isDone()) {
+            dialogWindowView.getProgressBar().setValue(plotView.getProgress());
+        }
+        dialogWindowView.dispose();
         return new PlotWindowView(plotView);
     }
+
+    private class Task extends SwingWorker<Void, Integer> implements Observer {
+        @Override
+        protected Void doInBackground() throws Exception {
+            build(calculateFromScratch).display();
+            return null;
+        }
+
+        @Override
+        public void update(Observable o, Object arg) {
+            dialogWindowView.getProgressBar().setValue((Integer) arg);
+        }
+    }
+
+    private ActionListener actionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource().equals(dialogWindowView.getButton())) {
+                dataModel.stop();
+                dataModel.setPoints(null);
+                dialogWindowView.getProgressBar().setValue(0);
+                dialogWindowView.dispose();
+            }
+        }
+    };
 }

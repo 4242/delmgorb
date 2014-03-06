@@ -30,13 +30,18 @@
     <bean id="plotBuilder" class="com.organization4242.delmgorb.controller.PlotBuilder" lazy-init="true">
         <property name="mainWindowModel" ref="mainWindowModel"/>
         <property name="dataModel" ref="dataModel"/>
+        <property name="dialogWindowView" ref="dialogWindowView"/>
+    </bean>
+
+    <bean id="dialogWindowView" class="com.organization4242.delmgorb.view.DialogWindowView" lazy-init="true">
+        <constructor-arg value="null"/>
+        <constructor-arg value="Progress.."/>
     </bean>
 
     <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">
         <constructor-arg ref="mainWindowView"/>
         <constructor-arg ref="mainWindowModel"/>
         <constructor-arg ref="dataModel"/>
-        <constructor-arg ref="plotBuilder"/>
         <property name="plotBuilder" ref="plotBuilder"/>
     </bean>
 </beans>

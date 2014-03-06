@@ -1,9 +1,8 @@
 package com.organization4242.delmgorb.view;
 
-import com.sun.org.apache.xpath.internal.operations.Mod;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /**
  * Class represents dialog window with progress bar and cancel button.
@@ -23,6 +22,8 @@ public class DialogWindowView extends JDialog {
     private JButton button;
 
     private JProgressBar progressBar;
+
+    private JLabel textArea;
     
     public JButton getButton() {
         return button;
@@ -32,16 +33,26 @@ public class DialogWindowView extends JDialog {
         return progressBar;
     }
 
+    public JLabel getTextArea() {
+        return textArea;
+    }
+
     /**
     * Initializes dialog window without showing it.
     * 
     * @param parent - parent JFrame which creates dialog
     * @param title - title of dialog window
-    * @param enableCancel - indicates whether cancel button should be enabled
     */
-    public DialogWindowView(JFrame parent, String title, Boolean enableCancel) {
+    public DialogWindowView(JFrame parent, String title) {
         super(parent, title);
-        init(enableCancel);
+        init(false);
+        setLocationRelativeTo(parent);
+    }
+
+    public DialogWindowView(JFrame parent, String title, ActionListener actionListener) {
+        super(parent, title);
+        init(true);
+        button.addActionListener(actionListener);
         setLocationRelativeTo(parent);
     }
 
@@ -53,6 +64,7 @@ public class DialogWindowView extends JDialog {
 
         button = new JButton("Cancel");
         progressBar = new JProgressBar();
+        textArea = new JLabel();
         progressBar.setStringPainted(true);
         progressBar.setMinimum(PROGRESS_BAR_MIN_VALUE);
         progressBar.setMaximum(PROGRESS_BAR_MAX_VALUE);
@@ -63,7 +75,7 @@ public class DialogWindowView extends JDialog {
 
         //Create GridBagConstraints
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.anchor = GridBagConstraints.SOUTHEAST;
+        constraints.anchor = GridBagConstraints.SOUTHWEST;
         constraints.insets = DEFAULT_INSETS;
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -71,11 +83,17 @@ public class DialogWindowView extends JDialog {
         constraints.weighty = 1;
         constraints.fill = GridBagConstraints.HORIZONTAL;
 
+        constraints.gridwidth = 2;
         gridBagLayout.setConstraints(progressBar, constraints);
         progressBar.setIndeterminate(false);
 
-        constraints.fill = GridBagConstraints.NONE;
+        constraints.gridwidth = 1;
+        constraints.anchor = GridBagConstraints.NORTHWEST;
         constraints.gridy++;
+        gridBagLayout.setConstraints(textArea, constraints);
+
+        constraints.anchor = GridBagConstraints.SOUTHEAST;
+        constraints.fill = GridBagConstraints.NONE;
         gridBagLayout.setConstraints(button, constraints);
 
         if (!enableCancel) {
@@ -83,6 +101,7 @@ public class DialogWindowView extends JDialog {
         }
         add(button);
         add(progressBar);
+        add(textArea);
     }
 
     /**

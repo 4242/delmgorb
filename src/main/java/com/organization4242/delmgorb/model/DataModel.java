@@ -18,12 +18,18 @@ public class DataModel extends Observable implements Serializable {
         return points;
     }
 
+    public void setPoints(Points points) {
+        this.points = points;
+    }
+
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
         this.mainWindowModel = mainWindowModel;
     }
 
     public void stop() {
-        stop = true;
+        if (!stop) {
+            stop = true;
+        }
     }
 
     public DataModel() {
@@ -125,7 +131,6 @@ public class DataModel extends Observable implements Serializable {
         double t = timeStep;
         while (t <= time){
             if (stop) {
-                stop = false;
                 return 0;
             }
             t+=10*timeStep;
@@ -142,7 +147,6 @@ public class DataModel extends Observable implements Serializable {
         t = max(timeOfMax - 20, 0.0);
         while (t <= min(time, timeOfMax + 20)){
             if (stop) {
-                stop = false;
                 return 0;
             }
             t+=timeStep;
@@ -177,7 +181,7 @@ public class DataModel extends Observable implements Serializable {
                 }
                 setChanged();
                 notifyObservers((int) (((double)
-                        (i*mainWindowModel.getNumberOfPoints() + j + 1)/Math.pow(mainWindowModel.getNumberOfPoints(),2))*100));
+                        (i * mainWindowModel.getNumberOfPoints() + j + 1) / Math.pow(mainWindowModel.getNumberOfPoints(), 2)) * 100));
             }
         }
         points = comboArray;
