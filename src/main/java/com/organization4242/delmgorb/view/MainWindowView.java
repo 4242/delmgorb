@@ -153,6 +153,7 @@ public class MainWindowView extends JFrame {
         addMenu();
         createPanelStructure();
         placeControls();
+        addActionListeners();
     }
 
     private void addMenu() {
