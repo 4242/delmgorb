@@ -16,7 +16,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Created by ilya-murzinov on 22.02.14.
+ * Represents controller used to bind {@link com.organization4242.delmgorb.model.MainWindowModel}
+ * and {@link com.organization4242.delmgorb.view.MainWindowView}.
+ *
+ * @author Murzinov Ilya
  */
 public class MainWindowController {
     private MainWindowModel mainWindowModel;
@@ -35,34 +38,25 @@ public class MainWindowController {
         this.plotBuilder = plotBuilder;
     }
 
+    /**
+    * Adds all listeners to controls.
+    * 
+    * @param view {@link com.organization4242.delmgorb.view.MainWindowView}
+    * @param mainWindowModel {@link com.organization4242.delmgorb.model.MainWindowModel}
+    * @param dataModel {@link com.organization4242.delmgorb.model.DataModel}
+    */
     public MainWindowController(MainWindowView view, MainWindowModel mainWindowModel,
                                 DataModel dataModel) {
         this.mainWindowModel = mainWindowModel;
         this.dataModel = dataModel;
         this.view = view;
         updateView();
-        FocusListener focusListener = new FocusAdapter() {
-            @Override
-            public void focusGained(final FocusEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        JTextField tf = (JTextField) e.getComponent();
-                        tf.selectAll();
-                    }
-                });
-            }
-        };
 
-        for (JTextField tf : view.getTextFields()) {
-            tf.addFocusListener(focusListener);
-        }
-        for (JTextField tf : view.getBoundsTextFields()) {
-            tf.addFocusListener(focusListener);
-        }
-        view.getImportDataMenuItem().addActionListener(menuItemActionListener);
-        view.getExportDataMenuItem().addActionListener(menuItemActionListener);
-        view.getButton().addMouseListener(new MouseAdapter() {
+        this.view.getImportDataMenuItem().addActionListener(menuItemActionListener);
+        this.view.getExportDataMenuItem().addActionListener(menuItemActionListener);
+
+        //Perform calculation and drawing.
+        this.view.getButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 updateModel();
@@ -79,13 +73,6 @@ public class MainWindowController {
                 task.execute();
             }
         });
-        view.getNumberOfPoints().addFocusListener(focusListener);
-        view.getTimeStep().addFocusListener(focusListener);
-        view.getNumberOfSpheresTextField().addFocusListener(focusListener);
-        view.getPeriodToInterpolate().addFocusListener(focusListener);
-        view.getPhiTextField().addFocusListener(focusListener);
-        view.getPsiTextField().addFocusListener(focusListener);
-        view.getThetaTextField().addFocusListener(focusListener);
     }
 
     private void updateModel() {
@@ -159,6 +146,12 @@ public class MainWindowController {
         return true;
     }
 
+    /**
+    * Action listener for menu items in main window.
+    * 
+    * Performs serialization/desealization {@link com.organization4242.delmgorb.model.MainWindowModel}
+    * and {@link com.organization4242.delmgorb.model.DataModel}.
+    */
     private ActionListener menuItemActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {

@@ -9,8 +9,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Class represents main window with all UI controls.
+ * Represents main window with all UI controls.
  * It uses 5 panels to place UI controls ans then place all panel inside the main panel.
+ * Also it adds focus listener in order to select all text in text fields when it gains focus.
  *
  * All controls are empty in the resulting window, use
  * {@link com.organization4242.delmgorb.controller.MainWindowController} to set all values.
@@ -471,6 +472,37 @@ public class MainWindowView extends JFrame {
         placeInterpolationParameters();
         placeInitialConditions();
         placeButtonControls();
+    }
+
+    /**
+    * When a text field gets focus, all text should be selected.
+    */
+    private void addActionListeners() {
+        FocusListener focusListener = new FocusAdapter() {
+            @Override
+            public void focusGained(final FocusEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JTextField tf = (JTextField) e.getComponent();
+                        tf.selectAll();
+                    }
+                });
+            }
+        };
+        for (JTextField tf : this.view.getTextFields()) {
+            tf.addFocusListener(focusListener);
+        }
+        for (JTextField tf : this.view.getBoundsTextFields()) {
+            tf.addFocusListener(focusListener);
+        }
+        getNumberOfPoints().addFocusListener(focusListener);
+        getTimeStep().addFocusListener(focusListener);
+        getNumberOfSpheresTextField().addFocusListener(focusListener);
+        getPeriodToInterpolate().addFocusListener(focusListener);
+        getPhiTextField().addFocusListener(focusListener);
+        getPsiTextField().addFocusListener(focusListener);
+        getThetaTextField().addFocusListener(focusListener);
     }
 
     /**
