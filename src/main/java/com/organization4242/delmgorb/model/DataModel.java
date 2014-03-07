@@ -167,8 +167,8 @@ public class DataModel extends Observable implements Serializable {
         Points comboArray;
         comboArray = new Points(mainWindowModel.getNumberOfPoints(), mainWindowModel.getNumberOfPoints());
         FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
-        comboArray.setxVal(doFragmentation(mainWindowModel.getxMin(), mainWindowModel.getxMax(), mainWindowModel.getNumberOfPoints()));
-        comboArray.setyVal(doFragmentation(mainWindowModel.getyMin(), mainWindowModel.getyMax(), mainWindowModel.getNumberOfPoints()));
+        comboArray.setxVal(doFragmentation(mainWindowModel.getXMin(), mainWindowModel.getXMax(), mainWindowModel.getNumberOfPoints()));
+        comboArray.setyVal(doFragmentation(mainWindowModel.getYMin(), mainWindowModel.getYMax(), mainWindowModel.getNumberOfPoints()));
         double[] initialState = InitialConditionsFactory.createConditions(mainWindowModel.getPhi(), mainWindowModel.getPsi(),
                 mainWindowModel.getTheta());
         for (int i = 0; i < mainWindowModel.getNumberOfPoints(); i++) {

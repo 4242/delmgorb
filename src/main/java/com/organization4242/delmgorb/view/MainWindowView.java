@@ -1,11 +1,13 @@
 package com.organization4242.delmgorb.view;
 
+import com.organization4242.delmgorb.controller.MainWindowController;
 import com.organization4242.delmgorb.model.Angle;
 import com.organization4242.delmgorb.model.IntegrationMethods;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +21,7 @@ import java.util.logging.Logger;
  * 
  * @author Murzinov Ilya
  */
-public class MainWindowView extends JFrame {
+public class MainWindowView extends AbstractView {
     private static final int NUMBER_OF_EQUATION_PARAMETERS = 14;
     private static final int HEIGHT = 650;
     private static final int WIDTH = 400;
@@ -27,6 +29,7 @@ public class MainWindowView extends JFrame {
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
     private static final Insets EMPTY_INSETS = new Insets(0,0,0,0);
 
+    JFrame frame = new JFrame();
     //Menu
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menu = new JMenu("File");
@@ -52,7 +55,7 @@ public class MainWindowView extends JFrame {
     private JLabel yToLabel = new JLabel("    to ");
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
     private JLabel integrationAngle = new JLabel("Angle to plot:");
-    private JLabel periodToInterpolateLabel = new JLabel("Period:");
+    private JLabel timePeriodLabel = new JLabel("Period:");
     private JLabel phiLabel = new JLabel(Angle.PHI + "(0):");
     private JLabel psiLabel = new JLabel(Angle.PSI + "(0):");
     private JLabel thetaLabel = new JLabel(Angle.THETA + "(0):");
@@ -62,9 +65,9 @@ public class MainWindowView extends JFrame {
     private JTextField[] boundsTextFields = new JTextField[TEXT_FIELD_MIN_WIDTH];
     private JTextField numberOfPointsTextField;
     private JTextField timeStepTextField;
-    private JTextField periodToInterpolateTextField;
+    private JTextField timePeriodTextField;
     private JComboBox<IntegrationMethods> integrationMethodsComboBox;
-    private JComboBox<Angle> buildingAngleJComboBox;
+    private JComboBox<Angle> angleComboBox;
     private JTextField numberOfSpheresTextField;
     private JTextField phiTextField;
     private JTextField psiTextField;
@@ -74,6 +77,10 @@ public class MainWindowView extends JFrame {
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
     //Accessors
+    public JFrame getFrame() {
+        return frame;
+    }
+
     public JMenuItem getImportDataMenuItem() {
         return importDataMenuItem;
     }
@@ -82,52 +89,8 @@ public class MainWindowView extends JFrame {
         return exportDataMenuItem;
     }
 
-    public JTextField[] getTextFields() {
-        return textFields;
-    }
-
-    public JTextField[] getBoundsTextFields() {
-        return boundsTextFields;
-    }
-
-    public JTextField getNumberOfPoints() {
-        return numberOfPointsTextField;
-    }
-
-    public JTextField getTimeStep() {
-        return timeStepTextField;
-    }
-
-    public JTextField getPsiTextField() {
-        return psiTextField;
-    }
-
-    public JTextField getPhiTextField() {
-        return phiTextField;
-    }
-
-    public JTextField getThetaTextField() {
-        return thetaTextField;
-    }
-
-    public JTextField getPeriodToInterpolate() {
-        return periodToInterpolateTextField;
-    }
-
-    public JTextField getNumberOfSpheresTextField() {
-        return numberOfSpheresTextField;
-    }
-
     public JButton getButton() {
         return button;
-    }
-
-    public JComboBox<IntegrationMethods> getIntegrationMethodsComboBox() {
-        return integrationMethodsComboBox;
-    }
-
-    public JComboBox<Angle> getAngleJComboBox() {
-        return buildingAngleJComboBox;
     }
 
     /**
@@ -135,10 +98,10 @@ public class MainWindowView extends JFrame {
     */
     public MainWindowView() {
         //Setting window parameters
-        setTitle("Delmgorb v1.0");
-        setSize(WIDTH, HEIGHT);
-        setResizable(false);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setTitle("Delmgorb v1.0");
+        frame.setSize(WIDTH, HEIGHT);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         //Setting theme
         try
@@ -161,7 +124,7 @@ public class MainWindowView extends JFrame {
         menu.add(new JSeparator());
         menu.add(exportDataMenuItem);
         menuBar.add(menu);
-        setJMenuBar(menuBar);
+        frame.setJMenuBar(menuBar);
     }
 
     /**
@@ -178,7 +141,7 @@ public class MainWindowView extends JFrame {
 
         numberOfPointsTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         timeStepTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        periodToInterpolateTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
+        timePeriodTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         numberOfSpheresTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         phiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         psiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
@@ -187,8 +150,8 @@ public class MainWindowView extends JFrame {
         button = new JButton("Draw!");
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
         integrationMethodsComboBox.setEditable(false);
-        buildingAngleJComboBox = new JComboBox<Angle>(Angle.values());
-        buildingAngleJComboBox.setEditable(false);
+        angleComboBox = new JComboBox<Angle>(Angle.values());
+        angleComboBox.setEditable(false);
     }
 
     /**
@@ -234,7 +197,7 @@ public class MainWindowView extends JFrame {
         mainPanel.add(buttonsPanel);
 
         //Add main panel to window
-        getContentPane().add(mainPanel);
+        frame.getContentPane().add(mainPanel);
     }
 
     /**
@@ -344,9 +307,9 @@ public class MainWindowView extends JFrame {
 
         constraints.gridy++;
         constraints.gridx = 0;
-        gridBagLayout.setConstraints(periodToInterpolateLabel, constraints);
+        gridBagLayout.setConstraints(timePeriodLabel, constraints);
         constraints.gridx++;
-        gridBagLayout.setConstraints(periodToInterpolateTextField, constraints);
+        gridBagLayout.setConstraints(timePeriodTextField, constraints);
 
         constraints.gridy++;
         constraints.gridx = 0;
@@ -360,18 +323,18 @@ public class MainWindowView extends JFrame {
         gridBagLayout.setConstraints(integrationAngle, constraints);
         constraints.gridx++;
         constraints.gridwidth = 4;
-        gridBagLayout.setConstraints(buildingAngleJComboBox, constraints);
+        gridBagLayout.setConstraints(angleComboBox, constraints);
 
         integrationParametersPanel.add(numLabel);
         integrationParametersPanel.add(numberOfPointsTextField);
         integrationParametersPanel.add(timeLabel);
         integrationParametersPanel.add(timeStepTextField);
-        integrationParametersPanel.add(periodToInterpolateLabel);
-        integrationParametersPanel.add(periodToInterpolateTextField);
+        integrationParametersPanel.add(timePeriodLabel);
+        integrationParametersPanel.add(timePeriodTextField);
         integrationParametersPanel.add(integrationMethodLabel);
         integrationParametersPanel.add(integrationMethodsComboBox);
         integrationParametersPanel.add(integrationAngle);
-        integrationParametersPanel.add(buildingAngleJComboBox);
+        integrationParametersPanel.add(angleComboBox);
     }
 
     /**
@@ -492,19 +455,19 @@ public class MainWindowView extends JFrame {
                 });
             }
         };
-        for (JTextField tf : getTextFields()) {
+        for (JTextField tf : textFields) {
             tf.addFocusListener(focusListener);
         }
-        for (JTextField tf : getBoundsTextFields()) {
+        for (JTextField tf : boundsTextFields) {
             tf.addFocusListener(focusListener);
         }
-        getNumberOfPoints().addFocusListener(focusListener);
-        getTimeStep().addFocusListener(focusListener);
-        getNumberOfSpheresTextField().addFocusListener(focusListener);
-        getPeriodToInterpolate().addFocusListener(focusListener);
-        getPhiTextField().addFocusListener(focusListener);
-        getPsiTextField().addFocusListener(focusListener);
-        getThetaTextField().addFocusListener(focusListener);
+        numberOfPointsTextField.addFocusListener(focusListener);
+        timeStepTextField.addFocusListener(focusListener);
+        numberOfSpheresTextField.addFocusListener(focusListener);
+        timePeriodTextField.addFocusListener(focusListener);
+        phiTextField.addFocusListener(focusListener);
+        psiTextField.addFocusListener(focusListener);
+        thetaTextField.addFocusListener(focusListener);
     }
 
     /**
@@ -514,8 +477,39 @@ public class MainWindowView extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setVisible(true);
+                frame.setVisible(true);
             }
         });    
+    }
+
+    @Override
+    public void modelPropertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(MainWindowController.NUMBER_OF_POINTS)) {
+            numberOfPointsTextField.setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.TIME_STEP)) {
+            timeStepTextField.setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.TIME_PERIOD)) {
+            timePeriodTextField.setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.INTEGRATION_METHOD)) {
+            integrationMethodsComboBox.setSelectedItem(evt.getNewValue());
+        } else if (evt.getPropertyName().equals(MainWindowController.ANGLE)) {
+            angleComboBox.setSelectedItem(evt.getNewValue());
+        } else if (evt.getPropertyName().equals(MainWindowController.X_MIN)) {
+            boundsTextFields[0].setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.X_MAX)) {
+            boundsTextFields[1].setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.Y_MIN)) {
+            boundsTextFields[2].setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.Y_MAX)) {
+            boundsTextFields[3].setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.PHI0)) {
+            phiTextField.setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.PSI0)) {
+            psiTextField.setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.THETA0)) {
+            thetaTextField.setText(evt.getNewValue().toString());
+        } else if (evt.getPropertyName().equals(MainWindowController.NUMBER_OF_SPHERES)) {
+            numberOfSpheresTextField.setText(evt.getNewValue().toString());
+        }
     }
 }

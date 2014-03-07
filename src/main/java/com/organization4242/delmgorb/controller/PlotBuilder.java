@@ -68,8 +68,8 @@ public class PlotBuilder {
 
         MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getInterpolationMethod(),
                 mainWindowModel.getNumberOfSpheres());
-        PlotModel plotModel = new PlotModel(function, mainWindowModel.getxMin(), mainWindowModel.getxMax(),
-                mainWindowModel.getyMin(), mainWindowModel.getyMax());
+        PlotModel plotModel = new PlotModel(function, mainWindowModel.getXMin(), mainWindowModel.getXMax(),
+                mainWindowModel.getYMin(), mainWindowModel.getYMax());
         PlotView plotView = new PlotView();
         plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + mainWindowModel.getAngle());
         plotView.setModel(plotModel);
@@ -92,6 +92,11 @@ public class PlotBuilder {
         @Override
         public void update(Observable o, Object arg) {
             dialogWindowView.getProgressBar().setValue((Integer) arg);
+        }
+
+        @Override
+        protected void done() {
+            dialogWindowView.getProgressBar().setValue(0);
         }
     }
 

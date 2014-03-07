@@ -1,5 +1,7 @@
 package com.organization4242.delmgorb.model;
 
+import com.organization4242.delmgorb.controller.MainWindowController;
+
 import java.io.Serializable;
 
 /**
@@ -8,19 +10,19 @@ import java.io.Serializable;
  *
  * @author Murzinov Ilya
  */
-public class MainWindowModel implements Serializable {
-    private IntegrationMethods integrationMethod;
-    private Angle angle;
+public class MainWindowModel extends AbstractModel implements Serializable {
     private Integer numberOfPoints;
     private Double timeStep;
     private Double timePeriod;
-    private Double phi0;
-    private Double psi0;
-    private Double theta0;
+    private IntegrationMethods integrationMethod;
+    private Angle angle;
     private Float xMin;
     private Float xMax;
     private Float yMin;
     private Float yMax;
+    private Double phi0;
+    private Double psi0;
+    private Double theta0;
     private Integer numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
 
@@ -56,19 +58,19 @@ public class MainWindowModel implements Serializable {
         return theta0;
     }
 
-    public Float getxMin() {
+    public Float getXMin() {
         return xMin;
     }
 
-    public Float getxMax() {
+    public Float getXMax() {
         return xMax;
     }
 
-    public Float getyMin() {
+    public Float getYMin() {
         return yMin;
     }
 
-    public Float getyMax() {
+    public Float getYMax() {
         return yMax;
     }
 
@@ -80,61 +82,85 @@ public class MainWindowModel implements Serializable {
         return interpolationMethod;
     }
 
-    public void setIntegrationMethod(IntegrationMethods integrationMethod) {
-        this.integrationMethod = integrationMethod;
-    }
-
-    public void setAngle(Angle angle) {
-        this.angle = angle;
-    }
-
     public void setNumberOfPoints(Integer numberOfPoints) {
+        int oldValue = this.numberOfPoints != null ? this.numberOfPoints : 0;
         this.numberOfPoints = numberOfPoints;
+        firePropertyChange(MainWindowController.NUMBER_OF_POINTS, oldValue, numberOfPoints);
     }
 
     public void setTimeStep(Double timeStep) {
+        Double oldValue = this.timeStep;
         this.timeStep = timeStep;
+        firePropertyChange(MainWindowController.TIME_STEP, oldValue, timeStep);
     }
 
     public void setTimePeriod(Double timePeriod) {
+        Double oldValue = this.timeStep;
         this.timePeriod = timePeriod;
+        firePropertyChange(MainWindowController.TIME_PERIOD, oldValue, timePeriod);
+    }
+
+    public void setIntegrationMethod(IntegrationMethods integrationMethod) {
+        IntegrationMethods oldValue = this.integrationMethod;
+        this.integrationMethod = integrationMethod;
+        firePropertyChange(MainWindowController.INTEGRATION_METHOD, oldValue, integrationMethod);
+    }
+
+    public void setAngle(Angle angle) {
+        Angle oldValue = this.angle;
+        this.angle = angle;
+        firePropertyChange(MainWindowController.ANGLE, oldValue, angle);
+    }
+
+    public void setXMin(Float xMin) {
+        Float oldValue = this.xMin;
+        this.xMin = xMin;
+        firePropertyChange(MainWindowController.X_MIN, oldValue, xMin);
+    }
+
+    public void setXMax(Float xMax) {
+        Float oldValue = this.xMax;
+        this.xMax = xMax;
+        firePropertyChange(MainWindowController.X_MAX, oldValue, xMax);
+    }
+
+    public void setYMin(Float yMin) {
+        Float oldValue = this.yMin;
+        this.yMin = yMin;
+        firePropertyChange(MainWindowController.Y_MIN, oldValue, yMin);
+    }
+
+    public void setYMax(Float yMax) {
+        Float oldValue = this.yMax;
+        this.yMax = yMax;
+        firePropertyChange(MainWindowController.Y_MAX, oldValue, yMax);
     }
 
     public void setPhi0(Double phi0) {
+        Double oldValue = this.phi0;
         this.phi0 = phi0;
+        firePropertyChange(MainWindowController.PHI0, oldValue, phi0);
     }
 
     public void setPsi0(Double psi0) {
+        Double oldValue = this.psi0;
         this.psi0 = psi0;
+        firePropertyChange(MainWindowController.PSI0, oldValue, psi0);
     }
 
     public void setTheta0(Double theta0) {
+        Double oldValue = this.theta0;
         this.theta0 = theta0;
-    }
-
-    public void setxMin(Float xMin) {
-        this.xMin = xMin;
-    }
-
-    public void setxMax(Float xMax) {
-        this.xMax = xMax;
-    }
-
-    public void setyMin(Float yMin) {
-        this.yMin = yMin;
-    }
-
-    public void setyMax(Float yMax) {
-        this.yMax = yMax;
+        firePropertyChange(MainWindowController.THETA0, oldValue, theta0);
     }
 
     public void setNumberOfSpheres(Integer numberOfSpheres) {
+        Integer oldValue = this.numberOfSpheres;
         this.numberOfSpheres = numberOfSpheres;
+        firePropertyChange(MainWindowController.NUMBER_OF_SPHERES, oldValue, numberOfSpheres);
     }
 
-    public void setInterpolationMethod(InterpolationMethods interpolationMethod) {
-        this.interpolationMethod = interpolationMethod;
+    public MainWindowModel() {
+
     }
-
-
 }

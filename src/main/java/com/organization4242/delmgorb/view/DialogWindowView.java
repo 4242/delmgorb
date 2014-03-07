@@ -45,28 +45,24 @@ public class DialogWindowView extends JDialog {
     /**
     * Initializes dialog window without showing it.
     * If you use this constructor, cancel button will be disabled.
-    * 
-    * @param parent parent JFrame which creates dialog.
+    *
     * @param title title of dialog window.
     */
-    public DialogWindowView(JFrame parent, String title) {
-        super(parent, title);
+    public DialogWindowView(String title) {
+        super((JFrame) null, title);
         init(false);
-        setLocationRelativeTo(parent);
     }
 
     /**
     * Initializes dialog window without showing it.
-    * 
-    * @param parent parent JFrame which creates dialog.
+    *
     * @param title title of dialog window.
     * @param actionListener action listener to be added to cancel button.
     */
-    public DialogWindowView(JFrame parent, String title, ActionListener actionListener) {
-        super(parent, title);
+    public DialogWindowView(String title, ActionListener actionListener) {
+        super((JFrame) null, title);
         init(true);
         button.addActionListener(actionListener);
-        setLocationRelativeTo(parent);
     }
 
     /**

@@ -20,8 +20,7 @@
         <property name="numberOfSpheres" value="10"/>
     </bean>
 
-    <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView">
-    </bean>
+    <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView"/>
 
     <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel">
         <property name="mainWindowModel" ref="mainWindowModel"/>
@@ -34,8 +33,7 @@
     </bean>
 
     <bean id="dialogWindowView" class="com.organization4242.delmgorb.view.DialogWindowView" lazy-init="true">
-        <constructor-arg value="null"/>
-        <constructor-arg value="Progress.."/>
+        <constructor-arg value="Progress"/>
     </bean>
 
     <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">

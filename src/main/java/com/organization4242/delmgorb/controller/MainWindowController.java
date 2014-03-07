@@ -1,12 +1,18 @@
 package com.organization4242.delmgorb.controller;
 
-import com.organization4242.delmgorb.model.*;
+import com.organization4242.delmgorb.model.DataModel;
+import com.organization4242.delmgorb.model.MainWindowModel;
+import com.organization4242.delmgorb.model.OpenFileHelper;
+import com.organization4242.delmgorb.model.Serializer;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,10 +27,24 @@ import java.util.logging.Logger;
  *
  * @author Murzinov Ilya
  */
-public class MainWindowController {
+public class MainWindowController extends AbstractController {
+    public static final String NUMBER_OF_POINTS = "NumberOfPoints";
+    public static final String TIME_STEP = "TimeStep";
+    public static final String TIME_PERIOD = "TimePeriod";
+    public static final String INTEGRATION_METHOD = "IntegrationMethod";
+    public static final String ANGLE = "Angle";
+    public static final String X_MIN = "xMin";
+    public static final String X_MAX = "xMax";
+    public static final String Y_MIN = "yMin";
+    public static final String Y_MAX = "yMax";
+    public static final String PHI0 = "Phi0";
+    public static final String PSI0 = "Psi0";
+    public static final String THETA0 = "Theta0";
+    public static final String NUMBER_OF_SPHERES = "NumberOfSpheres";
+
     private MainWindowModel mainWindowModel;
     private DataModel dataModel;
-    private MainWindowView view;
+    private MainWindowView mainWindowView;
     private PlotBuilder plotBuilder;
     private Boolean calculateFromScratch = true;
 
@@ -34,40 +54,63 @@ public class MainWindowController {
 
     private SwingWorker task;
 
+    public MainWindowModel getMainWindowModel() {
+        return mainWindowModel;
+    }
+
+    public DataModel getDataModel() {
+        return dataModel;
+    }
+
+    public MainWindowView getMainWindowView() {
+        return mainWindowView;
+    }
+
+    public void setMainWindowModel(MainWindowModel mainWindowModel) {
+        this.mainWindowModel = mainWindowModel;
+    }
+
+    public void setMainWindowView(MainWindowView mainWindowView) {
+        this.mainWindowView = mainWindowView;
+    }
+
+    public void setDataModel(DataModel dataModel) {
+        this.dataModel = dataModel;
+    }
+
     public void setPlotBuilder(PlotBuilder plotBuilder) {
         this.plotBuilder = plotBuilder;
     }
 
+    public MainWindowController(MainWindowView mainWindowView, MainWindowModel mainWindowModel,
+                                 DataModel dataModel) {
+        setMainWindowView(mainWindowView);
+        setMainWindowModel(mainWindowModel);
+        setDataModel(dataModel);
+        addModel(this.mainWindowModel);
+        addView(this.mainWindowView);
+        addActionListeners();
+    }
+
     /**
     * Adds all listeners to controls.
-    * 
-    * @param view {@link com.organization4242.delmgorb.view.MainWindowView}
-    * @param mainWindowModel {@link com.organization4242.delmgorb.model.MainWindowModel}
-    * @param dataModel {@link com.organization4242.delmgorb.model.DataModel}
     */
-    public MainWindowController(MainWindowView view, MainWindowModel mainWindowModel,
-                                DataModel dataModel) {
-        this.mainWindowModel = mainWindowModel;
-        this.dataModel = dataModel;
-        this.view = view;
-        updateView();
-
-        this.view.getImportDataMenuItem().addActionListener(menuItemActionListener);
-        this.view.getExportDataMenuItem().addActionListener(menuItemActionListener);
+    public void addActionListeners() {
+        this.mainWindowView.getImportDataMenuItem().addActionListener(menuItemActionListener);
+        this.mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
 
         //Perform calculation and drawing.
-        this.view.getButton().addMouseListener(new MouseAdapter() {
+        this.mainWindowView.getButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                updateModel();
                 if (MainWindowController.this.dataModel.getPoints() != null) {
-                    calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.view,
+                    calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.mainWindowView.getFrame(),
                             "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
                 }
-                MainWindowController.this.plotBuilder.setDataModel(MainWindowController.this.dataModel);
-                MainWindowController.this.plotBuilder.setMainWindowModel(MainWindowController.this.mainWindowModel);
-                plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.view);
+                plotBuilder.setDataModel(MainWindowController.this.dataModel);
+                plotBuilder.setMainWindowModel(MainWindowController.this.mainWindowModel);
+                plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
                 plotBuilder.setCalculateFromScratch(calculateFromScratch);
                 task = plotBuilder.getTask();
                 task.execute();
@@ -75,100 +118,28 @@ public class MainWindowController {
         });
     }
 
-    private void updateModel() {
-        mainWindowModel.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
-        mainWindowModel.setAngle((Angle) view.getAngleJComboBox().getSelectedItem());
-        mainWindowModel.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
-        mainWindowModel.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
-        mainWindowModel.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
-        mainWindowModel.setPhi0(Double.parseDouble(view.getPhiTextField().getText()));
-        mainWindowModel.setPsi0(Double.parseDouble(view.getPsiTextField().getText()));
-        mainWindowModel.setTheta0(Double.parseDouble(view.getThetaTextField().getText()));
-        mainWindowModel.setxMin(Float.parseFloat(view.getBoundsTextFields()[0].getText()));
-        mainWindowModel.setxMax(Float.parseFloat(view.getBoundsTextFields()[1].getText()));
-        mainWindowModel.setyMin(Float.parseFloat(view.getBoundsTextFields()[2].getText()));
-        mainWindowModel.setyMax(Float.parseFloat(view.getBoundsTextFields()[3].getText()));
-        mainWindowModel.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
-        mainWindowModel.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
-    }
-
-    private void updateView() {
-        view.getNumberOfPoints().setText(mainWindowModel.getNumberOfPoints().toString());
-        view.getBoundsTextFields()[0].setText(mainWindowModel.getxMin().toString());
-        view.getBoundsTextFields()[1].setText(mainWindowModel.getxMax().toString());
-        view.getBoundsTextFields()[2].setText(mainWindowModel.getyMin().toString());
-        view.getBoundsTextFields()[3].setText(mainWindowModel.getyMax().toString());
-        view.getIntegrationMethodsComboBox().setSelectedItem(mainWindowModel.getIntegrationMethod());
-        view.getPeriodToInterpolate().setText(mainWindowModel.getTimePeriod().toString());
-        view.getTimeStep().setText(mainWindowModel.getTimeStep().toString());
-        view.getAngleJComboBox().setSelectedItem(mainWindowModel.getAngle());
-        view.getPhiTextField().setText(mainWindowModel.getPhi().toString());
-        view.getPsiTextField().setText(mainWindowModel.getPsi().toString());
-        view.getThetaTextField().setText(mainWindowModel.getTheta().toString());
-        view.getNumberOfSpheresTextField().setText(mainWindowModel.getNumberOfSpheres().toString());
-    }
-
-    private Boolean validate() {
-        Boolean canDraw = true;
-        String validationMessage = "";
-
-        try {
-            updateModel();
-        } catch (Exception ex) {
-            validationMessage = validationMessage.concat("Check your parameters");
-            JOptionPane.showMessageDialog(view, validationMessage);
-            return false;
-        }
-
-        if (mainWindowModel.getxMin().equals(0f) || mainWindowModel.getxMax().equals(0f)
-                || mainWindowModel.getyMin().equals(0f) || mainWindowModel.getyMax().equals(0f)
-                || mainWindowModel.getxMin()* mainWindowModel.getxMax()<0
-                || mainWindowModel.getyMin()* mainWindowModel.getyMax()<0) {
-            canDraw = false;
-            validationMessage = validationMessage.concat("Both x and y can't be zero!");
-            validationMessage = validationMessage.concat("\n");
-        }
-        if (mainWindowModel.getxMin() > mainWindowModel.getxMax()) {
-            canDraw = false;
-            validationMessage = validationMessage.concat("XMax should be greater then XMin!");
-            validationMessage = validationMessage.concat("\n");
-        }
-        if (mainWindowModel.getyMin() > mainWindowModel.getyMax()) {
-            canDraw = false;
-            validationMessage = validationMessage.concat("YMax should be greater then YMin!");
-            validationMessage = validationMessage.concat("\n");
-        }
-        if (!canDraw) {
-            JOptionPane.showMessageDialog(view, validationMessage);
-            return false;
-        }
-
-        return true;
-    }
-
     /**
     * Action listener for menu items in main window.
     * 
-    * Performs serialization/desealization {@link com.organization4242.delmgorb.model.MainWindowModel}
+    * Performs serialization/deserialization {@link com.organization4242.delmgorb.model.MainWindowModel}
     * and {@link com.organization4242.delmgorb.model.DataModel}.
     */
     private ActionListener menuItemActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource().equals(view.getImportDataMenuItem())) {
+            if (e.getSource().equals(mainWindowView.getImportDataMenuItem())) {
                 try {
                     Serializer serializer =
-                            (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(view)));
+                            (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(mainWindowView.getFrame())));
                     mainWindowModel = serializer.mainWindowModel;
                     dataModel = serializer.dataModel;
                 } catch (FileNotFoundException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
                 }
-                updateView();
             }
-            else if (e.getSource().equals(view.getExportDataMenuItem())) {
+            else if (e.getSource().equals(mainWindowView.getExportDataMenuItem())) {
                 try {
-                    File file = OpenFileHelper.open(view);
+                    File file = OpenFileHelper.open(mainWindowView.getFrame());
                     if (file.exists()) {
                         file = new File(file.getAbsolutePath());
                     }
@@ -177,15 +148,14 @@ public class MainWindowController {
                     xStream.omitField(Observable.class, "obs");
                     xStream.omitField(Observable.class, "changed");
                     xStream.toXML(serializer, fos);
-                    JOptionPane.showMessageDialog(view, "Data was exported to " + file.getAbsolutePath());
+                    JOptionPane.showMessageDialog(mainWindowView.getFrame(), "Data was exported to " + file.getAbsolutePath());
                 } catch (NullPointerException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
-                    JOptionPane.showMessageDialog(view, "No data to export.");
+                    JOptionPane.showMessageDialog(mainWindowView.getFrame(), "No data to export.");
                 } catch (FileNotFoundException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
                 }
             }
         }
     };
-
 }
