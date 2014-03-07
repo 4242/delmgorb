@@ -490,10 +490,10 @@ public class MainWindowView extends JFrame {
                 });
             }
         };
-        for (JTextField tf : this.view.getTextFields()) {
+        for (JTextField tf : getTextFields()) {
             tf.addFocusListener(focusListener);
         }
-        for (JTextField tf : this.view.getBoundsTextFields()) {
+        for (JTextField tf : getBoundsTextFields()) {
             tf.addFocusListener(focusListener);
         }
         getNumberOfPoints().addFocusListener(focusListener);
