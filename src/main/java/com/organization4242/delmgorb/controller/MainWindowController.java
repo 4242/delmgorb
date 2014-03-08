@@ -34,9 +34,9 @@ public class MainWindowController extends AbstractController {
     public static final String X_MAX = "xMax";
     public static final String Y_MIN = "yMin";
     public static final String Y_MAX = "yMax";
-    public static final String PHI0 = "Phi0";
-    public static final String PSI0 = "Psi0";
-    public static final String THETA0 = "Theta0";
+    public static final String PHI = "Phi";
+    public static final String PSI = "Psi";
+    public static final String THETA = "Theta";
     public static final String NUMBER_OF_SPHERES = "NumberOfSpheres";
 
     private MainWindowModel mainWindowModel;

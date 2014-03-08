@@ -26,18 +26,18 @@ public final class Application {
 
         mainWindowView.display();
 
-        mainWindowModel.setNumberOfPoints(5);
-        mainWindowModel.setTimeStep(0.4);
-        mainWindowModel.setTimePeriod(200d);
+        mainWindowModel.setNumberOfPoints(10);
+        mainWindowModel.setTimeStep(0.5);
+        mainWindowModel.setTimePeriod(100d);
         mainWindowModel.setXMin(0.05f);
         mainWindowModel.setXMax(1f);
         mainWindowModel.setYMin(1f);
         mainWindowModel.setYMax(2f);
         mainWindowModel.setAngle(Angle.PHI);
         mainWindowModel.setIntegrationMethod(IntegrationMethods.CLASSICAL_RUNGE_KUTTA);
-        mainWindowModel.setPhi(0.06);
-        mainWindowModel.setPsi(0.06);
-        mainWindowModel.setTheta(0.06);
-        mainWindowModel.setNumberOfSpheres(5);
+        mainWindowModel.setPhi(0.05);
+        mainWindowModel.setPsi(0.05);
+        mainWindowModel.setTheta(0.05);
+        mainWindowModel.setNumberOfSpheres(50);
     }
 }

@@ -4,6 +4,7 @@ import com.organization4242.delmgorb.controller.MainWindowController;
 
 import java.beans.PropertyChangeEvent;
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Class is used for storing values from {@link com.organization4242.delmgorb.view.MainWindowView}
@@ -83,6 +84,84 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         return interpolationMethod;
     }
 
+    public void setNumberOfPoints(String numberOfPoints) {
+        int oldValue = this.numberOfPoints != null ? this.numberOfPoints : 0;
+        this.numberOfPoints = Integer.parseInt(numberOfPoints);
+        firePropertyChange(MainWindowController.NUMBER_OF_POINTS, oldValue, numberOfPoints);
+    }
+
+    public void setTimeStep(String timeStep) {
+        Double oldValue = this.timeStep != null ? this.timeStep : 0d;
+        this.timeStep = Double.parseDouble(timeStep);
+        firePropertyChange(MainWindowController.TIME_STEP, oldValue, timeStep);
+    }
+
+    public void setTimePeriod(String timePeriod) {
+        Double oldValue = this.timePeriod != null ? this.timePeriod : 0d;
+        this.timePeriod = Double.parseDouble(timePeriod);
+        firePropertyChange(MainWindowController.TIME_PERIOD, oldValue, timePeriod);
+    }
+
+    public void setIntegrationMethod(String integrationMethod) {
+        IntegrationMethods oldValue = this.integrationMethod != null ? this.integrationMethod : null;
+        this.integrationMethod = IntegrationMethods.valueOf(integrationMethod);
+        firePropertyChange(MainWindowController.INTEGRATION_METHOD, oldValue, integrationMethod);
+    }
+
+    public void setAngle(String angle) {
+        Angle oldValue = this.angle != null ? this.angle : null;
+        this.angle = Angle.valueOf(angle);
+        firePropertyChange(MainWindowController.ANGLE, oldValue, angle);
+    }
+
+    public void setXMin(String xMin) {
+        Float oldValue = this.xMin != null ? this.xMin : 0f;
+        this.xMin = Float.parseFloat(xMin);
+        firePropertyChange(MainWindowController.X_MIN, oldValue, xMin);
+    }
+
+    public void setXMax(String xMax) {
+        Float oldValue = this.xMax != null ? this.xMax : 0f;
+        this.xMax = Float.parseFloat(xMax);
+        firePropertyChange(MainWindowController.X_MAX, oldValue, xMax);
+    }
+
+    public void setYMin(String yMin) {
+        Float oldValue = this.yMin != null ? this.yMin : 0f;
+        this.yMin = Float.parseFloat(yMin);
+        firePropertyChange(MainWindowController.Y_MIN, oldValue, yMin);
+    }
+
+    public void setYMax(String yMax) {
+        Float oldValue = this.yMax != null ? this.yMax : 0f;
+        this.yMax = Float.parseFloat(yMax);
+        firePropertyChange(MainWindowController.Y_MAX, oldValue, yMax);
+    }
+
+    public void setPhi(String phi) {
+        Double oldValue = this.phi != null ? this.phi : 0d;
+        this.phi = Double.parseDouble(phi);
+        firePropertyChange(MainWindowController.PHI, oldValue, phi);
+    }
+
+    public void setPsi(String psi) {
+        Double oldValue = this.psi != null ? this.psi : 0d;
+        this.psi = Double.parseDouble(psi);
+        firePropertyChange(MainWindowController.PSI, oldValue, psi);
+    }
+
+    public void setTheta(String theta) {
+        Double oldValue = this.theta != null ? this.theta : 0d;
+        this.theta = Double.parseDouble(theta);
+        firePropertyChange(MainWindowController.THETA, oldValue, theta);
+    }
+
+    public void setNumberOfSpheres(String numberOfSpheres) {
+        Integer oldValue = this.numberOfSpheres != null ? this.numberOfSpheres : null;
+        this.numberOfSpheres = Integer.parseInt(numberOfSpheres);
+        firePropertyChange(MainWindowController.NUMBER_OF_SPHERES, oldValue, numberOfSpheres);
+    }
+
     public void setNumberOfPoints(Integer numberOfPoints) {
         int oldValue = this.numberOfPoints != null ? this.numberOfPoints : 0;
         this.numberOfPoints = numberOfPoints;
@@ -140,19 +219,19 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     public void setPhi(Double phi) {
         Double oldValue = this.phi != null ? this.phi : 0d;
         this.phi = phi;
-        firePropertyChange(MainWindowController.PHI0, oldValue, phi);
+        firePropertyChange(MainWindowController.PHI, oldValue, phi);
     }
 
     public void setPsi(Double psi) {
         Double oldValue = this.psi != null ? this.psi : 0d;
         this.psi = psi;
-        firePropertyChange(MainWindowController.PSI0, oldValue, psi);
+        firePropertyChange(MainWindowController.PSI, oldValue, psi);
     }
 
     public void setTheta(Double theta) {
         Double oldValue = this.theta != null ? this.theta : 0d;
         this.theta = theta;
-        firePropertyChange(MainWindowController.THETA0, oldValue, theta);
+        firePropertyChange(MainWindowController.THETA, oldValue, theta);
     }
 
     public void setNumberOfSpheres(Integer numberOfSpheres) {
@@ -167,6 +246,16 @@ public class MainWindowModel extends AbstractModel implements Serializable {
 
     @Override
     public void viewPropertyChange(PropertyChangeEvent pce) {
-        System.out.println(pce.getNewValue());
+        try {
+            MainWindowModel.class.getMethod("set"+pce.getPropertyName(), String.class).invoke(this, pce.getNewValue());
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }

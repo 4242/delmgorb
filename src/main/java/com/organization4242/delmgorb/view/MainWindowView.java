@@ -57,7 +57,7 @@ public class MainWindowView extends AbstractView {
     private JLabel xToLabel = new JLabel("to");
     private JLabel yToLabel = new JLabel("to");
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
-    private JLabel integrationAngle = new JLabel("Angle:");
+    private JLabel angleLabel = new JLabel("Angle:");
     private JLabel timePeriodLabel = new JLabel("Time period:");
     private JLabel phiLabel = new JLabel(Angle.PHI + "(0):");
     private JLabel psiLabel = new JLabel(Angle.PSI + "(0):");
@@ -323,7 +323,7 @@ public class MainWindowView extends AbstractView {
 
         constraints.gridy++;
         constraints.gridx = 0;
-        gridBagLayout.setConstraints(integrationAngle, constraints);
+        gridBagLayout.setConstraints(angleLabel, constraints);
         constraints.gridx++;
         constraints.gridwidth = 4;
         gridBagLayout.setConstraints(angleComboBox, constraints);
@@ -336,7 +336,7 @@ public class MainWindowView extends AbstractView {
         integrationParametersPanel.add(timePeriodTextField);
         integrationParametersPanel.add(integrationMethodLabel);
         integrationParametersPanel.add(integrationMethodsComboBox);
-        integrationParametersPanel.add(integrationAngle);
+        integrationParametersPanel.add(angleLabel);
         integrationParametersPanel.add(angleComboBox);
     }
 
@@ -467,7 +467,35 @@ public class MainWindowView extends AbstractView {
                     public void run() {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.select(0, 0);
-                        firePropertyChange(tf.getName(), oldValue, tf.getText());
+                        String propertyName = "";
+                        if (e.getSource().equals(numberOfPointsTextField)) {
+                            propertyName = MainWindowController.NUMBER_OF_POINTS;
+                        } else if (e.getSource().equals(timeStepTextField)) {
+                            propertyName = MainWindowController.TIME_STEP;
+                        } else if (e.getSource().equals(timePeriodTextField)) {
+                            propertyName = MainWindowController.TIME_PERIOD;
+                        } else if (e.getSource().equals(integrationMethodsComboBox)) {
+                            propertyName = MainWindowController.INTEGRATION_METHOD;
+                        } else if (e.getSource().equals(angleComboBox)) {
+                            propertyName = MainWindowController.ANGLE;
+                        } else if (e.getSource().equals(xMinTextField)) {
+                            propertyName = MainWindowController.X_MIN;
+                        } else if (e.getSource().equals(xMaxTextField)) {
+                            propertyName = MainWindowController.X_MIN;
+                        } else if (e.getSource().equals(yMinTextField)) {
+                            propertyName = MainWindowController.Y_MIN;
+                        } else if (e.getSource().equals(yMaxTextField)) {
+                            propertyName = MainWindowController.Y_MAX;
+                        } else if (e.getSource().equals(phiTextField)) {
+                            propertyName = MainWindowController.PHI;
+                        } else if (e.getSource().equals(psiTextField)) {
+                            propertyName = MainWindowController.PSI;
+                        } else if (e.getSource().equals(thetaTextField)) {
+                            propertyName = MainWindowController.THETA;
+                        } else if (e.getSource().equals(numberOfSpheresTextField)) {
+                            propertyName = MainWindowController.NUMBER_OF_SPHERES;
+                        }
+                        firePropertyChange(propertyName, oldValue, tf.getText());
                     }
                 });
             }
@@ -523,11 +551,11 @@ public class MainWindowView extends AbstractView {
             yMinTextField.setText(pce.getNewValue().toString());
         } else if (pce.getPropertyName().equals(MainWindowController.Y_MAX)) {
             yMaxTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.PHI0)) {
+        } else if (pce.getPropertyName().equals(MainWindowController.PHI)) {
             phiTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.PSI0)) {
+        } else if (pce.getPropertyName().equals(MainWindowController.PSI)) {
             psiTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.THETA0)) {
+        } else if (pce.getPropertyName().equals(MainWindowController.THETA)) {
             thetaTextField.setText(pce.getNewValue().toString());
         } else if (pce.getPropertyName().equals(MainWindowController.NUMBER_OF_SPHERES)) {
             numberOfSpheresTextField.setText(pce.getNewValue().toString());
