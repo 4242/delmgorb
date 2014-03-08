@@ -50,7 +50,8 @@ public class PlotBuilder {
     }
 
     public Task getTask() {
-        return task = new Task();
+        task = new Task();
+        return task;
     }
 
     public PlotBuilder() {

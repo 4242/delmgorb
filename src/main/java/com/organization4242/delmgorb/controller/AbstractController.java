@@ -7,13 +7,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ilya-murzinov on 07.03.14.
  */
 public abstract class AbstractController implements PropertyChangeListener {
-    private ArrayList<AbstractView> registeredViews;
-    private ArrayList<AbstractModel> registeredModels;
+    private List<AbstractView> registeredViews;
+    private List<AbstractModel> registeredModels;
 
     public AbstractController() {
         registeredViews = new ArrayList<AbstractView>();

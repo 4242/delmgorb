@@ -9,10 +9,19 @@ import java.io.Serializable;
  * @author Murzinov Ilya
  */
 public class Serializer implements Serializable {
+    private MainWindowModel mainWindowModel;
+    private DataModel dataModel;
+
+    public MainWindowModel getMainWindowModel() {
+        return mainWindowModel;
+    }
+
+    public DataModel getDataModel() {
+        return dataModel;
+    }
+
     public Serializer(MainWindowModel mainWindowModel, DataModel dataModel) {
         this.mainWindowModel = mainWindowModel;
         this.dataModel = dataModel;
     }
-    public MainWindowModel mainWindowModel;
-    public DataModel dataModel;
 }

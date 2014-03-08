@@ -159,8 +159,4 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         this.numberOfSpheres = numberOfSpheres;
         firePropertyChange(MainWindowController.NUMBER_OF_SPHERES, oldValue, numberOfSpheres);
     }
-
-    public MainWindowModel() {
-        System.out.println("M");
-    }
 }

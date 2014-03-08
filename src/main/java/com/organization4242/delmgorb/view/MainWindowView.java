@@ -29,7 +29,7 @@ public class MainWindowView extends AbstractView {
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
     private static final Insets EMPTY_INSETS = new Insets(0,0,0,0);
 
-    JFrame frame = new JFrame();
+    private JFrame frame = new JFrame();
     //Menu
     private JMenuBar menuBar = new JMenuBar();
     private JMenu menu = new JMenu("File");
@@ -97,7 +97,6 @@ public class MainWindowView extends AbstractView {
     * Initializes main window and creates its structure without showing it.
     */
     public MainWindowView() {
-        System.out.println("V");
         //Setting window parameters
         frame.setTitle("Delmgorb v1.0");
         frame.setSize(WIDTH, HEIGHT);

@@ -81,10 +81,7 @@ public class MainWindowController extends AbstractController {
     }
 
     public MainWindowController() {
-        System.out.println("C");
-//        setMainWindowView(mainWindowView);
-//        setMainWindowModel(mainWindowModel);
-//        setDataModel(dataModel);
+
     }
 
     /**
@@ -127,8 +124,8 @@ public class MainWindowController extends AbstractController {
                 try {
                     Serializer serializer =
                             (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(mainWindowView.getFrame())));
-                    mainWindowModel = serializer.mainWindowModel;
-                    dataModel = serializer.dataModel;
+                    mainWindowModel = serializer.getMainWindowModel();
+                    dataModel = serializer.getDataModel();
                 } catch (FileNotFoundException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
                 }
