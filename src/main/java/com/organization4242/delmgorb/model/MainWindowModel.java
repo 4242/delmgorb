@@ -89,78 +89,78 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     }
 
     public void setTimeStep(Double timeStep) {
-        Double oldValue = this.timeStep;
+        Double oldValue = this.timeStep != null ? this.timeStep : 0d;
         this.timeStep = timeStep;
         firePropertyChange(MainWindowController.TIME_STEP, oldValue, timeStep);
     }
 
     public void setTimePeriod(Double timePeriod) {
-        Double oldValue = this.timeStep;
+        Double oldValue = this.timePeriod != null ? this.timePeriod : 0d;
         this.timePeriod = timePeriod;
         firePropertyChange(MainWindowController.TIME_PERIOD, oldValue, timePeriod);
     }
 
     public void setIntegrationMethod(IntegrationMethods integrationMethod) {
-        IntegrationMethods oldValue = this.integrationMethod;
+        IntegrationMethods oldValue = this.integrationMethod != null ? this.integrationMethod : null;
         this.integrationMethod = integrationMethod;
         firePropertyChange(MainWindowController.INTEGRATION_METHOD, oldValue, integrationMethod);
     }
 
     public void setAngle(Angle angle) {
-        Angle oldValue = this.angle;
+        Angle oldValue = this.angle != null ? this.angle : null;
         this.angle = angle;
         firePropertyChange(MainWindowController.ANGLE, oldValue, angle);
     }
 
     public void setXMin(Float xMin) {
-        Float oldValue = this.xMin;
+        Float oldValue = this.xMin != null ? this.xMin : 0f;
         this.xMin = xMin;
         firePropertyChange(MainWindowController.X_MIN, oldValue, xMin);
     }
 
     public void setXMax(Float xMax) {
-        Float oldValue = this.xMax;
+        Float oldValue = this.xMax != null ? this.xMax : 0f;
         this.xMax = xMax;
         firePropertyChange(MainWindowController.X_MAX, oldValue, xMax);
     }
 
     public void setYMin(Float yMin) {
-        Float oldValue = this.yMin;
+        Float oldValue = this.yMin != null ? this.yMin : 0f;
         this.yMin = yMin;
         firePropertyChange(MainWindowController.Y_MIN, oldValue, yMin);
     }
 
     public void setYMax(Float yMax) {
-        Float oldValue = this.yMax;
+        Float oldValue = this.yMax != null ? this.yMax : 0f;
         this.yMax = yMax;
         firePropertyChange(MainWindowController.Y_MAX, oldValue, yMax);
     }
 
     public void setPhi0(Double phi0) {
-        Double oldValue = this.phi0;
+        Double oldValue = this.phi0 != null ? this.phi0 : 0d;
         this.phi0 = phi0;
         firePropertyChange(MainWindowController.PHI0, oldValue, phi0);
     }
 
     public void setPsi0(Double psi0) {
-        Double oldValue = this.psi0;
+        Double oldValue = this.psi0 != null ? this.psi0 : 0d;
         this.psi0 = psi0;
         firePropertyChange(MainWindowController.PSI0, oldValue, psi0);
     }
 
     public void setTheta0(Double theta0) {
-        Double oldValue = this.theta0;
+        Double oldValue = this.theta0 != null ? this.theta0 : 0d;
         this.theta0 = theta0;
         firePropertyChange(MainWindowController.THETA0, oldValue, theta0);
     }
 
     public void setNumberOfSpheres(Integer numberOfSpheres) {
-        Integer oldValue = this.numberOfSpheres;
+        Integer oldValue = this.numberOfSpheres != null ? this.numberOfSpheres : null;
         this.numberOfSpheres = numberOfSpheres;
         firePropertyChange(MainWindowController.NUMBER_OF_SPHERES, oldValue, numberOfSpheres);
     }
 
     public MainWindowModel() {
-
+        System.out.println("M");
     }
 }

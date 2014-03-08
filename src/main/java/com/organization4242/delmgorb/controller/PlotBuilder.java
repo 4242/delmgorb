@@ -5,6 +5,7 @@ import com.organization4242.delmgorb.view.DialogWindowView;
 import com.organization4242.delmgorb.view.PlotView;
 import com.organization4242.delmgorb.view.PlotWindowView;
 import org.apache.commons.math3.analysis.MultivariateFunction;
+import org.springframework.beans.factory.annotation.Required;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -25,14 +26,17 @@ public class PlotBuilder {
     private DialogWindowView dialogWindowView;
     private Boolean calculateFromScratch;
 
+    @Required
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
         this.mainWindowModel = mainWindowModel;
     }
 
+    @Required
     public void setDataModel(DataModel dataModel) {
         this.dataModel = dataModel;
     }
 
+    @Required
     public void setDialogWindowView(DialogWindowView dialogWindowView) {
         this.dialogWindowView = dialogWindowView;
     }
@@ -107,6 +111,7 @@ public class PlotBuilder {
                 dataModel.stop();
                 dataModel.setPoints(null);
                 dialogWindowView.getProgressBar().setValue(0);
+                dialogWindowView.getButton().removeActionListener(this);
                 dialogWindowView.dispose();
             }
         }

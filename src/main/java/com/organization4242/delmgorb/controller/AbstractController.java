@@ -39,6 +39,7 @@ public abstract class AbstractController implements PropertyChangeListener {
         registeredViews.remove(view);
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
         for (AbstractView view: registeredViews) {
             view.modelPropertyChange(evt);

@@ -7,7 +7,9 @@ import com.organization4242.delmgorb.model.Serializer;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.springframework.beans.factory.annotation.Required;
 
+import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,6 +30,7 @@ import java.util.logging.Logger;
  * @author Murzinov Ilya
  */
 public class MainWindowController extends AbstractController {
+    public static final String INIT = "Init";
     public static final String NUMBER_OF_POINTS = "NumberOfPoints";
     public static final String TIME_STEP = "TimeStep";
     public static final String TIME_PERIOD = "TimePeriod";
@@ -54,53 +57,46 @@ public class MainWindowController extends AbstractController {
 
     private SwingWorker task;
 
-    public MainWindowModel getMainWindowModel() {
-        return mainWindowModel;
-    }
-
-    public DataModel getDataModel() {
-        return dataModel;
-    }
-
-    public MainWindowView getMainWindowView() {
-        return mainWindowView;
-    }
-
+    @Required
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
         this.mainWindowModel = mainWindowModel;
+        addModel(this.mainWindowModel);
     }
 
+    @Required
     public void setMainWindowView(MainWindowView mainWindowView) {
         this.mainWindowView = mainWindowView;
+        addView(this.mainWindowView);
+        addActionListeners();
     }
 
+    @Required
     public void setDataModel(DataModel dataModel) {
         this.dataModel = dataModel;
     }
 
+    @Required
     public void setPlotBuilder(PlotBuilder plotBuilder) {
         this.plotBuilder = plotBuilder;
     }
 
-    public MainWindowController(MainWindowView mainWindowView, MainWindowModel mainWindowModel,
-                                 DataModel dataModel) {
-        setMainWindowView(mainWindowView);
-        setMainWindowModel(mainWindowModel);
-        setDataModel(dataModel);
-        addModel(this.mainWindowModel);
-        addView(this.mainWindowView);
-        addActionListeners();
+    public MainWindowController() {
+        System.out.println("C");
+//        setMainWindowView(mainWindowView);
+//        setMainWindowModel(mainWindowModel);
+//        setDataModel(dataModel);
     }
 
     /**
     * Adds all listeners to controls.
     */
+    @PostConstruct
     public void addActionListeners() {
-        this.mainWindowView.getImportDataMenuItem().addActionListener(menuItemActionListener);
-        this.mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
+        mainWindowView.getImportDataMenuItem().addActionListener(menuItemActionListener);
+        mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
 
         //Perform calculation and drawing.
-        this.mainWindowView.getButton().addMouseListener(new MouseAdapter() {
+        mainWindowView.getButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (MainWindowController.this.dataModel.getPoints() != null) {
@@ -108,8 +104,8 @@ public class MainWindowController extends AbstractController {
                             "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
                 }
-                plotBuilder.setDataModel(MainWindowController.this.dataModel);
-                plotBuilder.setMainWindowModel(MainWindowController.this.mainWindowModel);
+                //plotBuilder.setDataModel(MainWindowController.this.dataModel);
+                //plotBuilder.setMainWindowModel(MainWindowController.this.mainWindowModel);
                 plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
                 plotBuilder.setCalculateFromScratch(calculateFromScratch);
                 task = plotBuilder.getTask();

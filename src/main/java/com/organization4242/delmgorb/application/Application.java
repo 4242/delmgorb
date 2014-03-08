@@ -21,7 +21,7 @@ public final class Application {
         MainWindowView mainWindowView = (MainWindowView) context.getBean("mainWindowView");
         MainWindowController controller = (MainWindowController) context.getBean("mainWindowController");
         MainWindowModel mainWindowModel = (MainWindowModel) context.getBean("mainWindowModel");
-
+//
 //        MainWindowView mainWindowView = new MainWindowView();
 //        MainWindowModel mainWindowModel= new MainWindowModel();
 //        mainWindowModel.setNumberOfPoints(10);
@@ -37,23 +37,23 @@ public final class Application {
 //        mainWindowModel.setPsi0(0.05);
 //        mainWindowModel.setTheta0(0.05);
 //
-//        DataModel dataModel = new DataModel();
-//        dataModel.setMainWindowModel(mainWindowModel);
-//        MainWindowController controller = new MainWindowController(mainWindowView,
-//                mainWindowModel, dataModel);
-//
-//        DialogWindowView dialogWindowView = new DialogWindowView("Progress");
+//        MainWindowController controller = new MainWindowController();
 //
 //        controller.setMainWindowView(mainWindowView);
 //        controller.setMainWindowModel(mainWindowModel);
-//        controller.addView(mainWindowView);
-//        controller.addModel(mainWindowModel);
-//
-//        PlotBuilder plotBuilder = new PlotBuilder();
-//        plotBuilder.setDialogWindowView(dialogWindowView);
-//
-//        controller.setPlotBuilder(plotBuilder);
 
         mainWindowView.display();
+//        mainWindowModel.setNumberOfPoints(10);
+//        mainWindowModel.setTimeStep(0.5);
+//        mainWindowModel.setTimePeriod(100d);
+//        mainWindowModel.setXMin(0.05f);
+//        mainWindowModel.setXMax(1f);
+//        mainWindowModel.setYMin(1f);
+//        mainWindowModel.setYMax(2f);
+//        mainWindowModel.setAngle(Angle.PSI);
+//        mainWindowModel.setIntegrationMethod(IntegrationMethods.CLASSICAL_RUNGE_KUTTA);
+//        mainWindowModel.setPhi0(0.05);
+//        mainWindowModel.setPsi0(0.05);
+//        mainWindowModel.setTheta0(0.05);
     }
 }

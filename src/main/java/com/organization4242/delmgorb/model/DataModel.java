@@ -167,14 +167,14 @@ public class DataModel extends Observable implements Serializable {
         Points comboArray;
         comboArray = new Points(mainWindowModel.getNumberOfPoints(), mainWindowModel.getNumberOfPoints());
         FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
-        comboArray.setxVal(doFragmentation(mainWindowModel.getXMin(), mainWindowModel.getXMax(), mainWindowModel.getNumberOfPoints()));
-        comboArray.setyVal(doFragmentation(mainWindowModel.getYMin(), mainWindowModel.getYMax(), mainWindowModel.getNumberOfPoints()));
+        comboArray.setXVal(doFragmentation(mainWindowModel.getXMin(), mainWindowModel.getXMax(), mainWindowModel.getNumberOfPoints()));
+        comboArray.setYVal(doFragmentation(mainWindowModel.getYMin(), mainWindowModel.getYMax(), mainWindowModel.getNumberOfPoints()));
         double[] initialState = InitialConditionsFactory.createConditions(mainWindowModel.getPhi(), mainWindowModel.getPsi(),
                 mainWindowModel.getTheta());
         for (int i = 0; i < mainWindowModel.getNumberOfPoints(); i++) {
             for (int j = 0; j < mainWindowModel.getNumberOfPoints(); j++) {
-                comboArray.getfVal()[j][i] = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                        mainWindowModel.getTimeStep(), comboArray.getyVal()[i], comboArray.getxVal()[j], integrator, initialState);
+                comboArray.getFVal()[j][i] = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
+                        mainWindowModel.getTimeStep(), comboArray.getYVal()[i], comboArray.getXVal()[j], integrator, initialState);
                 if (stop) {
                     stop = false;
                     return;

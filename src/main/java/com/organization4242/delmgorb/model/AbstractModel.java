@@ -10,8 +10,7 @@ public abstract class AbstractModel
 {
     protected PropertyChangeSupport propertyChangeSupport;
 
-    public AbstractModel()
-    {
+    public AbstractModel() {
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 

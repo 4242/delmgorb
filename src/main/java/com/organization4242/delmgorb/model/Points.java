@@ -13,19 +13,19 @@ public class Points {
     private Double[] yVal;
     private Double[][] fVal;
 
-    public Double[] getxVal() {
+    public Double[] getXVal() {
         return xVal;
     }
 
-    public Double[] getyVal() {
+    public Double[] getYVal() {
         return yVal;
     }
 
-    public Double[][] getfVal() {
+    public Double[][] getFVal() {
         return fVal;
     }
 
-    public void setxVal(Double[] newXVal) {
+    public void setXVal(Double[] newXVal) {
         if (newXVal == null) {
             this.xVal = new Double[0];
         } else {
@@ -33,7 +33,7 @@ public class Points {
         }
     }
 
-    public void setyVal(Double[] newYVal) {
+    public void setYVal(Double[] newYVal) {
         if (newYVal == null) {
             this.yVal = new Double[0];
         } else {

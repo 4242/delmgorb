@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <!--<context:annotation-config/>-->
 
     <bean id="mainWindowModel" class="com.organization4242.delmgorb.model.MainWindowModel">
         <property name="numberOfPoints" value="10"/>
@@ -22,24 +26,24 @@
 
     <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView"/>
 
-    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel">
-        <property name="mainWindowModel" ref="mainWindowModel"/>
-    </bean>
+    <!--<bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel" lazy-init="true">-->
+        <!--<property name="mainWindowModel" ref="mainWindowModel"/>-->
+    <!--</bean>-->
 
-    <bean id="plotBuilder" class="com.organization4242.delmgorb.controller.PlotBuilder" lazy-init="true">
-        <property name="mainWindowModel" ref="mainWindowModel"/>
-        <property name="dataModel" ref="dataModel"/>
-        <property name="dialogWindowView" ref="dialogWindowView"/>
-    </bean>
+    <!--<bean id="plotBuilder" class="com.organization4242.delmgorb.controller.PlotBuilder" lazy-init="true">-->
+        <!--<property name="mainWindowModel" ref="mainWindowModel"/>-->
+        <!--<property name="dataModel" ref="dataModel"/>-->
+        <!--<property name="dialogWindowView" ref="dialogWindowView"/>-->
+    <!--</bean>-->
 
-    <bean id="dialogWindowView" class="com.organization4242.delmgorb.view.DialogWindowView" lazy-init="true">
-        <constructor-arg value="Progress"/>
-    </bean>
+    <!--<bean id="dialogWindowView" class="com.organization4242.delmgorb.view.DialogWindowView" lazy-init="true">-->
+        <!--<constructor-arg value="Progress"/>-->
+    <!--</bean>-->
 
     <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">
-        <constructor-arg ref="mainWindowView"/>
-        <constructor-arg ref="mainWindowModel"/>
-        <constructor-arg ref="dataModel"/>
-        <property name="plotBuilder" ref="plotBuilder"/>
+        <property name="mainWindowView" ref="mainWindowView"/>
+        <property name="mainWindowModel" ref="mainWindowModel"/>
+        <!--<constructor-arg ref="dataModel"/>-->
+        <!--<property name="plotBuilder" ref="plotBuilder"/>-->
     </bean>
 </beans>

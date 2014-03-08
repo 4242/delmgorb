@@ -97,6 +97,7 @@ public class MainWindowView extends AbstractView {
     * Initializes main window and creates its structure without showing it.
     */
     public MainWindowView() {
+        System.out.println("V");
         //Setting window parameters
         frame.setTitle("Delmgorb v1.0");
         frame.setSize(WIDTH, HEIGHT);
@@ -454,6 +455,17 @@ public class MainWindowView extends AbstractView {
                     }
                 });
             }
+
+            @Override
+            public void focusLost(final FocusEvent e) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        JTextField tf = (JTextField) e.getComponent();
+                        tf.select(0, 0);
+                    }
+                });
+            }
         };
         for (JTextField tf : textFields) {
             tf.addFocusListener(focusListener);
@@ -483,33 +495,33 @@ public class MainWindowView extends AbstractView {
     }
 
     @Override
-    public void modelPropertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(MainWindowController.NUMBER_OF_POINTS)) {
-            numberOfPointsTextField.setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.TIME_STEP)) {
-            timeStepTextField.setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.TIME_PERIOD)) {
-            timePeriodTextField.setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.INTEGRATION_METHOD)) {
-            integrationMethodsComboBox.setSelectedItem(evt.getNewValue());
-        } else if (evt.getPropertyName().equals(MainWindowController.ANGLE)) {
-            angleComboBox.setSelectedItem(evt.getNewValue());
-        } else if (evt.getPropertyName().equals(MainWindowController.X_MIN)) {
-            boundsTextFields[0].setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.X_MAX)) {
-            boundsTextFields[1].setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.Y_MIN)) {
-            boundsTextFields[2].setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.Y_MAX)) {
-            boundsTextFields[3].setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.PHI0)) {
-            phiTextField.setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.PSI0)) {
-            psiTextField.setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.THETA0)) {
-            thetaTextField.setText(evt.getNewValue().toString());
-        } else if (evt.getPropertyName().equals(MainWindowController.NUMBER_OF_SPHERES)) {
-            numberOfSpheresTextField.setText(evt.getNewValue().toString());
+    public void modelPropertyChange(PropertyChangeEvent pce) {
+        if (pce.getPropertyName().equals(MainWindowController.NUMBER_OF_POINTS)) {
+            numberOfPointsTextField.setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.TIME_STEP)) {
+            timeStepTextField.setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.TIME_PERIOD)) {
+            timePeriodTextField.setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.INTEGRATION_METHOD)) {
+            integrationMethodsComboBox.setSelectedItem(pce.getNewValue());
+        } else if (pce.getPropertyName().equals(MainWindowController.ANGLE)) {
+            angleComboBox.setSelectedItem(pce.getNewValue());
+        } else if (pce.getPropertyName().equals(MainWindowController.X_MIN)) {
+            boundsTextFields[0].setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.X_MAX)) {
+            boundsTextFields[1].setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.Y_MIN)) {
+            boundsTextFields[2].setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.Y_MAX)) {
+            boundsTextFields[3].setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.PHI0)) {
+            phiTextField.setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.PSI0)) {
+            psiTextField.setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.THETA0)) {
+            thetaTextField.setText(pce.getNewValue().toString());
+        } else if (pce.getPropertyName().equals(MainWindowController.NUMBER_OF_SPHERES)) {
+            numberOfSpheresTextField.setText(pce.getNewValue().toString());
         }
     }
 }
