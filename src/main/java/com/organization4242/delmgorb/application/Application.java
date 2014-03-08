@@ -1,6 +1,8 @@
 package com.organization4242.delmgorb.application;
 
 import com.organization4242.delmgorb.controller.MainWindowController;
+import com.organization4242.delmgorb.model.Angle;
+import com.organization4242.delmgorb.model.IntegrationMethods;
 import com.organization4242.delmgorb.model.MainWindowModel;
 import com.organization4242.delmgorb.view.MainWindowView;
 import org.springframework.context.ApplicationContext;
@@ -24,26 +26,18 @@ public final class Application {
 
         mainWindowView.display();
 
-//        MainWindowController controller = new MainWindowController();
-//        MainWindowModel mainWindowModel = new MainWindowModel();
-//        MainWindowView mainWindowView = new MainWindowView();
-//        controller.addView(mainWindowView);
-//        controller.addModel(mainWindowModel);
-//
-//        mainWindowModel.setNumberOfPoints(10);
-//        mainWindowModel.setTimeStep(0.5);
-//        mainWindowModel.setTimePeriod(100d);
-//        mainWindowModel.setXMin(0.05f);
-//        mainWindowModel.setXMax(1f);
-//        mainWindowModel.setYMin(1f);
-//        mainWindowModel.setYMax(2f);
-//        mainWindowModel.setAngle(Angle.PHI);
-//        mainWindowModel.setIntegrationMethod(IntegrationMethods.CLASSICAL_RUNGE_KUTTA);
-//        mainWindowModel.setPhi0(0.05);
-//        mainWindowModel.setPsi0(0.05);
-//        mainWindowModel.setTheta0(0.05);
-//        mainWindowModel.setNumberOfSpheres(10);
-//
-//        mainWindowView.display();
+        mainWindowModel.setNumberOfPoints(5);
+        mainWindowModel.setTimeStep(0.4);
+        mainWindowModel.setTimePeriod(200d);
+        mainWindowModel.setXMin(0.05f);
+        mainWindowModel.setXMax(1f);
+        mainWindowModel.setYMin(1f);
+        mainWindowModel.setYMax(2f);
+        mainWindowModel.setAngle(Angle.PHI);
+        mainWindowModel.setIntegrationMethod(IntegrationMethods.CLASSICAL_RUNGE_KUTTA);
+        mainWindowModel.setPhi(0.06);
+        mainWindowModel.setPsi(0.06);
+        mainWindowModel.setTheta(0.06);
+        mainWindowModel.setNumberOfSpheres(5);
     }
 }

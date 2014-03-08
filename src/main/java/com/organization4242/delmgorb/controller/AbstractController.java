@@ -5,7 +5,6 @@ import com.organization4242.delmgorb.view.AbstractView;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,30 +33,24 @@ public abstract class AbstractController implements PropertyChangeListener {
 
     public void addView(AbstractView view) {
         registeredViews.add(view);
+        view.addPropertyChangeListener(this);
     }
 
     public void removeView(AbstractView view) {
         registeredViews.remove(view);
+        view.removePropertyChangeListener(this);
     }
 
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        for (AbstractView view: registeredViews) {
-            view.modelPropertyChange(evt);
-        }
-    }
-
-    protected void setModelProperty(String propertyName, Object newValue) {
-        for (AbstractModel model: registeredModels) {
-            try {
-                Method method = model.getClass().
-                        getMethod("set"+propertyName, new Class[] {newValue.getClass()});
-                method.invoke(model, newValue);
-            } catch (Exception ex) {
-                //  Handle exception.
+    public void propertyChange(PropertyChangeEvent pce) {
+        if (pce.getSource().getClass().getSuperclass().equals(AbstractModel.class)) {
+            for (AbstractView view: registeredViews) {
+                view.modelPropertyChange(pce);
+            }
+        } else if (pce.getSource().getClass().getSuperclass().equals(AbstractView.class)) {
+            for (AbstractModel model : registeredModels) {
+                model.viewPropertyChange(pce);
             }
         }
     }
-
-
 }

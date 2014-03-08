@@ -2,6 +2,7 @@ package com.organization4242.delmgorb.model;
 
 import com.organization4242.delmgorb.controller.MainWindowController;
 
+import java.beans.PropertyChangeEvent;
 import java.io.Serializable;
 
 /**
@@ -20,9 +21,9 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     private Float xMax;
     private Float yMin;
     private Float yMax;
-    private Double phi0;
-    private Double psi0;
-    private Double theta0;
+    private Double phi;
+    private Double psi;
+    private Double theta;
     private Integer numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
 
@@ -47,15 +48,15 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     }
 
     public Double getPhi() {
-        return phi0;
+        return phi;
     }
 
     public Double getPsi() {
-        return psi0;
+        return psi;
     }
 
     public Double getTheta() {
-        return theta0;
+        return theta;
     }
 
     public Float getXMin() {
@@ -136,22 +137,22 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         firePropertyChange(MainWindowController.Y_MAX, oldValue, yMax);
     }
 
-    public void setPhi0(Double phi0) {
-        Double oldValue = this.phi0 != null ? this.phi0 : 0d;
-        this.phi0 = phi0;
-        firePropertyChange(MainWindowController.PHI0, oldValue, phi0);
+    public void setPhi(Double phi) {
+        Double oldValue = this.phi != null ? this.phi : 0d;
+        this.phi = phi;
+        firePropertyChange(MainWindowController.PHI0, oldValue, phi);
     }
 
-    public void setPsi0(Double psi0) {
-        Double oldValue = this.psi0 != null ? this.psi0 : 0d;
-        this.psi0 = psi0;
-        firePropertyChange(MainWindowController.PSI0, oldValue, psi0);
+    public void setPsi(Double psi) {
+        Double oldValue = this.psi != null ? this.psi : 0d;
+        this.psi = psi;
+        firePropertyChange(MainWindowController.PSI0, oldValue, psi);
     }
 
-    public void setTheta0(Double theta0) {
-        Double oldValue = this.theta0 != null ? this.theta0 : 0d;
-        this.theta0 = theta0;
-        firePropertyChange(MainWindowController.THETA0, oldValue, theta0);
+    public void setTheta(Double theta) {
+        Double oldValue = this.theta != null ? this.theta : 0d;
+        this.theta = theta;
+        firePropertyChange(MainWindowController.THETA0, oldValue, theta);
     }
 
     public void setNumberOfSpheres(Integer numberOfSpheres) {
@@ -160,13 +161,12 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         firePropertyChange(MainWindowController.NUMBER_OF_SPHERES, oldValue, numberOfSpheres);
     }
 
-    private MainWindowModel() {
+    public MainWindowModel() {
 
     }
 
-    private static MainWindowModel instance = new MainWindowModel();
-
-    public static MainWindowModel getInstance() {
-        return instance;
+    @Override
+    public void viewPropertyChange(PropertyChangeEvent pce) {
+        System.out.println(pce.getNewValue());
     }
 }

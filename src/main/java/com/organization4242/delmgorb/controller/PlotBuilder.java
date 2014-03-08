@@ -61,15 +61,22 @@ public class PlotBuilder {
     private PlotWindowView build(Boolean calculateFromScratch) {
         Points points;
         dataModel.addObserver(task);
-        dialogWindowView.getTextArea().setText("Calculating...");
-        dialogWindowView.getButton().setEnabled(true);
-        dialogWindowView.getButton().addActionListener(actionListener);
+        dataModel.setMainWindowModel(mainWindowModel);
         dialogWindowView.display();
+
         if (calculateFromScratch) {
+            dataModel.setPoints(null);
+            dialogWindowView.getTextArea().setText("Calculating...");
+            dialogWindowView.getButton().setEnabled(true);
+            dialogWindowView.getButton().addActionListener(actionListener);
             dataModel.buildPoints();
         }
 
         points = dataModel.getPoints();
+
+        if (points == null) {
+            return null;
+        }
 
         MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getInterpolationMethod(),
                 mainWindowModel.getNumberOfSpheres());
@@ -79,6 +86,8 @@ public class PlotBuilder {
         plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + mainWindowModel.getAngle());
         plotView.setModel(plotModel);
         dialogWindowView.getTextArea().setText("Drawing...");
+        dialogWindowView.getButton().removeActionListener(actionListener);
+        dialogWindowView.getButton().setEnabled(false);
         plotView.getTask().execute();
         while (!plotView.getTask().isDone()) {
             dialogWindowView.getProgressBar().setValue(plotView.getProgress());
@@ -102,6 +111,7 @@ public class PlotBuilder {
         @Override
         protected void done() {
             dialogWindowView.getProgressBar().setValue(0);
+            dialogWindowView.getButton().removeActionListener(actionListener);
         }
     }
 

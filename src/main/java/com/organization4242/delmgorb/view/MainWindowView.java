@@ -6,8 +6,11 @@ import com.organization4242.delmgorb.model.IntegrationMethods;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
+import java.lang.reflect.Field;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,8 +25,6 @@ import java.util.logging.Logger;
  * @author Murzinov Ilya
  */
 public class MainWindowView extends AbstractView {
-    private MainWindowController mainWindowController;
-
     private static final int NUMBER_OF_EQUATION_PARAMETERS = 14;
     private static final int HEIGHT = 650;
     private static final int WIDTH = 400;
@@ -64,7 +65,10 @@ public class MainWindowView extends AbstractView {
 
     //UI Controls
     private JTextField[] textFields = new JTextField[NUMBER_OF_EQUATION_PARAMETERS];
-    private JTextField[] boundsTextFields = new JTextField[TEXT_FIELD_MIN_WIDTH];
+    private JTextField xMinTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
+    private JTextField xMaxTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
+    private JTextField yMinTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
+    private JTextField yMaxTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
     private JTextField numberOfPointsTextField;
     private JTextField timeStepTextField;
     private JTextField timePeriodTextField;
@@ -79,10 +83,6 @@ public class MainWindowView extends AbstractView {
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
     //Accessors
-    public void setMainWindowController(MainWindowController mainWindowController) {
-        this.mainWindowController = mainWindowController;
-    }
-
     public JFrame getFrame() {
         return frame;
     }
@@ -140,9 +140,6 @@ public class MainWindowView extends AbstractView {
 
         for (int i=0; i< NUMBER_OF_EQUATION_PARAMETERS; i++) {
             textFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
-        }
-        for (int i=0; i<4; i++) {
-            boundsTextFields[i] = new JTextField(TEXT_FIELD_MIN_WIDTH);
         }
 
         numberOfPointsTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
@@ -250,26 +247,26 @@ public class MainWindowView extends AbstractView {
         constraints.gridy++;
         gridBagLayout.setConstraints(xLabel, constraints);
         constraints.gridx++;
-        gridBagLayout.setConstraints(boundsTextFields[0], constraints);
+        gridBagLayout.setConstraints(xMinTextField, constraints);
         constraints.gridx++;
         gridBagLayout.setConstraints(yToLabel, constraints);
         constraints.gridx++;
-        gridBagLayout.setConstraints(boundsTextFields[1], constraints);
+        gridBagLayout.setConstraints(xMaxTextField, constraints);
 
         constraints.gridx = 0;
         constraints.gridy++;
         gridBagLayout.setConstraints(yLabel, constraints);
         constraints.gridx++;
-        gridBagLayout.setConstraints(boundsTextFields[2], constraints);
+        gridBagLayout.setConstraints(yMinTextField, constraints);
         constraints.gridx++;
         gridBagLayout.setConstraints(xToLabel, constraints);
         constraints.gridx++;
-        gridBagLayout.setConstraints(boundsTextFields[3], constraints);
+        gridBagLayout.setConstraints(yMaxTextField, constraints);
 
-        for (int i = 0; i < 4; i++) {
-            internalPane.add(boundsTextFields[i]);
-        }
-
+        internalPane.add(xMinTextField);
+        internalPane.add(xMaxTextField);
+        internalPane.add(yMinTextField);
+        internalPane.add(yMaxTextField);
         internalPane.add(xLabel);
         internalPane.add(yLabel);
         internalPane.add(xToLabel);
@@ -450,6 +447,7 @@ public class MainWindowView extends AbstractView {
     */
     private void addActionListeners() {
         FocusListener focusListener = new FocusAdapter() {
+            Object oldValue;
             @Override
             public void focusGained(final FocusEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -457,6 +455,7 @@ public class MainWindowView extends AbstractView {
                     public void run() {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
+                        oldValue = tf.getText();
                     }
                 });
             }
@@ -468,23 +467,23 @@ public class MainWindowView extends AbstractView {
                     public void run() {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.select(0, 0);
+                        firePropertyChange(tf.getName(), oldValue, tf.getText());
                     }
                 });
             }
         };
-        for (JTextField tf : textFields) {
-            tf.addFocusListener(focusListener);
+
+        //Add focus listener to all text fields using reflection
+        for (Field f : MainWindowView.this.getClass().getDeclaredFields()) {
+            if (f.getName().contains("TextField")) {
+                try {
+                    System.out.println(f.get(MainWindowView.this));
+                    ((JTextField) f.get(MainWindowView.this)).addFocusListener(focusListener);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        for (JTextField tf : boundsTextFields) {
-            tf.addFocusListener(focusListener);
-        }
-        numberOfPointsTextField.addFocusListener(focusListener);
-        timeStepTextField.addFocusListener(focusListener);
-        numberOfSpheresTextField.addFocusListener(focusListener);
-        timePeriodTextField.addFocusListener(focusListener);
-        phiTextField.addFocusListener(focusListener);
-        psiTextField.addFocusListener(focusListener);
-        thetaTextField.addFocusListener(focusListener);
     }
 
     /**
@@ -499,6 +498,11 @@ public class MainWindowView extends AbstractView {
         });    
     }
 
+    /**
+     * Handles event sent by {@link com.organization4242.delmgorb.model.MainWindowModel}
+     *
+     * @param pce event
+     */
     @Override
     public void modelPropertyChange(PropertyChangeEvent pce) {
         if (pce.getPropertyName().equals(MainWindowController.NUMBER_OF_POINTS)) {
@@ -512,13 +516,13 @@ public class MainWindowView extends AbstractView {
         } else if (pce.getPropertyName().equals(MainWindowController.ANGLE)) {
             angleComboBox.setSelectedItem(pce.getNewValue());
         } else if (pce.getPropertyName().equals(MainWindowController.X_MIN)) {
-            boundsTextFields[0].setText(pce.getNewValue().toString());
+            xMinTextField.setText(pce.getNewValue().toString());
         } else if (pce.getPropertyName().equals(MainWindowController.X_MAX)) {
-            boundsTextFields[1].setText(pce.getNewValue().toString());
+            xMaxTextField.setText(pce.getNewValue().toString());
         } else if (pce.getPropertyName().equals(MainWindowController.Y_MIN)) {
-            boundsTextFields[2].setText(pce.getNewValue().toString());
+            yMinTextField.setText(pce.getNewValue().toString());
         } else if (pce.getPropertyName().equals(MainWindowController.Y_MAX)) {
-            boundsTextFields[3].setText(pce.getNewValue().toString());
+            yMaxTextField.setText(pce.getNewValue().toString());
         } else if (pce.getPropertyName().equals(MainWindowController.PHI0)) {
             phiTextField.setText(pce.getNewValue().toString());
         } else if (pce.getPropertyName().equals(MainWindowController.PSI0)) {

@@ -1,9 +1,6 @@
 package com.organization4242.delmgorb.controller;
 
-import com.organization4242.delmgorb.model.DataModel;
-import com.organization4242.delmgorb.model.MainWindowModel;
-import com.organization4242.delmgorb.model.OpenFileHelper;
-import com.organization4242.delmgorb.model.Serializer;
+import com.organization4242.delmgorb.model.*;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.thoughtworks.xstream.XStream;
 import org.springframework.beans.factory.annotation.Required;
@@ -77,6 +74,10 @@ public class MainWindowController extends AbstractController {
         this.plotBuilder = plotBuilder;
     }
 
+    public void setxStream(XStream xStream) {
+        this.xStream = xStream;
+    }
+
     public MainWindowController() {
 
     }
@@ -134,6 +135,8 @@ public class MainWindowController extends AbstractController {
                     Serializer serializer = new Serializer(mainWindowModel, dataModel);
                     xStream.omitField(Observable.class, "obs");
                     xStream.omitField(Observable.class, "changed");
+                    xStream.omitField(AbstractModel.class, "propertyChangeSupport");
+                    xStream.omitField(DataModel.class, "mainWindowModel");
                     xStream.toXML(serializer, fos);
                     JOptionPane.showMessageDialog(mainWindowView.getFrame(), "Data was exported to " + file.getAbsolutePath());
                 }  catch (FileNotFoundException ex) {
