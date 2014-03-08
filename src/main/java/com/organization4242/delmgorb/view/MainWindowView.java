@@ -22,6 +22,8 @@ import java.util.logging.Logger;
  * @author Murzinov Ilya
  */
 public class MainWindowView extends AbstractView {
+    private MainWindowController mainWindowController;
+
     private static final int NUMBER_OF_EQUATION_PARAMETERS = 14;
     private static final int HEIGHT = 650;
     private static final int WIDTH = 400;
@@ -77,6 +79,10 @@ public class MainWindowView extends AbstractView {
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
     //Accessors
+    public void setMainWindowController(MainWindowController mainWindowController) {
+        this.mainWindowController = mainWindowController;
+    }
+
     public JFrame getFrame() {
         return frame;
     }

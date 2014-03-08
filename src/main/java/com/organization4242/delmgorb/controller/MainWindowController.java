@@ -6,10 +6,8 @@ import com.organization4242.delmgorb.model.OpenFileHelper;
 import com.organization4242.delmgorb.model.Serializer;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.springframework.beans.factory.annotation.Required;
 
-import javax.annotation.PostConstruct;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,7 +28,6 @@ import java.util.logging.Logger;
  * @author Murzinov Ilya
  */
 public class MainWindowController extends AbstractController {
-    public static final String INIT = "Init";
     public static final String NUMBER_OF_POINTS = "NumberOfPoints";
     public static final String TIME_STEP = "TimeStep";
     public static final String TIME_PERIOD = "TimePeriod";
@@ -51,7 +48,7 @@ public class MainWindowController extends AbstractController {
     private PlotBuilder plotBuilder;
     private Boolean calculateFromScratch = true;
 
-    private XStream xStream = new XStream(new DomDriver());
+    private XStream xStream;
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
@@ -87,7 +84,6 @@ public class MainWindowController extends AbstractController {
     /**
     * Adds all listeners to controls.
     */
-    @PostConstruct
     public void addActionListeners() {
         mainWindowView.getImportDataMenuItem().addActionListener(menuItemActionListener);
         mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
@@ -101,8 +97,6 @@ public class MainWindowController extends AbstractController {
                             "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
                 }
-                //plotBuilder.setDataModel(MainWindowController.this.dataModel);
-                //plotBuilder.setMainWindowModel(MainWindowController.this.mainWindowModel);
                 plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
                 plotBuilder.setCalculateFromScratch(calculateFromScratch);
                 task = plotBuilder.getTask();
@@ -142,11 +136,11 @@ public class MainWindowController extends AbstractController {
                     xStream.omitField(Observable.class, "changed");
                     xStream.toXML(serializer, fos);
                     JOptionPane.showMessageDialog(mainWindowView.getFrame(), "Data was exported to " + file.getAbsolutePath());
-                } catch (NullPointerException ex) {
-                    logger.log(Level.SEVERE, ex.getMessage());
-                    JOptionPane.showMessageDialog(mainWindowView.getFrame(), "No data to export.");
-                } catch (FileNotFoundException ex) {
-                    logger.log(Level.SEVERE, ex.getMessage());
+                }  catch (FileNotFoundException ex) {
+                    logger.severe(ex.getMessage());
+                } catch (Exception ex) {
+                    logger.severe(ex.getMessage());
+                    JOptionPane.showMessageDialog(mainWindowView.getFrame(), "Something is wrong.");
                 }
             }
         }

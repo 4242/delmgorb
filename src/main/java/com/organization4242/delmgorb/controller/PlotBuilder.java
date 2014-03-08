@@ -58,7 +58,7 @@ public class PlotBuilder {
 
     }
 
-    public PlotWindowView build(Boolean calculateFromScratch) {
+    private PlotWindowView build(Boolean calculateFromScratch) {
         Points points;
         dataModel.addObserver(task);
         dialogWindowView.getTextArea().setText("Calculating...");

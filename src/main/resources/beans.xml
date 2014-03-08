@@ -28,7 +28,9 @@
     <bean id="mainWindowModelWithoutProperties" class="com.organization4242.delmgorb.model.MainWindowModel"
             factory-method="getInstance"/>
 
-    <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView"/>
+    <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView">
+        <property name="mainWindowController" ref="mainWindowController"/>
+    </bean>
 
     <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel" lazy-init="true">
         <property name="mainWindowModel" ref="mainWindowModelWithoutProperties"/>
