@@ -26,7 +26,7 @@
 
     <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView"/>
 
-    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel">
+    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel" factory-method="getInstance" scope="singleton">
         <property name="mainWindowModel" ref="mainWindowModel"/>
     </bean>
 

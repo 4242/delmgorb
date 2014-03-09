@@ -121,6 +121,7 @@ public class MainWindowController extends AbstractController {
                             (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(mainWindowView.getFrame())));
                     mainWindowModel = serializer.getMainWindowModel();
                     dataModel = serializer.getDataModel();
+                    setControlsEnabled(false);
                 } catch (FileNotFoundException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
                 }
@@ -148,4 +149,16 @@ public class MainWindowController extends AbstractController {
             }
         }
     };
+
+    private void setControlsEnabled(Boolean enabled) {
+        mainWindowView.getNumberOfPointsTextField().setEnabled(enabled);
+        mainWindowView.getIntegrationMethodsComboBox().setEnabled(enabled);
+        mainWindowView.getAngleComboBox().setEnabled(enabled);
+        mainWindowView.getxMaxTextField().setEnabled(enabled);
+        mainWindowView.getxMinTextField().setEnabled(enabled);
+        mainWindowView.getyMinTextField().setEnabled(enabled);
+        mainWindowView.getyMaxTextField().setEnabled(enabled);
+        mainWindowView.getTimeStepTextField().setEnabled(enabled);
+        mainWindowView.getTimePeriodTextField().setEnabled(enabled);
+    }
 }

@@ -5,6 +5,7 @@ import com.organization4242.delmgorb.controller.MainWindowController;
 import java.beans.PropertyChangeEvent;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Logger;
 
 /**
  * Class is used for storing values from {@link com.organization4242.delmgorb.view.MainWindowView}
@@ -27,6 +28,8 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     private Double theta;
     private Integer numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
+
+    private transient Logger logger = Logger.getLogger("Delmgorb.logger");
 
     public IntegrationMethods getIntegrationMethod() {
         return integrationMethod;
@@ -151,6 +154,7 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     }
 
     public void setTheta(String theta) {
+
         Double oldValue = this.theta != null ? this.theta : 0d;
         this.theta = Double.parseDouble(theta);
         firePropertyChange(MainWindowController.THETA, oldValue, theta);
@@ -249,13 +253,13 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         try {
             MainWindowModel.class.getMethod("set"+pce.getPropertyName(), String.class).invoke(this, pce.getNewValue());
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         } catch (SecurityException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
     }
 }

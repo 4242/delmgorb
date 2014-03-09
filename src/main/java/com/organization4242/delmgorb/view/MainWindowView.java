@@ -99,6 +99,58 @@ public class MainWindowView extends AbstractView {
         return button;
     }
 
+    public JTextField getxMinTextField() {
+        return xMinTextField;
+    }
+
+    public JTextField[] getTextFields() {
+        return textFields;
+    }
+
+    public JTextField getxMaxTextField() {
+        return xMaxTextField;
+    }
+
+    public JTextField getyMinTextField() {
+        return yMinTextField;
+    }
+
+    public JTextField getyMaxTextField() {
+        return yMaxTextField;
+    }
+
+    public JTextField getNumberOfPointsTextField() {
+        return numberOfPointsTextField;
+    }
+
+    public JComboBox<IntegrationMethods> getIntegrationMethodsComboBox() {
+        return integrationMethodsComboBox;
+    }
+
+    public JTextField getTimePeriodTextField() {
+        return timePeriodTextField;
+    }
+
+    public JTextField getTimeStepTextField() {
+        return timeStepTextField;
+    }
+
+    public JComboBox<Angle> getAngleComboBox() {
+        return angleComboBox;
+    }
+
+    public JTextField getPhiTextField() {
+        return phiTextField;
+    }
+
+    public JTextField getPsiTextField() {
+        return psiTextField;
+    }
+
+    public JTextField getThetaTextField() {
+        return thetaTextField;
+    }
+
     /**
     * Initializes main window and creates its structure without showing it.
     */
@@ -505,10 +557,9 @@ public class MainWindowView extends AbstractView {
         for (Field f : MainWindowView.this.getClass().getDeclaredFields()) {
             if (f.getName().contains("TextField")) {
                 try {
-                    System.out.println(f.get(MainWindowView.this));
                     ((JTextField) f.get(MainWindowView.this)).addFocusListener(focusListener);
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    logger.severe(e.getMessage());
                 }
             }
         }
