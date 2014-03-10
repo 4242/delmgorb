@@ -32,14 +32,8 @@ public class DataModel extends Observable implements Serializable {
         }
     }
 
-    private DataModel() {
-        return;
-    }
+    public DataModel() {
 
-    private static DataModel instance = new DataModel();
-
-    public static DataModel getInstance() {
-        return instance;
     }
 
     private static class IntegratorFactory {

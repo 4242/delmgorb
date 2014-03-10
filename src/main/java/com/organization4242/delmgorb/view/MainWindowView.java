@@ -78,7 +78,8 @@ public class MainWindowView extends AbstractView {
     private JTextField phiTextField;
     private JTextField psiTextField;
     private JTextField thetaTextField;
-    private JButton button;
+    private JButton drawButton;
+    private JButton resetButton;
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
@@ -95,8 +96,12 @@ public class MainWindowView extends AbstractView {
         return exportDataMenuItem;
     }
 
-    public JButton getButton() {
-        return button;
+    public JButton getDrawButton() {
+        return drawButton;
+    }
+
+    public JButton getResetButton() {
+        return resetButton;
     }
 
     public JTextField getxMinTextField() {
@@ -202,7 +207,8 @@ public class MainWindowView extends AbstractView {
         psiTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
         thetaTextField = new JTextField(TEXT_FIELD_MIN_WIDTH);
 
-        button = new JButton("Draw!");
+        drawButton = new JButton("Draw!");
+        resetButton = new JButton("Reset");
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
         integrationMethodsComboBox.setEditable(false);
         angleComboBox = new JComboBox<Angle>(Angle.values());
@@ -464,6 +470,8 @@ public class MainWindowView extends AbstractView {
      * Places all UI controls to buttons panel.
      */
     private void placeButtonControls() {
+        JPanel internalPanel = new JPanel();
+        internalPanel.setLayout(gridBagLayout);
         buttonsPanel.setLayout(gridBagLayout);
 
         //Create GridBagConstraints
@@ -478,9 +486,18 @@ public class MainWindowView extends AbstractView {
 
         constraints.fill = GridBagConstraints.NONE;
         constraints.gridy++;
-        gridBagLayout.setConstraints(button, constraints);
+        gridBagLayout.setConstraints(resetButton, constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(drawButton, constraints);
 
-        buttonsPanel.add(button);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets = EMPTY_INSETS;
+        gridBagLayout.setConstraints(internalPanel, constraints);
+
+        internalPanel.add(drawButton);
+        internalPanel.add(resetButton);
+        buttonsPanel.add(internalPanel);
     }
 
     /**

@@ -44,6 +44,7 @@ public class MainWindowController extends AbstractController {
     private MainWindowView mainWindowView;
     private PlotBuilder plotBuilder;
     private Boolean calculateFromScratch = true;
+    private Boolean imported = false;
 
     private XStream xStream;
 
@@ -55,6 +56,7 @@ public class MainWindowController extends AbstractController {
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
         this.mainWindowModel = mainWindowModel;
         addModel(this.mainWindowModel);
+        mainWindowModel.setDefaults();
     }
 
     @Required
@@ -64,12 +66,10 @@ public class MainWindowController extends AbstractController {
         addActionListeners();
     }
 
-    @Required
     public void setDataModel(DataModel dataModel) {
         this.dataModel = dataModel;
     }
 
-    @Required
     public void setPlotBuilder(PlotBuilder plotBuilder) {
         this.plotBuilder = plotBuilder;
     }
@@ -90,18 +90,36 @@ public class MainWindowController extends AbstractController {
         mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
 
         //Perform calculation and drawing.
-        mainWindowView.getButton().addMouseListener(new MouseAdapter() {
+        mainWindowView.getDrawButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (MainWindowController.this.dataModel.getPoints() != null) {
+                if (MainWindowController.this.dataModel.getPoints() != null && !imported) {
                     calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.mainWindowView.getFrame(),
                             "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
                 }
+                if (imported) {
+                    calculateFromScratch = false;
+                }
+
+                plotBuilder.setDataModel(dataModel);
+                plotBuilder.setMainWindowModel(mainWindowModel);
                 plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
                 plotBuilder.setCalculateFromScratch(calculateFromScratch);
+                calculateFromScratch = true;
                 task = plotBuilder.getTask();
                 task.execute();
+            }
+        });
+
+        //Reset data
+        mainWindowView.getResetButton().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                mainWindowModel.setDefaults();
+                dataModel.setPoints(null);
+                setControlsEnabled(true);
+                imported = false;
             }
         });
     }
@@ -119,9 +137,10 @@ public class MainWindowController extends AbstractController {
                 try {
                     Serializer serializer =
                             (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(mainWindowView.getFrame())));
-                    mainWindowModel = serializer.getMainWindowModel();
+                    mainWindowModel.update(serializer.getMainWindowModel());
                     dataModel = serializer.getDataModel();
                     setControlsEnabled(false);
+                    imported = true;
                 } catch (FileNotFoundException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
                 }
@@ -160,5 +179,8 @@ public class MainWindowController extends AbstractController {
         mainWindowView.getyMaxTextField().setEnabled(enabled);
         mainWindowView.getTimeStepTextField().setEnabled(enabled);
         mainWindowView.getTimePeriodTextField().setEnabled(enabled);
+        mainWindowView.getPsiTextField().setEnabled(enabled);
+        mainWindowView.getPhiTextField().setEnabled(enabled);
+        mainWindowView.getThetaTextField().setEnabled(enabled);
     }
 }

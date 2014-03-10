@@ -8,25 +8,11 @@
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     <context:annotation-config/>
 
-    <bean id="mainWindowModel" class="com.organization4242.delmgorb.model.MainWindowModel">
-        <property name="numberOfPoints" value="10"/>
-        <property name="timeStep" value="0.5"/>
-        <property name="timePeriod" value="100.0"/>
-        <property name="xMin" value="1.0"/>
-        <property name="xMax" value="2.0"/>
-        <property name="yMin" value="0.05"/>
-        <property name="yMax" value="1.0"/>
-        <property name="angle" value="PSI"/>
-        <property name="integrationMethod" value="DORMAND_PRINCE_8"/>
-        <property name="psi" value="0.05"/>
-        <property name="phi" value="0.05"/>
-        <property name="theta" value="0.05"/>
-        <property name="numberOfSpheres" value="10"/>
-    </bean>
+    <bean id="mainWindowModel" class="com.organization4242.delmgorb.model.MainWindowModel"/>
 
     <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView"/>
 
-    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel" factory-method="getInstance" scope="singleton">
+    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel">
         <property name="mainWindowModel" ref="mainWindowModel"/>
     </bean>
 

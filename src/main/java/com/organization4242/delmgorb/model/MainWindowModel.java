@@ -154,7 +154,6 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     }
 
     public void setTheta(String theta) {
-
         Double oldValue = this.theta != null ? this.theta : 0d;
         this.theta = Double.parseDouble(theta);
         firePropertyChange(MainWindowController.THETA, oldValue, theta);
@@ -248,18 +247,50 @@ public class MainWindowModel extends AbstractModel implements Serializable {
 
     }
 
+    public void setDefaults() {
+        setNumberOfPoints(10);
+        setTimeStep(0.5);
+        setTimePeriod(100d);
+        setXMin(1f);
+        setXMax(2f);
+        setYMin(0.05f);
+        setYMax(1f);
+        setAngle(Angle.PSI);
+        setIntegrationMethod(IntegrationMethods.DORMAND_PRINCE_8);
+        setPhi(0.05);
+        setPsi(0.05);
+        setTheta(0.05);
+        setNumberOfSpheres(50);
+    }
+
+    public void update(MainWindowModel mainWindowModel) {
+        setNumberOfPoints(mainWindowModel.getNumberOfPoints());
+        setTimeStep(mainWindowModel.getTimeStep());
+        setTimePeriod(mainWindowModel.getTimePeriod());
+        setXMin(mainWindowModel.getXMin());
+        setXMax(mainWindowModel.getXMax());
+        setYMin(mainWindowModel.getYMin());
+        setYMax(mainWindowModel.getYMax());
+        setIntegrationMethod(mainWindowModel.getIntegrationMethod());
+        setAngle(mainWindowModel.getAngle());
+        setPhi(mainWindowModel.getPhi());
+        setPsi(mainWindowModel.getPsi());
+        setTheta(mainWindowModel.getTheta());
+        setNumberOfSpheres(mainWindowModel.getNumberOfSpheres());
+    }
+
     @Override
     public void viewPropertyChange(PropertyChangeEvent pce) {
         try {
             MainWindowModel.class.getMethod("set"+pce.getPropertyName(), String.class).invoke(this, pce.getNewValue());
-        } catch (NoSuchMethodException e) {
-            logger.severe(e.getMessage());
-        } catch (SecurityException e) {
-            logger.severe(e.getMessage());
-        } catch (InvocationTargetException e) {
-            logger.severe(e.getMessage());
-        } catch (IllegalAccessException e) {
-            logger.severe(e.getMessage());
+        } catch (NoSuchMethodException ex) {
+            logger.severe(ex.getMessage());
+        } catch (SecurityException ex) {
+            logger.severe(ex.getMessage());
+        } catch (InvocationTargetException ex) {
+            logger.severe(ex.getMessage());
+        } catch (IllegalAccessException ex) {
+            logger.severe(ex.getMessage());
         }
     }
 }
