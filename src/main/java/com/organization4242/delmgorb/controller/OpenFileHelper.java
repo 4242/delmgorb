@@ -1,4 +1,4 @@
-package com.organization4242.delmgorb.model;
+package com.organization4242.delmgorb.controller;
 
 import javax.swing.*;
 import java.io.File;

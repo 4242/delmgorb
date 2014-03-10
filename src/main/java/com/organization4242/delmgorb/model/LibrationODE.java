@@ -2,7 +2,7 @@ package com.organization4242.delmgorb.model;
 
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 
-class LibrationODE implements FirstOrderDifferentialEquations {
+public class LibrationODE implements FirstOrderDifferentialEquations {
     private double a;
     private double epsilon;
     private double delta;
