@@ -86,6 +86,9 @@ public class MainWindowController extends AbstractController {
     * Adds all listeners to controls.
     */
     public void addActionListeners() {
+        mainWindowView.getIntegrationMethodsComboBox().addPropertyChangeListener(this);
+        mainWindowView.getAngleComboBox().addPropertyChangeListener(this);
+
         mainWindowView.getImportDataMenuItem().addActionListener(menuItemActionListener);
         mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
 

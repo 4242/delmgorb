@@ -26,4 +26,15 @@ public enum IntegrationMethods {
     public String toString() {
         return name;
     }
+
+    public static IntegrationMethods fromString(String name) {
+        if (name != null) {
+            for (IntegrationMethods b : IntegrationMethods.values()) {
+                if (name.equalsIgnoreCase(b.name)) {
+                    return b;
+                }
+            }
+        }
+        return null;
+    }
 }

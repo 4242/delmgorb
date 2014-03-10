@@ -6,9 +6,7 @@ import com.organization4242.delmgorb.model.IntegrationMethods;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
@@ -515,6 +513,34 @@ public class MainWindowView extends AbstractView {
     * When a text field gets focus, all text should be selected.
     */
     private void addActionListeners() {
+        ItemListener itemListener = new ItemListener() {
+            String oldValue = null;
+            String newValue = null;
+            @Override
+            public void itemStateChanged(final ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    oldValue = e.getItem().toString();
+                } else if (e.getStateChange() == ItemEvent.SELECTED) {
+                    newValue = e.getItem().toString();
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            String propertyName = "";
+                            if (e.getSource().equals(integrationMethodsComboBox)) {
+                                propertyName = MainWindowController.INTEGRATION_METHOD;
+                            } else if (e.getSource().equals(angleComboBox)) {
+                                propertyName = MainWindowController.ANGLE;
+                            }
+                            firePropertyChange(propertyName, oldValue, newValue);
+                        }
+                    });
+                }
+            }
+        };
+
+        MainWindowView.this.getIntegrationMethodsComboBox().addItemListener(itemListener);
+        MainWindowView.this.getAngleComboBox().addItemListener(itemListener);
+
         FocusListener focusListener = new FocusAdapter() {
             Object oldValue;
             @Override
@@ -543,10 +569,6 @@ public class MainWindowView extends AbstractView {
                             propertyName = MainWindowController.TIME_STEP;
                         } else if (e.getSource().equals(timePeriodTextField)) {
                             propertyName = MainWindowController.TIME_PERIOD;
-                        } else if (e.getSource().equals(integrationMethodsComboBox)) {
-                            propertyName = MainWindowController.INTEGRATION_METHOD;
-                        } else if (e.getSource().equals(angleComboBox)) {
-                            propertyName = MainWindowController.ANGLE;
                         } else if (e.getSource().equals(xMinTextField)) {
                             propertyName = MainWindowController.X_MIN;
                         } else if (e.getSource().equals(xMaxTextField)) {

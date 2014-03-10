@@ -107,7 +107,7 @@ public class MainWindowModel extends AbstractModel implements Serializable {
 
     public void setIntegrationMethod(String integrationMethod) {
         IntegrationMethods oldValue = this.integrationMethod != null ? this.integrationMethod : null;
-        this.integrationMethod = IntegrationMethods.valueOf(integrationMethod);
+        this.integrationMethod = IntegrationMethods.fromString(integrationMethod);
         firePropertyChange(MainWindowController.INTEGRATION_METHOD, oldValue, integrationMethod);
     }
 
@@ -288,6 +288,7 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         } catch (SecurityException ex) {
             logger.severe(ex.getMessage());
         } catch (InvocationTargetException ex) {
+            ex.printStackTrace();
             logger.severe(ex.getMessage());
         } catch (IllegalAccessException ex) {
             logger.severe(ex.getMessage());
