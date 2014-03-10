@@ -96,6 +96,22 @@ public class PlotBuilder {
         return new PlotWindowView(plotView);
     }
 
+    public PlotView getSample() {
+        Points points;
+
+        points = dataModel.getPoints();
+
+        MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getInterpolationMethod(),
+                mainWindowModel.getNumberOfSpheres());
+        PlotModel plotModel = new PlotModel(function, mainWindowModel.getXMin(), mainWindowModel.getXMax(),
+                mainWindowModel.getYMin(), mainWindowModel.getYMax());
+        PlotView plotView = new PlotView();
+        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + mainWindowModel.getAngle());
+        plotView.setModel(plotModel);
+        plotView.getTask().execute();
+        return plotView;
+    }
+
     private class Task extends SwingWorker<Void, Integer> implements Observer {
         @Override
         protected Void doInBackground() throws Exception {

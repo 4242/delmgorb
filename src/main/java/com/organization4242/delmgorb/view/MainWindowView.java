@@ -513,9 +513,9 @@ public class MainWindowView extends AbstractView {
     * When a text field gets focus, all text should be selected.
     */
     private void addActionListeners() {
-        ItemListener itemListener = new ItemListener() {
-            String oldValue = null;
-            String newValue = null;
+        class ComboboxItemListener implements ItemListener {
+            private String oldValue = null;
+            private String newValue = null;
             @Override
             public void itemStateChanged(final ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.DESELECTED) {
@@ -536,13 +536,14 @@ public class MainWindowView extends AbstractView {
                     });
                 }
             }
-        };
+        }
 
+        ItemListener itemListener = new ComboboxItemListener();
         MainWindowView.this.getIntegrationMethodsComboBox().addItemListener(itemListener);
         MainWindowView.this.getAngleComboBox().addItemListener(itemListener);
 
-        FocusListener focusListener = new FocusAdapter() {
-            Object oldValue;
+        class TextFieldFocusListener extends FocusAdapter {
+            private Object oldValue;
             @Override
             public void focusGained(final FocusEvent e) {
                 SwingUtilities.invokeLater(new Runnable() {
@@ -557,7 +558,7 @@ public class MainWindowView extends AbstractView {
 
             @Override
             public void focusLost(final FocusEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
+                class TextFieldPropertyChangeHandler implements Runnable {
                     @Override
                     public void run() {
                         JTextField tf = (JTextField) e.getComponent();
@@ -588,15 +589,16 @@ public class MainWindowView extends AbstractView {
                         }
                         firePropertyChange(propertyName, oldValue, tf.getText());
                     }
-                });
+                }
+                SwingUtilities.invokeLater(new TextFieldPropertyChangeHandler());
             }
-        };
+        }
 
         //Add focus listener to all text fields using reflection
         for (Field f : MainWindowView.this.getClass().getDeclaredFields()) {
             if (f.getName().contains("TextField")) {
                 try {
-                    ((JTextField) f.get(MainWindowView.this)).addFocusListener(focusListener);
+                    ((JTextField) f.get(MainWindowView.this)).addFocusListener(new TextFieldFocusListener());
                 } catch (IllegalAccessException e) {
                     logger.severe(e.getMessage());
                 }

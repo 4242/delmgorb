@@ -89,31 +89,12 @@ public class MainWindowController extends AbstractController {
         mainWindowView.getIntegrationMethodsComboBox().addPropertyChangeListener(this);
         mainWindowView.getAngleComboBox().addPropertyChangeListener(this);
 
+        ActionListener menuItemActionListener = new MenuItemActionListener();
         mainWindowView.getImportDataMenuItem().addActionListener(menuItemActionListener);
         mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
 
         //Perform calculation and drawing.
-        mainWindowView.getDrawButton().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (MainWindowController.this.dataModel.getPoints() != null && !imported) {
-                    calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.mainWindowView.getFrame(),
-                            "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
-                            JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
-                }
-                if (imported) {
-                    calculateFromScratch = false;
-                }
-
-                plotBuilder.setDataModel(dataModel);
-                plotBuilder.setMainWindowModel(mainWindowModel);
-                plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
-                plotBuilder.setCalculateFromScratch(calculateFromScratch);
-                calculateFromScratch = true;
-                task = plotBuilder.getTask();
-                task.execute();
-            }
-        });
+        mainWindowView.getDrawButton().addMouseListener(new DrawButtonMouseListener());
 
         //Reset data
         mainWindowView.getResetButton().addMouseListener(new MouseAdapter() {
@@ -127,13 +108,35 @@ public class MainWindowController extends AbstractController {
         });
     }
 
+    private class DrawButtonMouseListener extends MouseAdapter{
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (MainWindowController.this.dataModel.getPoints() != null && !imported) {
+                calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.mainWindowView.getFrame(),
+                        "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
+            }
+            if (imported) {
+                calculateFromScratch = false;
+            }
+
+            plotBuilder.setDataModel(dataModel);
+            plotBuilder.setMainWindowModel(mainWindowModel);
+            plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
+            plotBuilder.setCalculateFromScratch(calculateFromScratch);
+            calculateFromScratch = true;
+            task = plotBuilder.getTask();
+            task.execute();
+        }
+    }
+
     /**
     * Action listener for menu items in main window.
     * 
     * Performs serialization/deserialization {@link com.organization4242.delmgorb.model.MainWindowModel}
     * and {@link com.organization4242.delmgorb.model.DataModel}.
     */
-    private ActionListener menuItemActionListener = new ActionListener() {
+    private class MenuItemActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(mainWindowView.getImportDataMenuItem())) {
