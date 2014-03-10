@@ -113,7 +113,7 @@ public class MainWindowModel extends AbstractModel implements Serializable {
 
     public void setAngle(String angle) {
         Angle oldValue = this.angle != null ? this.angle : null;
-        this.angle = Angle.valueOf(angle);
+        this.angle = Angle.fromString(angle);
         firePropertyChange(MainWindowController.ANGLE, oldValue, angle);
     }
 

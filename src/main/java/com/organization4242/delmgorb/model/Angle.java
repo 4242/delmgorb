@@ -15,4 +15,15 @@ public enum Angle {
     public String toString() {
         return name;
     }
+
+    public static Angle fromString(String name) {
+        if (name != null) {
+            for (Angle b : Angle.values()) {
+                if (name.equalsIgnoreCase(b.name)) {
+                    return b;
+                }
+            }
+        }
+        return null;
+    }
 }
