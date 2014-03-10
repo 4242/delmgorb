@@ -5,7 +5,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * Created by ilya-murzinov on 19.02.14.
+ * Main application class.
+ *
+ * @author Mu//inov Ilya
  */
 public final class Application {
     private Application() {
@@ -14,7 +16,8 @@ public final class Application {
 
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("classpath:beans.xml");
-        MainWindowView view = (MainWindowView) context.getBean("mainWindowView");
-        view.display();
+        MainWindowView mainWindowView = (MainWindowView) context.getBean("mainWindowView");
+
+        mainWindowView.display();
     }
 }

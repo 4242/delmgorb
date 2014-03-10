@@ -3,10 +3,13 @@ package com.organization4242.delmgorb.controller;
 import com.organization4242.delmgorb.model.*;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.springframework.beans.factory.annotation.Required;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,154 +24,130 @@ import java.util.logging.Logger;
  *
  * @author Murzinov Ilya
  */
-public class MainWindowController {
+public class MainWindowController extends AbstractController {
+    public static final String NUMBER_OF_POINTS = "NumberOfPoints";
+    public static final String TIME_STEP = "TimeStep";
+    public static final String TIME_PERIOD = "TimePeriod";
+    public static final String INTEGRATION_METHOD = "IntegrationMethod";
+    public static final String ANGLE = "Angle";
+    public static final String X_MIN = "xMin";
+    public static final String X_MAX = "xMax";
+    public static final String Y_MIN = "yMin";
+    public static final String Y_MAX = "yMax";
+    public static final String PHI = "Phi";
+    public static final String PSI = "Psi";
+    public static final String THETA = "Theta";
+    public static final String NUMBER_OF_SPHERES = "NumberOfSpheres";
+
     private MainWindowModel mainWindowModel;
     private DataModel dataModel;
-    private MainWindowView view;
+    private MainWindowView mainWindowView;
     private PlotBuilder plotBuilder;
     private Boolean calculateFromScratch = true;
+    private Boolean imported = false;
 
-    private XStream xStream = new XStream(new DomDriver());
+    private XStream xStream;
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
     private SwingWorker task;
 
+    @Required
+    public void setMainWindowModel(MainWindowModel mainWindowModel) {
+        this.mainWindowModel = mainWindowModel;
+        addModel(this.mainWindowModel);
+        mainWindowModel.setDefaults();
+    }
+
+    @Required
+    public void setMainWindowView(MainWindowView mainWindowView) {
+        this.mainWindowView = mainWindowView;
+        addView(this.mainWindowView);
+        addActionListeners();
+    }
+
+    public void setDataModel(DataModel dataModel) {
+        this.dataModel = dataModel;
+    }
+
     public void setPlotBuilder(PlotBuilder plotBuilder) {
         this.plotBuilder = plotBuilder;
     }
 
+    public void setxStream(XStream xStream) {
+        this.xStream = xStream;
+    }
+
+    public MainWindowController() {
+
+    }
+
     /**
     * Adds all listeners to controls.
-    * 
-    * @param view {@link com.organization4242.delmgorb.view.MainWindowView}
-    * @param mainWindowModel {@link com.organization4242.delmgorb.model.MainWindowModel}
-    * @param dataModel {@link com.organization4242.delmgorb.model.DataModel}
     */
-    public MainWindowController(MainWindowView view, MainWindowModel mainWindowModel,
-                                DataModel dataModel) {
-        this.mainWindowModel = mainWindowModel;
-        this.dataModel = dataModel;
-        this.view = view;
-        updateView();
-
-        this.view.getImportDataMenuItem().addActionListener(menuItemActionListener);
-        this.view.getExportDataMenuItem().addActionListener(menuItemActionListener);
+    public void addActionListeners() {
+        mainWindowView.getImportDataMenuItem().addActionListener(menuItemActionListener);
+        mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
 
         //Perform calculation and drawing.
-        this.view.getButton().addMouseListener(new MouseAdapter() {
+        mainWindowView.getDrawButton().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                updateModel();
-                if (MainWindowController.this.dataModel.getPoints() != null) {
-                    calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.view,
+                if (MainWindowController.this.dataModel.getPoints() != null && !imported) {
+                    calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.mainWindowView.getFrame(),
                             "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
                 }
-                MainWindowController.this.plotBuilder.setDataModel(MainWindowController.this.dataModel);
-                MainWindowController.this.plotBuilder.setMainWindowModel(MainWindowController.this.mainWindowModel);
-                plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.view);
+                if (imported) {
+                    calculateFromScratch = false;
+                }
+
+                plotBuilder.setDataModel(dataModel);
+                plotBuilder.setMainWindowModel(mainWindowModel);
+                plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
                 plotBuilder.setCalculateFromScratch(calculateFromScratch);
+                calculateFromScratch = true;
                 task = plotBuilder.getTask();
                 task.execute();
             }
         });
-    }
 
-    private void updateModel() {
-        mainWindowModel.setIntegrationMethod((IntegrationMethods) view.getIntegrationMethodsComboBox().getSelectedItem());
-        mainWindowModel.setAngle((Angle) view.getAngleJComboBox().getSelectedItem());
-        mainWindowModel.setNumberOfPoints(Integer.parseInt(view.getNumberOfPoints().getText()));
-        mainWindowModel.setTimeStep(Double.parseDouble(view.getTimeStep().getText()));
-        mainWindowModel.setTimePeriod(Double.parseDouble(view.getPeriodToInterpolate().getText()));
-        mainWindowModel.setPhi0(Double.parseDouble(view.getPhiTextField().getText()));
-        mainWindowModel.setPsi0(Double.parseDouble(view.getPsiTextField().getText()));
-        mainWindowModel.setTheta0(Double.parseDouble(view.getThetaTextField().getText()));
-        mainWindowModel.setxMin(Float.parseFloat(view.getBoundsTextFields()[0].getText()));
-        mainWindowModel.setxMax(Float.parseFloat(view.getBoundsTextFields()[1].getText()));
-        mainWindowModel.setyMin(Float.parseFloat(view.getBoundsTextFields()[2].getText()));
-        mainWindowModel.setyMax(Float.parseFloat(view.getBoundsTextFields()[3].getText()));
-        mainWindowModel.setNumberOfSpheres(Integer.parseInt(view.getNumberOfSpheresTextField().getText()));
-        mainWindowModel.setInterpolationMethod(InterpolationMethods.MICROSPHERE);
-    }
-
-    private void updateView() {
-        view.getNumberOfPoints().setText(mainWindowModel.getNumberOfPoints().toString());
-        view.getBoundsTextFields()[0].setText(mainWindowModel.getxMin().toString());
-        view.getBoundsTextFields()[1].setText(mainWindowModel.getxMax().toString());
-        view.getBoundsTextFields()[2].setText(mainWindowModel.getyMin().toString());
-        view.getBoundsTextFields()[3].setText(mainWindowModel.getyMax().toString());
-        view.getIntegrationMethodsComboBox().setSelectedItem(mainWindowModel.getIntegrationMethod());
-        view.getPeriodToInterpolate().setText(mainWindowModel.getTimePeriod().toString());
-        view.getTimeStep().setText(mainWindowModel.getTimeStep().toString());
-        view.getAngleJComboBox().setSelectedItem(mainWindowModel.getAngle());
-        view.getPhiTextField().setText(mainWindowModel.getPhi().toString());
-        view.getPsiTextField().setText(mainWindowModel.getPsi().toString());
-        view.getThetaTextField().setText(mainWindowModel.getTheta().toString());
-        view.getNumberOfSpheresTextField().setText(mainWindowModel.getNumberOfSpheres().toString());
-    }
-
-    private Boolean validate() {
-        Boolean canDraw = true;
-        String validationMessage = "";
-
-        try {
-            updateModel();
-        } catch (Exception ex) {
-            validationMessage = validationMessage.concat("Check your parameters");
-            JOptionPane.showMessageDialog(view, validationMessage);
-            return false;
-        }
-
-        if (mainWindowModel.getxMin().equals(0f) || mainWindowModel.getxMax().equals(0f)
-                || mainWindowModel.getyMin().equals(0f) || mainWindowModel.getyMax().equals(0f)
-                || mainWindowModel.getxMin()* mainWindowModel.getxMax()<0
-                || mainWindowModel.getyMin()* mainWindowModel.getyMax()<0) {
-            canDraw = false;
-            validationMessage = validationMessage.concat("Both x and y can't be zero!");
-            validationMessage = validationMessage.concat("\n");
-        }
-        if (mainWindowModel.getxMin() > mainWindowModel.getxMax()) {
-            canDraw = false;
-            validationMessage = validationMessage.concat("XMax should be greater then XMin!");
-            validationMessage = validationMessage.concat("\n");
-        }
-        if (mainWindowModel.getyMin() > mainWindowModel.getyMax()) {
-            canDraw = false;
-            validationMessage = validationMessage.concat("YMax should be greater then YMin!");
-            validationMessage = validationMessage.concat("\n");
-        }
-        if (!canDraw) {
-            JOptionPane.showMessageDialog(view, validationMessage);
-            return false;
-        }
-
-        return true;
+        //Reset data
+        mainWindowView.getResetButton().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                mainWindowModel.setDefaults();
+                dataModel.setPoints(null);
+                setControlsEnabled(true);
+                imported = false;
+            }
+        });
     }
 
     /**
     * Action listener for menu items in main window.
     * 
-    * Performs serialization/desealization {@link com.organization4242.delmgorb.model.MainWindowModel}
+    * Performs serialization/deserialization {@link com.organization4242.delmgorb.model.MainWindowModel}
     * and {@link com.organization4242.delmgorb.model.DataModel}.
     */
     private ActionListener menuItemActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource().equals(view.getImportDataMenuItem())) {
+            if (e.getSource().equals(mainWindowView.getImportDataMenuItem())) {
                 try {
                     Serializer serializer =
-                            (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(view)));
-                    mainWindowModel = serializer.mainWindowModel;
-                    dataModel = serializer.dataModel;
+                            (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(mainWindowView.getFrame())));
+                    mainWindowModel.update(serializer.getMainWindowModel());
+                    dataModel = serializer.getDataModel();
+                    setControlsEnabled(false);
+                    imported = true;
                 } catch (FileNotFoundException ex) {
                     logger.log(Level.SEVERE, ex.getMessage());
                 }
-                updateView();
             }
-            else if (e.getSource().equals(view.getExportDataMenuItem())) {
+            else if (e.getSource().equals(mainWindowView.getExportDataMenuItem())) {
                 try {
-                    File file = OpenFileHelper.open(view);
+                    File file = OpenFileHelper.open(mainWindowView.getFrame());
                     if (file.exists()) {
                         file = new File(file.getAbsolutePath());
                     }
@@ -176,16 +155,32 @@ public class MainWindowController {
                     Serializer serializer = new Serializer(mainWindowModel, dataModel);
                     xStream.omitField(Observable.class, "obs");
                     xStream.omitField(Observable.class, "changed");
+                    xStream.omitField(AbstractModel.class, "propertyChangeSupport");
+                    xStream.omitField(DataModel.class, "mainWindowModel");
                     xStream.toXML(serializer, fos);
-                    JOptionPane.showMessageDialog(view, "Data was exported to " + file.getAbsolutePath());
-                } catch (NullPointerException ex) {
-                    logger.log(Level.SEVERE, ex.getMessage());
-                    JOptionPane.showMessageDialog(view, "No data to export.");
-                } catch (FileNotFoundException ex) {
-                    logger.log(Level.SEVERE, ex.getMessage());
+                    JOptionPane.showMessageDialog(mainWindowView.getFrame(), "Data was exported to " + file.getAbsolutePath());
+                }  catch (FileNotFoundException ex) {
+                    logger.severe(ex.getMessage());
+                } catch (Exception ex) {
+                    logger.severe(ex.getMessage());
+                    JOptionPane.showMessageDialog(mainWindowView.getFrame(), "Something is wrong.");
                 }
             }
         }
     };
 
+    private void setControlsEnabled(Boolean enabled) {
+        mainWindowView.getNumberOfPointsTextField().setEnabled(enabled);
+        mainWindowView.getIntegrationMethodsComboBox().setEnabled(enabled);
+        mainWindowView.getAngleComboBox().setEnabled(enabled);
+        mainWindowView.getxMaxTextField().setEnabled(enabled);
+        mainWindowView.getxMinTextField().setEnabled(enabled);
+        mainWindowView.getyMinTextField().setEnabled(enabled);
+        mainWindowView.getyMaxTextField().setEnabled(enabled);
+        mainWindowView.getTimeStepTextField().setEnabled(enabled);
+        mainWindowView.getTimePeriodTextField().setEnabled(enabled);
+        mainWindowView.getPsiTextField().setEnabled(enabled);
+        mainWindowView.getPhiTextField().setEnabled(enabled);
+        mainWindowView.getThetaTextField().setEnabled(enabled);
+    }
 }
