@@ -30,10 +30,10 @@ public class MainWindowController extends AbstractController {
     public static final String TIME_PERIOD = "TimePeriod";
     public static final String INTEGRATION_METHOD = "IntegrationMethod";
     public static final String ANGLE = "Angle";
-    public static final String X_MIN = "xMin";
-    public static final String X_MAX = "xMax";
-    public static final String Y_MIN = "yMin";
-    public static final String Y_MAX = "yMax";
+    public static final String X_MIN = "XMin";
+    public static final String X_MAX = "XMax";
+    public static final String Y_MIN = "YMin";
+    public static final String Y_MAX = "YMax";
     public static final String PHI = "Phi";
     public static final String PSI = "Psi";
     public static final String THETA = "Theta";
