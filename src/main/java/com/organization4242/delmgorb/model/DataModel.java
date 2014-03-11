@@ -110,12 +110,46 @@ public class DataModel extends Observable implements Serializable {
                 case PHI: {
                     double gamma2 = 2*(y1[2]*y1[3] + y1[0]*y1[1]);
                     double gamma3 = y1[0]*y1[0] - y1[1]*y1[1] - y1[2]*y1[2] + y1[3]*y1[3];
-                    angleToPlot = atan(gamma2/gamma3);
+                    angleToPlot = atan(gamma2 / gamma3);
                     break;
                 }
                 case THETA: {
                     double gamma1 = 2*(y1[1]*y1[3] - y1[0]*y1[2]);
                     angleToPlot = -asin(gamma1);
+                    break;
+                }
+                case MIN_OF_PSI_AND_ONE_THIRD_OF_PI: {
+                    double alpha1  = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
+                    double beta1 = 2*(y1[1]*y1[2] + y1[0]*y1[3]);
+                    angleToPlot = Math.min(atan(beta1 / alpha1), 1.0471975511965976);
+                    break;
+                }
+                case MIN_OF_PHI_AND_ONE_THIRD_OF_PI: {
+                    double gamma2 = 2*(y1[2]*y1[3] + y1[0]*y1[1]);
+                    double gamma3 = y1[0]*y1[0] - y1[1]*y1[1] - y1[2]*y1[2] + y1[3]*y1[3];
+                    angleToPlot = Math.min(atan(gamma2 / gamma3), 1.0471975511965976);
+                    break;
+                }
+                case MIN_OF_THETA_AND_ONE_THIRD_OF_PI: {
+                    double gamma1 = 2*(y1[1]*y1[3] - y1[0]*y1[2]);
+                    angleToPlot = Math.min(-asin(gamma1), 1.0471975511965976);
+                    break;
+                }
+                case MIN_OF_PSI_AND_ONE_FOURTH_OF_PI: {
+                    double alpha1  = y1[0]*y1[0] + y1[1]*y1[1] - y1[2]*y1[2] - y1[3]*y1[3];
+                    double beta1 = 2*(y1[1]*y1[2] + y1[0]*y1[3]);
+                    angleToPlot = Math.min(atan(beta1 / alpha1), 0.7853981633974483);
+                    break;
+                }
+                case MIN_OF_PHI_AND_ONE_FOURTH_OF_PI: {
+                    double gamma2 = 2*(y1[2]*y1[3] + y1[0]*y1[1]);
+                    double gamma3 = y1[0]*y1[0] - y1[1]*y1[1] - y1[2]*y1[2] + y1[3]*y1[3];
+                    angleToPlot = Math.min(atan(gamma2 / gamma3), 0.7853981633974483);
+                    break;
+                }
+                case MIN_OF_THETA_AND_ONE_FOURTH_OF_PI: {
+                    double gamma1 = 2*(y1[1]*y1[3] - y1[0]*y1[2]);
+                    angleToPlot = Math.min(-asin(gamma1), 0.7853981633974483);
                     break;
                 }
             }
