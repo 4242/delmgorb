@@ -57,9 +57,9 @@ public class MainWindowView extends AbstractView {
     private JLabel numberOfSpheresLabel = new JLabel("Number of spheres:");
     private JLabel angleLabel = new JLabel("Angle:");
     private JLabel timePeriodLabel = new JLabel("Time period:");
-    private JLabel phiLabel = new JLabel(Angle.PHI + "(0):");
-    private JLabel psiLabel = new JLabel(Angle.PSI + "(0):");
-    private JLabel thetaLabel = new JLabel(Angle.THETA + "(0):");
+    private JLabel phiLabel = new JLabel("Phi(0):");
+    private JLabel psiLabel = new JLabel("Psi(0):");
+    private JLabel thetaLabel = new JLabel("Theta(0):");
 
     //UI Controls
     private JTextField[] textFields = new JTextField[NUMBER_OF_EQUATION_PARAMETERS];
@@ -207,6 +207,7 @@ public class MainWindowView extends AbstractView {
 
         drawButton = new JButton("Draw!");
         resetButton = new JButton("Reset");
+        resetButton.setToolTipText("Reset all values to default");
         integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
         integrationMethodsComboBox.setEditable(false);
         angleComboBox = new JComboBox<Angle>(Angle.values());
@@ -440,12 +441,6 @@ public class MainWindowView extends AbstractView {
 
         constraints.gridy++;
         constraints.gridx = 0;
-        gridBagLayout.setConstraints(phiLabel, constraints);
-        constraints.gridx++;
-        gridBagLayout.setConstraints(phiTextField, constraints);
-
-        constraints.gridy++;
-        constraints.gridx = 0;
         gridBagLayout.setConstraints(psiLabel, constraints);
         constraints.gridx++;
         gridBagLayout.setConstraints(psiTextField, constraints);
@@ -456,11 +451,20 @@ public class MainWindowView extends AbstractView {
         constraints.gridx++;
         gridBagLayout.setConstraints(thetaTextField, constraints);
 
+        constraints.gridy++;
+        constraints.gridx = 0;
+        gridBagLayout.setConstraints(phiLabel, constraints);
+        constraints.gridx++;
+        gridBagLayout.setConstraints(phiTextField, constraints);
+
         initialConditionsPanel.add(phiLabel);
+        phiLabel.setToolTipText("Roll angle / Угол крена");
         initialConditionsPanel.add(phiTextField);
         initialConditionsPanel.add(psiLabel);
+        psiLabel.setToolTipText("Yaw angle / Угол рыскания");
         initialConditionsPanel.add(psiTextField);
         initialConditionsPanel.add(thetaLabel);
+        thetaLabel.setToolTipText("Pitch angle / Угол тангажа");
         initialConditionsPanel.add(thetaTextField);
     }
 

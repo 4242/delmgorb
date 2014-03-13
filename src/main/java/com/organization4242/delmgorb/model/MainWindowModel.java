@@ -257,9 +257,9 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         setYMax(1f);
         setAngle(Angle.PSI);
         setIntegrationMethod(IntegrationMethods.DORMAND_PRINCE_8);
-        setPhi(0.05);
-        setPsi(0.05);
-        setTheta(0.05);
+        setPhi(0.01);
+        setPsi(0.01);
+        setTheta(0.01);
         setNumberOfSpheres(50);
     }
 
