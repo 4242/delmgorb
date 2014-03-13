@@ -1,15 +1,15 @@
 package com.organization4242.delmgorb.model;
 
 public enum Angle {
-    PSI("Psi"),
-    PHI("Phi"),
-    THETA("Theta"),
-    MIN_OF_PSI_AND_ONE_THIRD_OF_PI("Min(Psi, Pi/3)"),
-    MIN_OF_PHI_AND_ONE_THIRD_OF_PI("Min(Phi, Pi/3)"),
-    MIN_OF_THETA_AND_ONE_THIRD_OF_PI("Min(Theta, Pi/3)"),
-    MIN_OF_PSI_AND_ONE_FOURTH_OF_PI("Min(Psi, Pi/4)"),
-    MIN_OF_PHI_AND_ONE_FOURTH_OF_PI("Min(Phi, Pi/4)"),
-    MIN_OF_THETA_AND_ONE_FOURTH_OF_PI("Min(Theta, Pi/4)");
+    PSI("Max(Abs(Psi))"),
+    PHI("Max(Abs(Phi))"),
+    THETA("Max(Abs(Theta))"),
+    MIN_OF_PSI_AND_ONE_THIRD_OF_PI("Min(Max(Abs(Psi)), Pi/3)"),
+    MIN_OF_PHI_AND_ONE_THIRD_OF_PI("Min(Max(Abs(Phi)), Pi/3)"),
+    MIN_OF_THETA_AND_ONE_THIRD_OF_PI("Min(Max(Abs(Theta)), Pi/3)"),
+    MIN_OF_PSI_AND_ONE_FOURTH_OF_PI("Min(Max(Abs(Psi)), Pi/4)"),
+    MIN_OF_PHI_AND_ONE_FOURTH_OF_PI("Min(Max(Abs(Phi)), Pi/4)"),
+    MIN_OF_THETA_AND_ONE_FOURTH_OF_PI("Min(Max(Abs(Theta)), Pi/4)");
 
     private String name;
 
