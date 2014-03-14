@@ -8,7 +8,8 @@
            http://www.springframework.org/schema/context/spring-context-3.0.xsd">
     <context:annotation-config/>
 
-    <bean id="mainWindowModel" class="com.organization4242.delmgorb.model.MainWindowModel"/>
+    <bean id="mainWindowModel" class="com.organization4242.delmgorb.model.MainWindowModel">
+    </bean>
 
     <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView"/>
 

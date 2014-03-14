@@ -17,6 +17,7 @@ import java.awt.*;
 public class MyApplet extends Applet {
     PlotBuilder plotBuilder = new PlotBuilder();
     XStream xStream = new XStream(new DomDriver());
+
     @Override
     public void init() {
         setLayout(new BorderLayout());

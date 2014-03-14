@@ -2,9 +2,13 @@ package com.organization4242.delmgorb.model;
 
 import com.organization4242.delmgorb.controller.MainWindowController;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.beans.PropertyChangeEvent;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 import java.util.logging.Logger;
 
 /**
@@ -28,6 +32,8 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     private Double theta;
     private Integer numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
+
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private transient Logger logger = Logger.getLogger("Delmgorb.logger");
 
@@ -87,82 +93,77 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         return interpolationMethod;
     }
 
+    private void validate(Object object, Validator validator) {
+        Set<ConstraintViolation<Object>> constraintViolations = validator
+                .validate(object);
+
+        for (ConstraintViolation<Object> cv : constraintViolations)
+            System.out.println(cv.getMessage());
+    }
+
     public void setNumberOfPoints(String numberOfPoints) {
         int oldValue = this.numberOfPoints != null ? this.numberOfPoints : 0;
-        this.numberOfPoints = Integer.parseInt(numberOfPoints);
-        firePropertyChange(MainWindowController.NUMBER_OF_POINTS, oldValue, numberOfPoints);
+        this.numberOfPoints = numberOfPoints.equals("") ? 0 : Integer.parseInt(numberOfPoints);
     }
 
     public void setTimeStep(String timeStep) {
         Double oldValue = this.timeStep != null ? this.timeStep : 0d;
-        this.timeStep = Double.parseDouble(timeStep);
-        firePropertyChange(MainWindowController.TIME_STEP, oldValue, timeStep);
+        this.timeStep = timeStep.equals("") ? 0 : Double.parseDouble(timeStep);
     }
 
     public void setTimePeriod(String timePeriod) {
         Double oldValue = this.timePeriod != null ? this.timePeriod : 0d;
-        this.timePeriod = Double.parseDouble(timePeriod);
-        firePropertyChange(MainWindowController.TIME_PERIOD, oldValue, timePeriod);
+        this.timePeriod = timePeriod.equals("") ? 0 : Double.parseDouble(timePeriod);
     }
 
     public void setIntegrationMethod(String integrationMethod) {
         IntegrationMethods oldValue = this.integrationMethod != null ? this.integrationMethod : null;
         this.integrationMethod = IntegrationMethods.fromString(integrationMethod);
-        firePropertyChange(MainWindowController.INTEGRATION_METHOD, oldValue, integrationMethod);
     }
 
     public void setAngle(String angle) {
         Angle oldValue = this.angle != null ? this.angle : null;
         this.angle = Angle.fromString(angle);
-        firePropertyChange(MainWindowController.ANGLE, oldValue, angle);
     }
 
     public void setXMin(String xMin) {
         Float oldValue = this.xMin != null ? this.xMin : 0f;
-        this.xMin = Float.parseFloat(xMin);
-        firePropertyChange(MainWindowController.X_MIN, oldValue, xMin);
+        this.xMin = xMin.equals("") ? 0 : Float.parseFloat(xMin);
     }
 
     public void setXMax(String xMax) {
         Float oldValue = this.xMax != null ? this.xMax : 0f;
-        this.xMax = Float.parseFloat(xMax);
-        firePropertyChange(MainWindowController.X_MAX, oldValue, xMax);
+        this.xMax = xMax.equals("") ? 0 : Float.parseFloat(xMax);
     }
 
     public void setYMin(String yMin) {
         Float oldValue = this.yMin != null ? this.yMin : 0f;
-        this.yMin = Float.parseFloat(yMin);
-        firePropertyChange(MainWindowController.Y_MIN, oldValue, yMin);
+        this.yMin = yMin.equals("") ? 0 : Float.parseFloat(yMin);
     }
 
     public void setYMax(String yMax) {
         Float oldValue = this.yMax != null ? this.yMax : 0f;
-        this.yMax = Float.parseFloat(yMax);
-        firePropertyChange(MainWindowController.Y_MAX, oldValue, yMax);
+        this.yMax = yMax.equals("") ? 0 : Float.parseFloat(yMax);
     }
 
     public void setPhi(String phi) {
         Double oldValue = this.phi != null ? this.phi : 0d;
-        this.phi = Double.parseDouble(phi);
-        firePropertyChange(MainWindowController.PHI, oldValue, phi);
+        this.phi = phi.equals("") ? 0 : Double.parseDouble(phi);
     }
 
     public void setPsi(String psi) {
         Double oldValue = this.psi != null ? this.psi : 0d;
-        this.psi = Double.parseDouble(psi);
-        firePropertyChange(MainWindowController.PSI, oldValue, psi);
+        this.psi = psi.equals("") ? 0 : Double.parseDouble(psi);
     }
 
     public void setTheta(String theta) {
         Double oldValue = this.theta != null ? this.theta : 0d;
-        this.theta = Double.parseDouble(theta);
-        firePropertyChange(MainWindowController.THETA, oldValue, theta);
+        this.theta = theta.equals("") ? 0 : Double.parseDouble(theta);
     }
 
     public void setNumberOfSpheres(String numberOfSpheres) {
         Integer oldValue = this.numberOfSpheres != null ? this.numberOfSpheres : null;
-        this.numberOfSpheres = Integer.parseInt(numberOfSpheres);
-        firePropertyChange(MainWindowController.NUMBER_OF_SPHERES, oldValue, numberOfSpheres);
+        this.numberOfSpheres = numberOfSpheres.equals("") ? 0 : Integer.parseInt(numberOfSpheres);
     }
 
     public void setNumberOfPoints(Integer numberOfPoints) {
@@ -283,15 +284,9 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     public void viewPropertyChange(PropertyChangeEvent pce) {
         try {
             MainWindowModel.class.getMethod("set"+pce.getPropertyName(), String.class).invoke(this, pce.getNewValue());
-        } catch (NoSuchMethodException ex) {
-            logger.severe(ex.getMessage());
-        } catch (SecurityException ex) {
-            logger.severe(ex.getMessage());
-        } catch (InvocationTargetException ex) {
-            ex.printStackTrace();
-            logger.severe(ex.getMessage());
-        } catch (IllegalAccessException ex) {
+        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ex) {
             logger.severe(ex.getMessage());
         }
+        validate(this, validator);
     }
 }

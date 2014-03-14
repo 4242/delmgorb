@@ -50,8 +50,6 @@ public class MainWindowController extends AbstractController {
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
-    private SwingWorker task;
-
     @Required
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
         this.mainWindowModel = mainWindowModel;
@@ -94,7 +92,7 @@ public class MainWindowController extends AbstractController {
         mainWindowView.getExportDataMenuItem().addActionListener(menuItemActionListener);
 
         //Perform calculation and drawing.
-        mainWindowView.getDrawButton().addMouseListener(new DrawButtonMouseListener());
+        mainWindowView.getDrawButton().addActionListener(new DrawButtonMouseListener());
 
         //Reset data
         mainWindowView.getResetButton().addMouseListener(new MouseAdapter() {
@@ -108,9 +106,9 @@ public class MainWindowController extends AbstractController {
         });
     }
 
-    private class DrawButtonMouseListener extends MouseAdapter{
+    private class DrawButtonMouseListener implements ActionListener {
         @Override
-        public void mouseClicked(MouseEvent e) {
+        public void actionPerformed(ActionEvent e) {
             if (MainWindowController.this.dataModel.getPoints() != null && !imported) {
                 calculateFromScratch = JOptionPane.showOptionDialog(MainWindowController.this.mainWindowView.getFrame(),
                         "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
@@ -125,7 +123,7 @@ public class MainWindowController extends AbstractController {
             plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
             plotBuilder.setCalculateFromScratch(calculateFromScratch);
             calculateFromScratch = true;
-            task = plotBuilder.getTask();
+            SwingWorker task = plotBuilder.getTask();
             task.execute();
         }
     }

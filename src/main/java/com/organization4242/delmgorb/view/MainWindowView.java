@@ -1,16 +1,25 @@
 package com.organization4242.delmgorb.view;
 
-import com.organization4242.delmgorb.controller.MainWindowController;
 import com.organization4242.delmgorb.model.Angle;
 import com.organization4242.delmgorb.model.IntegrationMethods;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.swing.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Field;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.organization4242.delmgorb.controller.MainWindowController.*;
 
 /**
  * Represents main window with all UI controls.
@@ -78,6 +87,25 @@ public class MainWindowView extends AbstractView {
     private JTextField thetaTextField;
     private JButton drawButton;
     private JButton resetButton;
+
+    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private void validate(Object object, Validator validator) {
+        Set<ConstraintViolation<Object>> constraintViolations = validator
+                .validate(object);
+        StringBuilder message = new StringBuilder();
+        if (constraintViolations.size() == 0) {
+            drawButton.setEnabled(true);
+        }
+        for (ConstraintViolation<Object> cv : constraintViolations)
+            message.append(cv.getMessage());
+        if (constraintViolations.size() == 0) {
+            drawButton.setEnabled(true);
+            drawButton.setToolTipText(null);
+        } else {
+            drawButton.setEnabled(false);
+            drawButton.setToolTipText(message.toString());
+        }
+    }
 
     private Logger logger = Logger.getLogger("Delmgorb.logger");
 
@@ -531,9 +559,9 @@ public class MainWindowView extends AbstractView {
                         public void run() {
                             String propertyName = "";
                             if (e.getSource().equals(integrationMethodsComboBox)) {
-                                propertyName = MainWindowController.INTEGRATION_METHOD;
+                                propertyName = INTEGRATION_METHOD;
                             } else if (e.getSource().equals(angleComboBox)) {
-                                propertyName = MainWindowController.ANGLE;
+                                propertyName = ANGLE;
                             }
                             firePropertyChange(propertyName, oldValue, newValue);
                         }
@@ -563,35 +591,42 @@ public class MainWindowView extends AbstractView {
             @Override
             public void focusLost(final FocusEvent e) {
                 class TextFieldPropertyChangeHandler implements Runnable {
+                    @NotEmpty(message = "Value can not be null!")
+                    String newValue;
+                    String propertyName = "";
                     @Override
                     public void run() {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.select(0, 0);
-                        String propertyName = "";
                         if (e.getSource().equals(numberOfPointsTextField)) {
-                            propertyName = MainWindowController.NUMBER_OF_POINTS;
+                            propertyName = NUMBER_OF_POINTS;
                         } else if (e.getSource().equals(timeStepTextField)) {
-                            propertyName = MainWindowController.TIME_STEP;
+                            propertyName = TIME_STEP;
                         } else if (e.getSource().equals(timePeriodTextField)) {
-                            propertyName = MainWindowController.TIME_PERIOD;
+                            propertyName = TIME_PERIOD;
                         } else if (e.getSource().equals(xMinTextField)) {
-                            propertyName = MainWindowController.X_MIN;
+                            propertyName = X_MIN;
                         } else if (e.getSource().equals(xMaxTextField)) {
-                            propertyName = MainWindowController.X_MIN;
+                            propertyName = X_MIN;
                         } else if (e.getSource().equals(yMinTextField)) {
-                            propertyName = MainWindowController.Y_MIN;
+                            propertyName = Y_MIN;
                         } else if (e.getSource().equals(yMaxTextField)) {
-                            propertyName = MainWindowController.Y_MAX;
+                            propertyName = Y_MAX;
                         } else if (e.getSource().equals(phiTextField)) {
-                            propertyName = MainWindowController.PHI;
+                            propertyName = PHI;
                         } else if (e.getSource().equals(psiTextField)) {
-                            propertyName = MainWindowController.PSI;
+                            propertyName = PSI;
                         } else if (e.getSource().equals(thetaTextField)) {
-                            propertyName = MainWindowController.THETA;
+                            propertyName = THETA;
                         } else if (e.getSource().equals(numberOfSpheresTextField)) {
-                            propertyName = MainWindowController.NUMBER_OF_SPHERES;
+                            propertyName = NUMBER_OF_SPHERES;
                         }
-                        firePropertyChange(propertyName, oldValue, tf.getText());
+                        newValue = tf.getText();
+                        if (newValue.equals(oldValue)) {
+                            return;
+                        }
+                        validate(this, validator);
+                        firePropertyChange(propertyName, oldValue, newValue);
                     }
                 }
                 SwingUtilities.invokeLater(new TextFieldPropertyChangeHandler());
@@ -629,32 +664,48 @@ public class MainWindowView extends AbstractView {
      */
     @Override
     public void modelPropertyChange(PropertyChangeEvent pce) {
-        if (pce.getPropertyName().equals(MainWindowController.NUMBER_OF_POINTS)) {
-            numberOfPointsTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.TIME_STEP)) {
-            timeStepTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.TIME_PERIOD)) {
-            timePeriodTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.INTEGRATION_METHOD)) {
-            integrationMethodsComboBox.setSelectedItem(pce.getNewValue());
-        } else if (pce.getPropertyName().equals(MainWindowController.ANGLE)) {
-            angleComboBox.setSelectedItem(pce.getNewValue());
-        } else if (pce.getPropertyName().equals(MainWindowController.X_MIN)) {
-            xMinTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.X_MAX)) {
-            xMaxTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.Y_MIN)) {
-            yMinTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.Y_MAX)) {
-            yMaxTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.PHI)) {
-            phiTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.PSI)) {
-            psiTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.THETA)) {
-            thetaTextField.setText(pce.getNewValue().toString());
-        } else if (pce.getPropertyName().equals(MainWindowController.NUMBER_OF_SPHERES)) {
-            numberOfSpheresTextField.setText(pce.getNewValue().toString());
+        switch (pce.getPropertyName()) {
+            default :
+            case NUMBER_OF_POINTS : {
+                numberOfPointsTextField.setText(pce.getNewValue().toString());
+                break;
+            } case TIME_STEP : {
+                timeStepTextField.setText(pce.getNewValue().toString());
+                break;
+            } case TIME_PERIOD : {
+                timePeriodTextField.setText(pce.getNewValue().toString());
+                break;
+            } case INTEGRATION_METHOD : {
+                integrationMethodsComboBox.setSelectedItem(pce.getNewValue());
+                break;
+            } case ANGLE : {
+                angleComboBox.setSelectedItem(pce.getNewValue());
+                break;
+            } case X_MIN : {
+                xMinTextField.setText(pce.getNewValue().toString());
+                break;
+            } case X_MAX : {
+                xMaxTextField.setText(pce.getNewValue().toString());
+                break;
+            } case Y_MIN : {
+                yMinTextField.setText(pce.getNewValue().toString());
+                break;
+            } case Y_MAX : {
+                yMaxTextField.setText(pce.getNewValue().toString());
+                break;
+            } case PHI: {
+                phiTextField.setText(pce.getNewValue().toString());
+                break;
+            } case PSI : {
+                psiTextField.setText(pce.getNewValue().toString());
+                break;
+            } case THETA : {
+                thetaTextField.setText(pce.getNewValue().toString());
+                break;
+            } case NUMBER_OF_SPHERES : {
+                numberOfSpheresTextField.setText(pce.getNewValue().toString());
+                break;
+            }
         }
     }
 }
