@@ -17,14 +17,18 @@
         <property name="mainWindowModel" ref="mainWindowModel"/>
     </bean>
 
-    <bean id="plotBuilder" class="com.organization4242.delmgorb.controller.PlotBuilder" lazy-init="true">
+    <bean id="plotBuilder" class="com.organization4242.delmgorb.model.PlotBuilder" lazy-init="true">
         <property name="mainWindowModel" ref="mainWindowModel"/>
         <property name="dataModel" ref="dataModel"/>
-        <property name="dialogWindowView" ref="dialogWindowView"/>
     </bean>
 
     <bean id="dialogWindowView" class="com.organization4242.delmgorb.view.DialogWindowView" lazy-init="true">
         <constructor-arg value="Progress"/>
+    </bean>
+
+    <bean id="dialogWindowController" class="com.organization4242.delmgorb.controller.DialogWindowController">
+        <property name="dialogWindowView" ref="dialogWindowView"/>
+        <property name="plotBuilder" ref="plotBuilder"/>
     </bean>
 
     <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">

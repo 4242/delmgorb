@@ -33,8 +33,8 @@ import static com.organization4242.delmgorb.controller.MainWindowController.*;
  */
 public class MainWindowView extends AbstractView {
     private static final int NUMBER_OF_EQUATION_PARAMETERS = 14;
-    private static final int HEIGHT = 650;
-    private static final int WIDTH = 400;
+    public static final int HEIGHT = 650;
+    public static final int WIDTH = 400;
     private static final int TEXT_FIELD_MIN_WIDTH = 4;
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
     private static final Insets EMPTY_INSETS = new Insets(0,0,0,0);

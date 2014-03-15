@@ -120,7 +120,6 @@ public class MainWindowController extends AbstractController {
 
             plotBuilder.setDataModel(dataModel);
             plotBuilder.setMainWindowModel(mainWindowModel);
-            plotBuilder.getDialogWindowView().setLocationRelativeTo(MainWindowController.this.mainWindowView.getFrame());
             plotBuilder.setCalculateFromScratch(calculateFromScratch);
             calculateFromScratch = true;
             SwingWorker task = plotBuilder.getTask();

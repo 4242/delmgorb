@@ -1,6 +1,6 @@
 package com.organization4242.delmgorb.application;
 
-import com.organization4242.delmgorb.controller.PlotBuilder;
+import com.organization4242.delmgorb.model.PlotBuilder;
 import com.organization4242.delmgorb.model.DataModel;
 import com.organization4242.delmgorb.model.MainWindowModel;
 import com.organization4242.delmgorb.model.Serializer;

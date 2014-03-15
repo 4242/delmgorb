@@ -1,15 +1,18 @@
 package com.organization4242.delmgorb.view;
 
+import com.organization4242.delmgorb.controller.DialogWindowController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Represents dialog window with progress bar and cancel button.
  * It is used to display progress of long-going operations such as calculating
  * maximal values or interpolating set of points.
  * 
- * It is used to display progress of {@link com.organization4242.delmgorb.controller.PlotBuilder} task.
+ * It is used to display progress of {@link com.organization4242.delmgorb.model.PlotBuilder} task.
  * Also it provides ability to interrupt whose operations.
  *
  * This dialog can not be closed directly, you need to assign custom action listener
@@ -17,22 +20,24 @@ import java.awt.event.ActionListener;
  * 
  * @author Murzinov Ilya
  */
-public class DialogWindowView extends JDialog {
+public class DialogWindowView extends AbstractView {
     private static final int HEIGHT = 100;
     private static final int WIDTH = 200;
     private static final Insets DEFAULT_INSETS = new Insets(5,5,5,5);
     private static final int PROGRESS_BAR_MIN_VALUE = 0;
     private static final int PROGRESS_BAR_MAX_VALUE = 100;
 
+    private JDialog dialog;
+
     private JButton button;
 
     private JProgressBar progressBar;
 
     private JLabel textArea;
-    
+
     public JButton getButton() {
         return button;
-    }    
+    }
 
     public JProgressBar getProgressBar() {
         return progressBar;
@@ -49,42 +54,31 @@ public class DialogWindowView extends JDialog {
     * @param title title of dialog window.
     */
     public DialogWindowView(String title) {
-        super((JFrame) null, title);
-        init(false);
-    }
-
-    /**
-    * Initializes dialog window without showing it.
-    *
-    * @param title title of dialog window.
-    * @param actionListener action listener to be added to cancel button.
-    */
-    public DialogWindowView(String title, ActionListener actionListener) {
-        super((JFrame) null, title);
-        init(true);
-        button.addActionListener(actionListener);
+        dialog = new JDialog((JFrame) null, title);
+        dialog.setResizable(false);
+        dialog.setSize(200, 100);
+        dialog.setLocation(MainWindowView.WIDTH/2 - dialog.getWidth()/2, MainWindowView.HEIGHT/2 - dialog.getHeight()/2);
+        init();
     }
 
     /**
     * Initializes dialog window with controls.
-    * 
-    * @param enableCancel indicates whether cancel button should be enabled.
     */
-    private void init(Boolean enableCancel) {
-        setSize(WIDTH, HEIGHT);
+    private void init() {
+        dialog.setSize(WIDTH, HEIGHT);
 
-        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
         button = new JButton("Cancel");
         progressBar = new JProgressBar();
-        textArea = new JLabel();
+        textArea = new JLabel("Calculating");
         progressBar.setStringPainted(true);
         progressBar.setMinimum(PROGRESS_BAR_MIN_VALUE);
         progressBar.setMaximum(PROGRESS_BAR_MAX_VALUE);
         progressBar.setValue(PROGRESS_BAR_MIN_VALUE);
 
         GridBagLayout gridBagLayout = new GridBagLayout();
-        setLayout(gridBagLayout);
+        dialog.setLayout(gridBagLayout);
 
         //Create GridBagConstraints
         GridBagConstraints constraints = new GridBagConstraints();
@@ -109,13 +103,9 @@ public class DialogWindowView extends JDialog {
         constraints.fill = GridBagConstraints.NONE;
         gridBagLayout.setConstraints(button, constraints);
 
-        if (!enableCancel) {
-            button.setEnabled(false);
-        }
-
-        add(button);
-        add(progressBar);
-        add(textArea);
+        dialog.add(button);
+        dialog.add(progressBar);
+        dialog.add(textArea);
     }
 
     /**
@@ -125,9 +115,32 @@ public class DialogWindowView extends JDialog {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                setModalityType(ModalityType.APPLICATION_MODAL);
-                setVisible(true);
+                dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+                dialog.setVisible(true);
             }
         });
+    }
+
+    public void close() {
+        dialog.setVisible(false);
+    }
+
+    @Override
+    public void modelPropertyChange(PropertyChangeEvent pce) {
+        switch (pce.getPropertyName()) {
+            case DialogWindowController.INIT : {
+                display();
+                break;
+            } case DialogWindowController.PERCENTAGE : {
+                progressBar.setValue((Integer) pce.getNewValue());
+                break;
+            } case DialogWindowController.DISPOSE : {
+                dialog.dispose();
+                break;
+            } case DialogWindowController.CALCULATED : {
+                textArea.setText("Drawing");
+                break;
+            }
+        }
     }
 }
