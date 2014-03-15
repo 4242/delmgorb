@@ -30,8 +30,8 @@ notifications:
 #  - sh -e /etc/init.d/xvfb start
 
 install:
-  - mvn -e -X -source 1.7 package
-  - mvn -e -X -source 1.7 javadoc:javadoc
+  - mvn -e -X package
+  - mvn -e -X javadoc:javadoc
 
 script:
   - echo 'Skipping script...'
