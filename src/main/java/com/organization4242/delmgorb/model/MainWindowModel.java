@@ -33,7 +33,7 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     private Integer numberOfSpheres;
     private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
 
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+    private transient Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private transient Logger logger = Logger.getLogger("Delmgorb.logger");
 

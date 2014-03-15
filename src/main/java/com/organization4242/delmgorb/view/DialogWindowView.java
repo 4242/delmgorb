@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
  * It is used to display progress of long-going operations such as calculating
  * maximal values or interpolating set of points.
  * 
- * It is used to display progress of {@link com.organization4242.delmgorb.model.PlotBuilder} task.
+ * It is used to display progress of {@link com.organization4242.delmgorb.controller.PlotBuilder} task.
  * Also it provides ability to interrupt whose operations.
  *
  * This dialog can not be closed directly, you need to assign custom action listener

@@ -171,7 +171,7 @@ public class MainWindowController extends AbstractController {
                 }
             }
         }
-    };
+    }
 
     private void setControlsEnabled(Boolean enabled) {
         mainWindowView.getNumberOfPointsTextField().setEnabled(enabled);
