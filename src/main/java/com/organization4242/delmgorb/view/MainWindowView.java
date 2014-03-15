@@ -236,9 +236,9 @@ public class MainWindowView extends AbstractView {
         drawButton = new JButton("Draw!");
         resetButton = new JButton("Reset");
         resetButton.setToolTipText("Reset all values to default");
-        integrationMethodsComboBox = new JComboBox<IntegrationMethods>(IntegrationMethods.values());
+        integrationMethodsComboBox = new JComboBox<>(IntegrationMethods.values());
         integrationMethodsComboBox.setEditable(false);
-        angleComboBox = new JComboBox<Angle>(Angle.values());
+        angleComboBox = new JComboBox<>(Angle.values());
         angleComboBox.setEditable(false);
     }
 
