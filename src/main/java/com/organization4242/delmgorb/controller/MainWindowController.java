@@ -3,6 +3,8 @@ package com.organization4242.delmgorb.controller;
 import com.organization4242.delmgorb.model.*;
 import com.organization4242.delmgorb.view.MainWindowView;
 import com.thoughtworks.xstream.XStream;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Required;
 
 import javax.swing.*;
@@ -15,8 +17,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Observable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Represents controller used to bind {@link com.organization4242.delmgorb.model.MainWindowModel}
@@ -48,7 +48,7 @@ public class MainWindowController extends AbstractController {
 
     private XStream xStream;
 
-    private Logger logger = Logger.getLogger("Delmgorb.logger");
+    private Logger logger = LogManager.getLogger(MainWindowController.class);
 
     @Required
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
@@ -138,14 +138,17 @@ public class MainWindowController extends AbstractController {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(mainWindowView.getImportDataMenuItem())) {
                 try {
-                    Serializer serializer =
-                            (Serializer) xStream.fromXML(new FileInputStream(OpenFileHelper.open(mainWindowView.getFrame())));
-                    mainWindowModel.update(serializer.getMainWindowModel());
-                    dataModel = serializer.getDataModel();
-                    setControlsEnabled(false);
-                    imported = true;
+                    File file = OpenFileHelper.open(mainWindowView.getFrame());
+                    if (file != null) {
+                        Serializer serializer =
+                                (Serializer) xStream.fromXML(new FileInputStream(file));
+                        mainWindowModel.update(serializer.getMainWindowModel());
+                        dataModel = serializer.getDataModel();
+                        setControlsEnabled(false);
+                        imported = true;
+                    }
                 } catch (FileNotFoundException ex) {
-                    logger.log(Level.SEVERE, ex.getMessage());
+                    logger.error(ex);
                 }
             }
             else if (e.getSource().equals(mainWindowView.getExportDataMenuItem())) {
@@ -163,9 +166,9 @@ public class MainWindowController extends AbstractController {
                     xStream.toXML(serializer, fos);
                     JOptionPane.showMessageDialog(mainWindowView.getFrame(), "Data was exported to " + file.getAbsolutePath());
                 }  catch (FileNotFoundException ex) {
-                    logger.severe(ex.getMessage());
+                    logger.error(ex);
                 } catch (Exception ex) {
-                    logger.severe(ex.getMessage());
+                    logger.error(ex);
                     JOptionPane.showMessageDialog(mainWindowView.getFrame(), "Something is wrong.");
                 }
             }

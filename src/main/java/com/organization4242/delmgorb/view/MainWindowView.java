@@ -2,6 +2,8 @@ package com.organization4242.delmgorb.view;
 
 import com.organization4242.delmgorb.model.Angle;
 import com.organization4242.delmgorb.model.IntegrationMethods;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.swing.*;
@@ -16,8 +18,6 @@ import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Field;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.organization4242.delmgorb.controller.MainWindowController.*;
 
@@ -90,14 +90,16 @@ public class MainWindowView extends AbstractView {
 
     private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     private void validate(Object object, Validator validator) {
-        Set<ConstraintViolation<Object>> constraintViolations = validator
-                .validate(object);
+        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
         StringBuilder message = new StringBuilder();
         if (constraintViolations.size() == 0) {
             drawButton.setEnabled(true);
         }
-        for (ConstraintViolation<Object> cv : constraintViolations)
+
+        for (ConstraintViolation<Object> cv : constraintViolations) {
             message.append(cv.getMessage());
+        }
+
         if (constraintViolations.size() == 0) {
             drawButton.setEnabled(true);
             drawButton.setToolTipText(null);
@@ -107,7 +109,7 @@ public class MainWindowView extends AbstractView {
         }
     }
 
-    private Logger logger = Logger.getLogger("Delmgorb.logger");
+    private Logger logger = LogManager.getLogger(MainWindowView.class);
 
     //Accessors
     public JFrame getFrame() {
@@ -186,11 +188,11 @@ public class MainWindowView extends AbstractView {
     * Initializes main window and creates its structure without showing it.
     */
     public MainWindowView() {
-        //Setting window parameters
+        //Setting window parameters.trace(ex.getMessage(), ex);
         frame.setTitle("Delmgorb v1.0");
         frame.setSize(WIDTH, HEIGHT);
         frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         //Setting theme
         try
@@ -198,7 +200,7 @@ public class MainWindowView extends AbstractView {
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         }
         catch(Exception ex) {
-            logger.log(Level.WARNING, ex.getMessage());
+            logger.warn(ex);
         }
 
         init();
@@ -592,8 +594,8 @@ public class MainWindowView extends AbstractView {
             public void focusLost(final FocusEvent e) {
                 class TextFieldPropertyChangeHandler implements Runnable {
                     @NotEmpty(message = "Value can not be null!")
-                    String newValue;
-                    String propertyName = "";
+                    private String newValue;
+                    private String propertyName = "";
                     @Override
                     public void run() {
                         JTextField tf = (JTextField) e.getComponent();
@@ -638,8 +640,8 @@ public class MainWindowView extends AbstractView {
             if (f.getName().contains("TextField")) {
                 try {
                     ((JTextField) f.get(MainWindowView.this)).addFocusListener(new TextFieldFocusListener());
-                } catch (IllegalAccessException e) {
-                    logger.severe(e.getMessage());
+                } catch (IllegalAccessException ex) {
+                    logger.error(ex);
                 }
             }
         }
@@ -665,7 +667,6 @@ public class MainWindowView extends AbstractView {
     @Override
     public void modelPropertyChange(PropertyChangeEvent pce) {
         switch (pce.getPropertyName()) {
-            default :
             case NUMBER_OF_POINTS : {
                 numberOfPointsTextField.setText(pce.getNewValue().toString());
                 break;
@@ -704,6 +705,8 @@ public class MainWindowView extends AbstractView {
                 break;
             } case NUMBER_OF_SPHERES : {
                 numberOfSpheresTextField.setText(pce.getNewValue().toString());
+                break;
+            } default : {
                 break;
             }
         }

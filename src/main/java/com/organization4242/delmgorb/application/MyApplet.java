@@ -15,8 +15,8 @@ import java.awt.*;
  * Created by ilya-murzinov on 11.03.14.
  */
 public class MyApplet extends Applet {
-    PlotBuilder plotBuilder = new PlotBuilder();
-    XStream xStream = new XStream(new DomDriver());
+    private PlotBuilder plotBuilder = new PlotBuilder();
+    private XStream xStream = new XStream(new DomDriver());
 
     @Override
     public void init() {

@@ -1,6 +1,8 @@
 package com.organization4242.delmgorb.model;
 
 import com.organization4242.delmgorb.controller.MainWindowController;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -9,7 +11,6 @@ import java.beans.PropertyChangeEvent;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
-import java.util.logging.Logger;
 
 /**
  * Class is used for storing values from {@link com.organization4242.delmgorb.view.MainWindowView}
@@ -35,7 +36,7 @@ public class MainWindowModel extends AbstractModel implements Serializable {
 
     private transient Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
-    private transient Logger logger = Logger.getLogger("Delmgorb.logger");
+    private transient Logger logger = LogManager.getLogger(MainWindowModel.class);
 
     public IntegrationMethods getIntegrationMethod() {
         return integrationMethod;
@@ -94,75 +95,62 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     }
 
     private void validate(Object object, Validator validator) {
-        Set<ConstraintViolation<Object>> constraintViolations = validator
-                .validate(object);
+        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
 
-        for (ConstraintViolation<Object> cv : constraintViolations)
-            System.out.println(cv.getMessage());
+        for (ConstraintViolation<Object> cv : constraintViolations) {
+            logger.warn(cv.getMessage());
+        }
     }
 
     public void setNumberOfPoints(String numberOfPoints) {
-        int oldValue = this.numberOfPoints != null ? this.numberOfPoints : 0;
         this.numberOfPoints = numberOfPoints.equals("") ? 0 : Integer.parseInt(numberOfPoints);
     }
 
     public void setTimeStep(String timeStep) {
-        Double oldValue = this.timeStep != null ? this.timeStep : 0d;
         this.timeStep = timeStep.equals("") ? 0 : Double.parseDouble(timeStep);
     }
 
     public void setTimePeriod(String timePeriod) {
-        Double oldValue = this.timePeriod != null ? this.timePeriod : 0d;
         this.timePeriod = timePeriod.equals("") ? 0 : Double.parseDouble(timePeriod);
     }
 
     public void setIntegrationMethod(String integrationMethod) {
-        IntegrationMethods oldValue = this.integrationMethod != null ? this.integrationMethod : null;
         this.integrationMethod = IntegrationMethods.fromString(integrationMethod);
     }
 
     public void setAngle(String angle) {
-        Angle oldValue = this.angle != null ? this.angle : null;
         this.angle = Angle.fromString(angle);
     }
 
     public void setXMin(String xMin) {
-        Float oldValue = this.xMin != null ? this.xMin : 0f;
         this.xMin = xMin.equals("") ? 0 : Float.parseFloat(xMin);
     }
 
     public void setXMax(String xMax) {
-        Float oldValue = this.xMax != null ? this.xMax : 0f;
         this.xMax = xMax.equals("") ? 0 : Float.parseFloat(xMax);
     }
 
     public void setYMin(String yMin) {
-        Float oldValue = this.yMin != null ? this.yMin : 0f;
         this.yMin = yMin.equals("") ? 0 : Float.parseFloat(yMin);
     }
 
     public void setYMax(String yMax) {
-        Float oldValue = this.yMax != null ? this.yMax : 0f;
         this.yMax = yMax.equals("") ? 0 : Float.parseFloat(yMax);
     }
 
     public void setPhi(String phi) {
-        Double oldValue = this.phi != null ? this.phi : 0d;
         this.phi = phi.equals("") ? 0 : Double.parseDouble(phi);
     }
 
     public void setPsi(String psi) {
-        Double oldValue = this.psi != null ? this.psi : 0d;
         this.psi = psi.equals("") ? 0 : Double.parseDouble(psi);
     }
 
     public void setTheta(String theta) {
-        Double oldValue = this.theta != null ? this.theta : 0d;
         this.theta = theta.equals("") ? 0 : Double.parseDouble(theta);
     }
 
     public void setNumberOfSpheres(String numberOfSpheres) {
-        Integer oldValue = this.numberOfSpheres != null ? this.numberOfSpheres : null;
         this.numberOfSpheres = numberOfSpheres.equals("") ? 0 : Integer.parseInt(numberOfSpheres);
     }
 
@@ -285,7 +273,7 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         try {
             MainWindowModel.class.getMethod("set"+pce.getPropertyName(), String.class).invoke(this, pce.getNewValue());
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ex) {
-            logger.severe(ex.getMessage());
+            logger.error(ex);
         }
         validate(this, validator);
     }

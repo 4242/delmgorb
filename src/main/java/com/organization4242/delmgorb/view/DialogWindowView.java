@@ -4,7 +4,6 @@ import com.organization4242.delmgorb.controller.DialogWindowController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 
 /**
@@ -57,7 +56,7 @@ public class DialogWindowView extends AbstractView {
         dialog = new JDialog((JFrame) null, title);
         dialog.setResizable(false);
         dialog.setSize(200, 100);
-        dialog.setLocation(MainWindowView.WIDTH/2 - dialog.getWidth()/2, MainWindowView.HEIGHT/2 - dialog.getHeight()/2);
+        dialog.setLocation(MainWindowView.WIDTH/2, MainWindowView.HEIGHT/2 - dialog.getHeight()/2);
         init();
     }
 
@@ -122,6 +121,7 @@ public class DialogWindowView extends AbstractView {
     }
 
     public void close() {
+        progressBar.setValue(0);
         dialog.setVisible(false);
     }
 
@@ -139,6 +139,7 @@ public class DialogWindowView extends AbstractView {
                 break;
             } case DialogWindowController.CALCULATED : {
                 textArea.setText("Drawing");
+                button.setEnabled(false);
                 break;
             }
         }

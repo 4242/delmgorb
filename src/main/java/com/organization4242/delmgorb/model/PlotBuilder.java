@@ -17,11 +17,14 @@ import java.util.Observer;
  * @author Murzinov Ilya
  */
 public class PlotBuilder extends AbstractModel implements Observer {
-    private InterpolatorModel interpolatorModel = new InterpolatorModel();
+    private InterpolatorModel interpolatorModel;
     private MainWindowModel mainWindowModel;
     private  DataModel dataModel;
-    private Task task = new Task();
     private Boolean calculateFromScratch;
+
+    public void setInterpolatorModel(InterpolatorModel interpolatorModel) {
+        this.interpolatorModel = interpolatorModel;
+    }
 
     @Required
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
@@ -43,8 +46,7 @@ public class PlotBuilder extends AbstractModel implements Observer {
     }
 
     public Task getTask() {
-        task = new Task();
-        return task;
+        return new Task();
     }
 
     public PlotBuilder() {
@@ -113,7 +115,7 @@ public class PlotBuilder extends AbstractModel implements Observer {
 
     private class Task extends SwingWorker<Void, Integer> {
         @Override
-        protected Void doInBackground() throws Exception {
+        protected Void doInBackground() {
             build(calculateFromScratch).display();
             return null;
         }

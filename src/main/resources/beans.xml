@@ -17,9 +17,12 @@
         <property name="mainWindowModel" ref="mainWindowModel"/>
     </bean>
 
+    <bean id="interpolatorModel" class="com.organization4242.delmgorb.model.InterpolatorModel" lazy-init="true"/>
+
     <bean id="plotBuilder" class="com.organization4242.delmgorb.model.PlotBuilder" lazy-init="true">
         <property name="mainWindowModel" ref="mainWindowModel"/>
         <property name="dataModel" ref="dataModel"/>
+        <property name="interpolatorModel" ref="interpolatorModel"/>
     </bean>
 
     <bean id="dialogWindowView" class="com.organization4242.delmgorb.view.DialogWindowView" lazy-init="true">

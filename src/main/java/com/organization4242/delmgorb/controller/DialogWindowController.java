@@ -3,7 +3,6 @@ package com.organization4242.delmgorb.controller;
 import com.organization4242.delmgorb.model.PlotBuilder;
 import com.organization4242.delmgorb.view.DialogWindowView;
 
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -30,7 +29,7 @@ public class DialogWindowController extends AbstractController {
         addModel(plotBuilder);
     }
 
-    public ActionListener actionListener = new ActionListener() {
+    private ActionListener actionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             plotBuilder.getDataModel().stop();
