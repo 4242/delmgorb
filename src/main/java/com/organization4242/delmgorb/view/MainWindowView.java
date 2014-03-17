@@ -90,9 +90,6 @@ public class MainWindowView extends AbstractView {
     private void validate(Object object, Validator validator) {
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
         StringBuilder message = new StringBuilder();
-        if (constraintViolations.size() == 0) {
-            drawButton.setEnabled(true);
-        }
 
         for (ConstraintViolation<Object> cv : constraintViolations) {
             message.append(cv.getMessage());
@@ -102,6 +99,7 @@ public class MainWindowView extends AbstractView {
             drawButton.setEnabled(true);
             drawButton.setToolTipText(null);
         } else {
+
             drawButton.setEnabled(false);
             drawButton.setToolTipText(message.toString());
         }
