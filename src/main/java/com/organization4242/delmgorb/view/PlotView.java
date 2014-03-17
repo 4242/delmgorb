@@ -51,8 +51,6 @@ public class PlotView extends JPanel {
         surfacePanel.setConfigurationVisible(true);
         add(surfacePanel, BorderLayout.CENTER);
 
-        requestFocus();
-
         final Projector projector = surfacePanel.getSurface().getModel().getProjector();
 
         surfacePanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)

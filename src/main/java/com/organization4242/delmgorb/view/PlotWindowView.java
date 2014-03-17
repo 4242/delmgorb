@@ -16,6 +16,8 @@ public class PlotWindowView extends JFrame {
         setSize(WIDTH, HEIGHT);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         getContentPane().add(view);
+        view.setFocusable(true);
+        view.requestFocus();
     }
 
     public void display() {
