@@ -206,6 +206,7 @@ public class MainWindowView extends AbstractView {
         createPanelStructure();
         placeControls();
         addActionListeners();
+        registerShortcuts();
     }
 
     private void addMenu() {
@@ -676,6 +677,26 @@ public class MainWindowView extends AbstractView {
                 }
             }
         }
+    }
+
+    private void registerShortcuts() {
+        drawButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke
+                .getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_DOWN_MASK), "Calculate");
+        drawButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke
+                .getKeyStroke("ESCAPE"), "Exit");
+
+        drawButton.getActionMap().put("Calculate", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                drawButton.doClick();
+            }
+        });
+        drawButton.getActionMap().put("Exit", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
     }
 
     /**

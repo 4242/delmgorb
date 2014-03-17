@@ -46,8 +46,4 @@ public class PlotView extends JPanel {
     public void setTitleText(String text) {
         surfacePanel.setTitleText(text);
     }
-
-    public int getProgress() {
-        return task.getProgress();
-    }
 }
