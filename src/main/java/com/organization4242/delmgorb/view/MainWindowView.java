@@ -1,5 +1,6 @@
 package com.organization4242.delmgorb.view;
 
+import com.organization4242.delmgorb.controller.MainWindowController;
 import com.organization4242.delmgorb.model.Angle;
 import com.organization4242.delmgorb.model.IntegrationMethods;
 import org.apache.log4j.LogManager;
@@ -11,10 +12,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import java.awt.*;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Field;
 import java.util.Set;
@@ -543,97 +541,130 @@ public class MainWindowView extends AbstractView {
         placeButtonControls();
     }
 
+    private class MenuItemActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource().equals(getImportDataMenuItem())) {
+                firePropertyChange(MainWindowController.IMPORT, 0, 1);
+            }
+            else if (e.getSource().equals(getExportDataMenuItem())) {
+                firePropertyChange(MainWindowController.EXPORT, 0, 1);
+            }
+        }
+    }
+
+    private class ComboBoxItemListener implements ItemListener {
+        private String oldValue = null;
+        private String newValue = null;
+        @Override
+        public void itemStateChanged(final ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.DESELECTED) {
+                oldValue = e.getItem().toString();
+            } else if (e.getStateChange() == ItemEvent.SELECTED) {
+                newValue = e.getItem().toString();
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        String propertyName = "";
+                        if (e.getSource().equals(integrationMethodsComboBox)) {
+                            propertyName = INTEGRATION_METHOD;
+                        } else if (e.getSource().equals(angleComboBox)) {
+                            propertyName = ANGLE;
+                        }
+                        firePropertyChange(propertyName, oldValue, newValue);
+                    }
+                });
+            }
+        }
+    }
+
+    class TextFieldFocusListener extends FocusAdapter {
+        private Object oldValue;
+        @Override
+        public void focusGained(final FocusEvent e) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    JTextField tf = (JTextField) e.getComponent();
+                    tf.selectAll();
+                    oldValue = tf.getText();
+                }
+            });
+        }
+
+        @Override
+        public void focusLost(final FocusEvent e) {
+            class TextFieldPropertyChangeHandler implements Runnable {
+                @NotEmpty(message = "Value can not be null!")
+                private String newValue;
+                private String propertyName = "";
+                @Override
+                public void run() {
+                    JTextField tf = (JTextField) e.getComponent();
+                    tf.select(0, 0);
+                    if (e.getSource().equals(numberOfPointsTextField)) {
+                        propertyName = NUMBER_OF_POINTS;
+                    } else if (e.getSource().equals(timeStepTextField)) {
+                        propertyName = TIME_STEP;
+                    } else if (e.getSource().equals(timePeriodTextField)) {
+                        propertyName = TIME_PERIOD;
+                    } else if (e.getSource().equals(xMinTextField)) {
+                        propertyName = X_MIN;
+                    } else if (e.getSource().equals(xMaxTextField)) {
+                        propertyName = X_MIN;
+                    } else if (e.getSource().equals(yMinTextField)) {
+                        propertyName = Y_MIN;
+                    } else if (e.getSource().equals(yMaxTextField)) {
+                        propertyName = Y_MAX;
+                    } else if (e.getSource().equals(phiTextField)) {
+                        propertyName = PHI;
+                    } else if (e.getSource().equals(psiTextField)) {
+                        propertyName = PSI;
+                    } else if (e.getSource().equals(thetaTextField)) {
+                        propertyName = THETA;
+                    } else if (e.getSource().equals(numberOfSpheresTextField)) {
+                        propertyName = NUMBER_OF_SPHERES;
+                    }
+                    newValue = tf.getText();
+                    if (newValue.equals(oldValue)) {
+                        return;
+                    }
+                    validate(this, validator);
+                    firePropertyChange(propertyName, oldValue, newValue);
+                }
+            }
+            SwingUtilities.invokeLater(new TextFieldPropertyChangeHandler());
+        }
+    }
+
+    private class DrawButtonMouseListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            firePropertyChange(MainWindowController.DRAW_BUTTON_CLICK, 0, 1);
+        }
+    }
+
+    private class ResetButtonMouseListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            firePropertyChange(MainWindowController.RESET_BUTTON_CLICK, 0, 1);
+        }
+    }
+
     /**
     * When a text field gets focus, all text should be selected.
     */
     private void addActionListeners() {
-        class ComboboxItemListener implements ItemListener {
-            private String oldValue = null;
-            private String newValue = null;
-            @Override
-            public void itemStateChanged(final ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    oldValue = e.getItem().toString();
-                } else if (e.getStateChange() == ItemEvent.SELECTED) {
-                    newValue = e.getItem().toString();
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            String propertyName = "";
-                            if (e.getSource().equals(integrationMethodsComboBox)) {
-                                propertyName = INTEGRATION_METHOD;
-                            } else if (e.getSource().equals(angleComboBox)) {
-                                propertyName = ANGLE;
-                            }
-                            firePropertyChange(propertyName, oldValue, newValue);
-                        }
-                    });
-                }
-            }
-        }
+        ActionListener menuItemActionListener = new MenuItemActionListener();
+        importDataMenuItem.addActionListener(menuItemActionListener);
+        exportDataMenuItem.addActionListener(menuItemActionListener);
 
-        ItemListener itemListener = new ComboboxItemListener();
-        MainWindowView.this.getIntegrationMethodsComboBox().addItemListener(itemListener);
-        MainWindowView.this.getAngleComboBox().addItemListener(itemListener);
+        ItemListener itemListener = new ComboBoxItemListener();
+        integrationMethodsComboBox.addItemListener(itemListener);
+        angleComboBox.addItemListener(itemListener);
 
-        class TextFieldFocusListener extends FocusAdapter {
-            private Object oldValue;
-            @Override
-            public void focusGained(final FocusEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        JTextField tf = (JTextField) e.getComponent();
-                        tf.selectAll();
-                        oldValue = tf.getText();
-                    }
-                });
-            }
-
-            @Override
-            public void focusLost(final FocusEvent e) {
-                class TextFieldPropertyChangeHandler implements Runnable {
-                    @NotEmpty(message = "Value can not be null!")
-                    private String newValue;
-                    private String propertyName = "";
-                    @Override
-                    public void run() {
-                        JTextField tf = (JTextField) e.getComponent();
-                        tf.select(0, 0);
-                        if (e.getSource().equals(numberOfPointsTextField)) {
-                            propertyName = NUMBER_OF_POINTS;
-                        } else if (e.getSource().equals(timeStepTextField)) {
-                            propertyName = TIME_STEP;
-                        } else if (e.getSource().equals(timePeriodTextField)) {
-                            propertyName = TIME_PERIOD;
-                        } else if (e.getSource().equals(xMinTextField)) {
-                            propertyName = X_MIN;
-                        } else if (e.getSource().equals(xMaxTextField)) {
-                            propertyName = X_MIN;
-                        } else if (e.getSource().equals(yMinTextField)) {
-                            propertyName = Y_MIN;
-                        } else if (e.getSource().equals(yMaxTextField)) {
-                            propertyName = Y_MAX;
-                        } else if (e.getSource().equals(phiTextField)) {
-                            propertyName = PHI;
-                        } else if (e.getSource().equals(psiTextField)) {
-                            propertyName = PSI;
-                        } else if (e.getSource().equals(thetaTextField)) {
-                            propertyName = THETA;
-                        } else if (e.getSource().equals(numberOfSpheresTextField)) {
-                            propertyName = NUMBER_OF_SPHERES;
-                        }
-                        newValue = tf.getText();
-                        if (newValue.equals(oldValue)) {
-                            return;
-                        }
-                        validate(this, validator);
-                        firePropertyChange(propertyName, oldValue, newValue);
-                    }
-                }
-                SwingUtilities.invokeLater(new TextFieldPropertyChangeHandler());
-            }
-        }
+        drawButton.addActionListener(new DrawButtonMouseListener());
+        resetButton.addActionListener(new ResetButtonMouseListener());
 
         //Add focus listener to all text fields using reflection
         for (Field f : MainWindowView.this.getClass().getDeclaredFields()) {
