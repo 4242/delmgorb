@@ -5,17 +5,12 @@ import com.organization4242.delmgorb.model.Angle;
 import com.organization4242.delmgorb.model.IntegrationMethods;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.swing.*;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Field;
-import java.util.Set;
 
 import static com.organization4242.delmgorb.controller.MainWindowController.*;
 
@@ -85,25 +80,6 @@ public class MainWindowView extends AbstractView {
     private JTextField thetaTextField;
     private JButton drawButton;
     private JButton resetButton;
-
-    private Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-    private void validate(Object object, Validator validator) {
-        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
-        StringBuilder message = new StringBuilder();
-
-        for (ConstraintViolation<Object> cv : constraintViolations) {
-            message.append(cv.getMessage());
-        }
-
-        if (constraintViolations.size() == 0) {
-            drawButton.setEnabled(true);
-            drawButton.setToolTipText(null);
-        } else {
-
-            drawButton.setEnabled(false);
-            drawButton.setToolTipText(message.toString());
-        }
-    }
 
     private Logger logger = LogManager.getLogger(MainWindowView.class);
 
@@ -594,8 +570,6 @@ public class MainWindowView extends AbstractView {
         @Override
         public void focusLost(final FocusEvent e) {
             class TextFieldPropertyChangeHandler implements Runnable {
-                @NotEmpty(message = "Value can not be null!")
-                private String newValue;
                 private String propertyName = "";
                 @Override
                 public void run() {
@@ -624,12 +598,9 @@ public class MainWindowView extends AbstractView {
                     } else if (e.getSource().equals(numberOfSpheresTextField)) {
                         propertyName = NUMBER_OF_SPHERES;
                     }
-                    newValue = tf.getText();
-                    if (newValue.equals(oldValue)) {
-                        return;
+                    if (e.getComponent().isValid()) {
+                        firePropertyChange(propertyName, oldValue, tf.getText());
                     }
-                    validate(this, validator);
-                    firePropertyChange(propertyName, oldValue, newValue);
                 }
             }
             SwingUtilities.invokeLater(new TextFieldPropertyChangeHandler());
@@ -650,9 +621,54 @@ public class MainWindowView extends AbstractView {
         }
     }
 
-    /**
-    * When a text field gets focus, all text should be selected.
-    */
+    private InputVerifier intInputVerifier = new InputVerifier() {
+        @Override
+        public boolean verify(JComponent input) {
+            boolean valid;
+            try {
+                Integer.parseInt(((JTextField) input).getText());
+                valid = true;
+            } catch (Exception ex) {
+                valid = false;
+                logger.warn(ex);
+            }
+
+            if (!valid) {
+                drawButton.setEnabled(false);
+                input.setBackground(Color.RED);
+            } else {
+                drawButton.setEnabled(true);
+                input.setBackground(Color.WHITE);
+            }
+
+            return valid;
+        }
+    };
+
+    private InputVerifier doubleInputVerifier = new InputVerifier() {
+        @Override
+        public boolean verify(JComponent input) {
+            boolean valid;
+            try {
+                Double.parseDouble(((JTextField) input).getText());
+                valid = true;
+            } catch (Exception ex) {
+                valid = false;
+                logger.warn(ex);
+            }
+
+            if (!valid) {
+                drawButton.setEnabled(false);
+                input.setBackground(Color.RED);
+            } else {
+                drawButton.setEnabled(true);
+                input.setBackground(Color.WHITE);
+            }
+
+            return valid;
+        }
+    };
+
     private void addActionListeners() {
         ActionListener menuItemActionListener = new MenuItemActionListener();
         importDataMenuItem.addActionListener(menuItemActionListener);
@@ -665,11 +681,17 @@ public class MainWindowView extends AbstractView {
         drawButton.addActionListener(new DrawButtonMouseListener());
         resetButton.addActionListener(new ResetButtonMouseListener());
 
-        //Add focus listener to all text fields using reflection
+        //Add focus listener and verifier to all text fields using reflection
         for (Field f : MainWindowView.this.getClass().getDeclaredFields()) {
             if (f.getName().contains("TextField")) {
                 try {
                     ((JTextField) f.get(MainWindowView.this)).addFocusListener(new TextFieldFocusListener());
+
+                    if (f.getName().contains("Points") || f.getName().contains("Spheres")) {
+                        ((JTextField) f.get(MainWindowView.this)).setInputVerifier(intInputVerifier);
+                    } else {
+                        ((JTextField) f.get(MainWindowView.this)).setInputVerifier(doubleInputVerifier);
+                    }
                 } catch (IllegalAccessException ex) {
                     logger.error(ex);
                 }
