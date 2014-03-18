@@ -4,6 +4,8 @@ import com.organization4242.delmgorb.controller.DialogWindowController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 
 /**
@@ -27,24 +29,9 @@ public class DialogWindowView extends AbstractView {
     private static final int PROGRESS_BAR_MAX_VALUE = 100;
 
     private JDialog dialog;
-
     private JButton button;
-
     private JProgressBar progressBar;
-
     private JLabel textArea;
-
-    public JButton getButton() {
-        return button;
-    }
-
-    public JProgressBar getProgressBar() {
-        return progressBar;
-    }
-
-    public JLabel getTextArea() {
-        return textArea;
-    }
 
     /**
     * Initializes dialog window without showing it.
@@ -58,6 +45,7 @@ public class DialogWindowView extends AbstractView {
         dialog.setSize(200, 100);
         dialog.setLocation(MainWindowView.WIDTH/2, MainWindowView.HEIGHT/2 - dialog.getHeight()/2);
         init();
+        addActionListeners();
     }
 
     /**
@@ -105,6 +93,17 @@ public class DialogWindowView extends AbstractView {
         dialog.add(button);
         dialog.add(progressBar);
         dialog.add(textArea);
+    }
+
+    private void addActionListeners() {
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                close();
+                progressBar.setValue(0);
+                firePropertyChange(DialogWindowController.CANCEL, 0, 1);
+            }
+        });
     }
 
     /**
