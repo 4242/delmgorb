@@ -107,6 +107,7 @@ public class MainWindowController extends AbstractController {
                             "Calculate new data?", "", JOptionPane.YES_NO_OPTION,
                             JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0;
                 }
+
                 if (imported) {
                     calculateFromScratch = false;
                 }
@@ -119,10 +120,14 @@ public class MainWindowController extends AbstractController {
                 task.execute();
                 break;
             } case RESET_BUTTON_CLICK: {
-                mainWindowModel.setDefaults();
-                dataModel.setPoints(null);
-                setControlsEnabled(true);
-                imported = false;
+                if (JOptionPane.showOptionDialog(MainWindowController.this.mainWindowView.getFrame(),
+                        "Reset data?", "", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE, null, new String[]{"Yes", "No"}, null) == 0) {
+                    mainWindowModel.setDefaults();
+                    dataModel.setPoints(null);
+                    setControlsEnabled(true);
+                    imported = false;
+                }
                 break;
             } case IMPORT: {
                 try {

@@ -681,18 +681,35 @@ public class MainWindowView extends AbstractView {
         drawButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke
                 .getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_DOWN_MASK), "Calculate");
         drawButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke
+                .getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK), "Import");
+        drawButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke
+                .getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK), "Export");
+        drawButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke
                 .getKeyStroke("ESCAPE"), "Exit");
 
         drawButton.getActionMap().put("Calculate", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                drawButton.doClick();
+                drawButton.requestFocus();
+                MainWindowView.this.firePropertyChange(MainWindowController.DRAW_BUTTON_CLICK, 0, 1);
             }
         });
         drawButton.getActionMap().put("Exit", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
+            }
+        });
+        drawButton.getActionMap().put("Import", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindowView.this.firePropertyChange(MainWindowController.IMPORT, 0, 1);
+            }
+        });
+        drawButton.getActionMap().put("Export", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MainWindowView.this.firePropertyChange(MainWindowController.EXPORT, 0, 1);
             }
         });
     }

@@ -26,6 +26,7 @@ public final class OpenFileHelper {
     public static File open(JFrame view) {
         int fileChosen = chooser.showDialog(view, "Open file");
         if (fileChosen == JFileChooser.APPROVE_OPTION) {
+            chooser.requestFocus();
             file = chooser.getSelectedFile();
         }
         return file;
