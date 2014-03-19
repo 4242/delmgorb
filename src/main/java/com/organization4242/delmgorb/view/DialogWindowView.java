@@ -4,8 +4,6 @@ import com.organization4242.delmgorb.controller.DialogWindowController;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 
 /**
@@ -96,13 +94,10 @@ public class DialogWindowView extends AbstractView {
     }
 
     private void addActionListeners() {
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                close();
-                progressBar.setValue(0);
-                firePropertyChange(DialogWindowController.CANCEL, 0, 1);
-            }
+        button.addActionListener(e -> {
+            close();
+            progressBar.setValue(0);
+            firePropertyChange(DialogWindowController.CANCEL, 0, 1);
         });
     }
 

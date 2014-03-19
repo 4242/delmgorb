@@ -537,17 +537,14 @@ public class MainWindowView extends AbstractView {
                 oldValue = e.getItem().toString();
             } else if (e.getStateChange() == ItemEvent.SELECTED) {
                 newValue = e.getItem().toString();
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        String propertyName = "";
-                        if (e.getSource().equals(integrationMethodsComboBox)) {
-                            propertyName = INTEGRATION_METHOD;
-                        } else if (e.getSource().equals(angleComboBox)) {
-                            propertyName = ANGLE;
-                        }
-                        firePropertyChange(propertyName, oldValue, newValue);
+                SwingUtilities.invokeLater(() -> {
+                    String propertyName = "";
+                    if (e.getSource().equals(integrationMethodsComboBox)) {
+                        propertyName = INTEGRATION_METHOD;
+                    } else if (e.getSource().equals(angleComboBox)) {
+                        propertyName = ANGLE;
                     }
+                    firePropertyChange(propertyName, oldValue, newValue);
                 });
             }
         }
@@ -557,13 +554,10 @@ public class MainWindowView extends AbstractView {
         private Object oldValue;
         @Override
         public void focusGained(final FocusEvent e) {
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    JTextField tf = (JTextField) e.getComponent();
-                    tf.selectAll();
-                    oldValue = tf.getText();
-                }
+            SwingUtilities.invokeLater(() -> {
+                JTextField tf = (JTextField) e.getComponent();
+                tf.selectAll();
+                oldValue = tf.getText();
             });
         }
 
@@ -604,20 +598,6 @@ public class MainWindowView extends AbstractView {
                 }
             }
             SwingUtilities.invokeLater(new TextFieldPropertyChangeHandler());
-        }
-    }
-
-    private class DrawButtonMouseListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            firePropertyChange(MainWindowController.DRAW_BUTTON_CLICK, 0, 1);
-        }
-    }
-
-    private class ResetButtonMouseListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            firePropertyChange(MainWindowController.RESET_BUTTON_CLICK, 0, 1);
         }
     }
 
@@ -671,15 +651,17 @@ public class MainWindowView extends AbstractView {
 
     private void addActionListeners() {
         ActionListener menuItemActionListener = new MenuItemActionListener();
-        importDataMenuItem.addActionListener(menuItemActionListener);
+        importDataMenuItem.addActionListener(e -> firePropertyChange("", 1, 9));
         exportDataMenuItem.addActionListener(menuItemActionListener);
 
         ItemListener itemListener = new ComboBoxItemListener();
         integrationMethodsComboBox.addItemListener(itemListener);
         angleComboBox.addItemListener(itemListener);
 
-        drawButton.addActionListener(new DrawButtonMouseListener());
-        resetButton.addActionListener(new ResetButtonMouseListener());
+        drawButton.addActionListener(e ->
+                firePropertyChange(MainWindowController.DRAW_BUTTON_CLICK, 0, 1));
+        resetButton.addActionListener(e ->
+                firePropertyChange(MainWindowController.RESET_BUTTON_CLICK, 0, 1));
 
         //Add focus listener and verifier to all text fields using reflection
         for (Field f : MainWindowView.this.getClass().getDeclaredFields()) {
@@ -740,12 +722,7 @@ public class MainWindowView extends AbstractView {
     * Shows main window.
     */
     public void display() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                frame.setVisible(true);
-            }
-        });    
+        SwingUtilities.invokeLater(() -> frame.setVisible(true));
     }
 
     /**

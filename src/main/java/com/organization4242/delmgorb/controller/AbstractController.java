@@ -16,8 +16,8 @@ public abstract class AbstractController implements PropertyChangeListener {
     private List<AbstractModel> registeredModels;
 
     public AbstractController() {
-        registeredViews = new ArrayList<AbstractView>();
-        registeredModels = new ArrayList<AbstractModel>();
+        registeredViews = new ArrayList<>();
+        registeredModels = new ArrayList<>();
     }
 
     public void addModel(AbstractModel model) {
@@ -42,14 +42,10 @@ public abstract class AbstractController implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
-        if (pce.getSource().getClass().getSuperclass().equals(AbstractModel.class)) {
-            for (AbstractView view: registeredViews) {
-                view.modelPropertyChange(pce);
-            }
-        } else if (pce.getSource().getClass().getSuperclass().equals(AbstractView.class)) {
-            for (AbstractModel model : registeredModels) {
-                model.viewPropertyChange(pce);
-            }
+        if (pce.getSource() instanceof AbstractModel) {
+            registeredViews.forEach(x -> x.modelPropertyChange(pce));
+        } else if (pce.getSource() instanceof AbstractView) {
+            registeredModels.forEach(x -> x.viewPropertyChange(pce));
         }
     }
 }

@@ -21,11 +21,6 @@ public class PlotWindowView extends JFrame {
     }
 
     public void display() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(() -> setVisible(true));
     }
 }
