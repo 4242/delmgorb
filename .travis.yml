@@ -32,8 +32,8 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 install:
-  - mvn -e -X package
-  - mvn -e -X javadoc:javadoc
+  - mvn package
+  - mvn javadoc:javadoc
 
 script:
   - echo 'Skipping script...'
