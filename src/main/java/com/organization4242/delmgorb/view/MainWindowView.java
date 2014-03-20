@@ -166,15 +166,6 @@ public class MainWindowView extends AbstractView {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        //Setting theme
-        try
-        {
-            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        }
-        catch(Exception ex) {
-            logger.warn(ex);
-        }
-
         init();
         addMenu();
         createPanelStructure();
@@ -520,10 +511,10 @@ public class MainWindowView extends AbstractView {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource().equals(getImportDataMenuItem())) {
-                firePropertyChange(MainWindowController.IMPORT, 0, 1);
+                MainWindowView.this.firePropertyChange(MainWindowController.IMPORT, 0, 1);
             }
             else if (e.getSource().equals(getExportDataMenuItem())) {
-                firePropertyChange(MainWindowController.EXPORT, 0, 1);
+                MainWindowView.this.firePropertyChange(MainWindowController.EXPORT, 0, 1);
             }
         }
     }
@@ -544,7 +535,7 @@ public class MainWindowView extends AbstractView {
                     } else if (e.getSource().equals(angleComboBox)) {
                         propertyName = ANGLE;
                     }
-                    firePropertyChange(propertyName, oldValue, newValue);
+                    MainWindowView.this.firePropertyChange(propertyName, oldValue, newValue);
                 });
             }
         }
@@ -552,52 +543,43 @@ public class MainWindowView extends AbstractView {
 
     class TextFieldFocusListener extends FocusAdapter {
         private Object oldValue;
+        private String propertyName = "";
         @Override
         public void focusGained(final FocusEvent e) {
-            SwingUtilities.invokeLater(() -> {
-                JTextField tf = (JTextField) e.getComponent();
-                tf.selectAll();
-                oldValue = tf.getText();
-            });
+            JTextField tf = (JTextField) e.getComponent();
+            tf.selectAll();
+            oldValue = tf.getText();
         }
 
         @Override
         public void focusLost(final FocusEvent e) {
-            class TextFieldPropertyChangeHandler implements Runnable {
-                private String propertyName = "";
-                @Override
-                public void run() {
-                    JTextField tf = (JTextField) e.getComponent();
-                    tf.select(0, 0);
-                    if (e.getSource().equals(numberOfPointsTextField)) {
-                        propertyName = NUMBER_OF_POINTS;
-                    } else if (e.getSource().equals(timeStepTextField)) {
-                        propertyName = TIME_STEP;
-                    } else if (e.getSource().equals(timePeriodTextField)) {
-                        propertyName = TIME_PERIOD;
-                    } else if (e.getSource().equals(xMinTextField)) {
-                        propertyName = X_MIN;
-                    } else if (e.getSource().equals(xMaxTextField)) {
-                        propertyName = X_MIN;
-                    } else if (e.getSource().equals(yMinTextField)) {
-                        propertyName = Y_MIN;
-                    } else if (e.getSource().equals(yMaxTextField)) {
-                        propertyName = Y_MAX;
-                    } else if (e.getSource().equals(phiTextField)) {
-                        propertyName = PHI;
-                    } else if (e.getSource().equals(psiTextField)) {
-                        propertyName = PSI;
-                    } else if (e.getSource().equals(thetaTextField)) {
-                        propertyName = THETA;
-                    } else if (e.getSource().equals(numberOfSpheresTextField)) {
-                        propertyName = NUMBER_OF_SPHERES;
-                    }
-                    if (e.getComponent().isValid()) {
-                        firePropertyChange(propertyName, oldValue, tf.getText());
-                    }
-                }
+            JTextField tf = (JTextField) e.getComponent();
+            tf.select(0, 0);
+            if (e.getSource().equals(numberOfPointsTextField)) {
+                propertyName = NUMBER_OF_POINTS;
+            } else if (e.getSource().equals(timeStepTextField)) {
+                propertyName = TIME_STEP;
+            } else if (e.getSource().equals(timePeriodTextField)) {
+                propertyName = TIME_PERIOD;
+            } else if (e.getSource().equals(xMinTextField)) {
+                propertyName = X_MIN;
+            } else if (e.getSource().equals(xMaxTextField)) {
+                propertyName = X_MIN;
+            } else if (e.getSource().equals(yMinTextField)) {
+                propertyName = Y_MIN;
+            } else if (e.getSource().equals(yMaxTextField)) {
+                propertyName = Y_MAX;
+            } else if (e.getSource().equals(phiTextField)) {
+                propertyName = PHI;
+            } else if (e.getSource().equals(psiTextField)) {
+                propertyName = PSI;
+            } else if (e.getSource().equals(thetaTextField)) {
+                propertyName = THETA;
+            } else if (e.getSource().equals(numberOfSpheresTextField)) {
+                propertyName = NUMBER_OF_SPHERES;
             }
-            SwingUtilities.invokeLater(new TextFieldPropertyChangeHandler());
+            String newValue = tf.getText();
+            MainWindowView.this.firePropertyChange(propertyName, oldValue, newValue);
         }
     }
 
@@ -659,9 +641,9 @@ public class MainWindowView extends AbstractView {
         angleComboBox.addItemListener(itemListener);
 
         drawButton.addActionListener(e ->
-                firePropertyChange(MainWindowController.DRAW_BUTTON_CLICK, 0, 1));
+                MainWindowView.this.firePropertyChange(MainWindowController.DRAW_BUTTON_CLICK, 0, 1));
         resetButton.addActionListener(e ->
-                firePropertyChange(MainWindowController.RESET_BUTTON_CLICK, 0, 1));
+                MainWindowView.this.firePropertyChange(MainWindowController.RESET_BUTTON_CLICK, 0, 1));
 
         //Add focus listener and verifier to all text fields using reflection
         for (Field f : MainWindowView.this.getClass().getDeclaredFields()) {
@@ -722,6 +704,15 @@ public class MainWindowView extends AbstractView {
     * Shows main window.
     */
     public void display() {
+        //Setting theme
+        try
+        {
+            UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        }
+        catch(Exception ex) {
+            logger.warn(ex);
+        }
+
         SwingUtilities.invokeLater(() -> frame.setVisible(true));
     }
 
