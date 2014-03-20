@@ -42,9 +42,6 @@
                         <mainClass>com.organization4242.delmgorb.application.Application</mainClass>
                     </manifest>
                 </archive>
-                <descriptorRefs>
-                    <descriptorRef>jar-with-dependencies</descriptorRef>
-                </descriptorRefs>
             </configuration>
         </plugin>
         <plugin>
