@@ -17,7 +17,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by ilya-murzinov on 20.03.14.
+ * Tests from {@link com.organization4242.delmgorb.view.MainWindowView}
+ *
+ * @ Murzinov Ilya
  */
 @RunWith(JUnit4.class)
 public class MainWindowViewTest implements PropertyChangeListener{
@@ -69,17 +71,31 @@ public class MainWindowViewTest implements PropertyChangeListener{
     }
 
     @Test
-    public void validationPositiveTest() {
+    public void validationIntegerWithIntegerPositiveTest() {
         view.getNumberOfPointsTextField().setText("1");
         view.getNumberOfPointsTextField().getFocusListeners()[0].focusLost(focusEvent);
         assertTrue(view.getDrawButton().isEnabled());
     }
 
     @Test
-    public void validationNegativeWithDoubleTest() {
+    public void validationIntegerWithDoubleNegativeTest() {
         view.getNumberOfPointsTextField().setText("11.6");
         view.getNumberOfPointsTextField().getInputVerifier().verify(view.getNumberOfPointsTextField());
         assertFalse(view.getDrawButton().isEnabled());
+    }
+
+    @Test
+    public void validationDoubleWithIntegerPositiveTest() {
+        view.getTimeStepTextField().setText("5");
+        view.getTimeStepTextField().getFocusListeners()[0].focusLost(focusEvent);
+        assertTrue(view.getDrawButton().isEnabled());
+    }
+
+    @Test
+    public void validationDoubleWithDoublePositiveTest() {
+        view.getTimeStepTextField().setText("11.6");
+        view.getTimeStepTextField().getInputVerifier().verify(view.getTimeStepTextField());
+        assertTrue(view.getDrawButton().isEnabled());
     }
 
     @Test
@@ -87,6 +103,19 @@ public class MainWindowViewTest implements PropertyChangeListener{
         view.getNumberOfPointsTextField().setText("aaa");
         view.getNumberOfPointsTextField().getInputVerifier().verify(view.getNumberOfPointsTextField());
         assertFalse(view.getDrawButton().isEnabled());
+    }
+
+    /**
+     * Check that draw button is enabled after setting invalid value and then valid value
+     */
+    @Test
+    public void validationPositiveAfterNegativeTest() {
+        view.getNumberOfPointsTextField().setText("aaa");
+        view.getNumberOfPointsTextField().getInputVerifier().verify(view.getNumberOfPointsTextField());
+        assertFalse(view.getDrawButton().isEnabled());
+        view.getNumberOfPointsTextField().setText("1");
+        view.getNumberOfPointsTextField().getInputVerifier().verify(view.getNumberOfPointsTextField());
+        assertTrue(view.getDrawButton().isEnabled());
     }
 
     @Override
