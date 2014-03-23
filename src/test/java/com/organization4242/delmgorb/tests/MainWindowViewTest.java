@@ -1,6 +1,9 @@
 package com.organization4242.delmgorb.tests;
 
+import com.organization4242.delmgorb.controller.AbstractController;
 import com.organization4242.delmgorb.controller.MainWindowController;
+import com.organization4242.delmgorb.model.IntegrationMethods;
+import com.organization4242.delmgorb.model.MainWindowModel;
 import com.organization4242.delmgorb.view.MainWindowView;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +14,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -27,6 +31,9 @@ public class MainWindowViewTest implements PropertyChangeListener{
 
     private ActionEvent actionEvent = mock(ActionEvent.class);
     private FocusEvent focusEvent = mock(FocusEvent.class);
+    private PropertyChangeSupport propertyChangeSupport =
+            new PropertyChangeSupport(mock(MainWindowModel.class));
+    private AbstractController controller = new AbstractController() {};
 
     private String propertyName;
     private String oldValue;
@@ -36,6 +43,8 @@ public class MainWindowViewTest implements PropertyChangeListener{
     public void setUp() throws Exception {
         view = new MainWindowView();
         view.addPropertyChangeListener(this);
+        controller.addView(view);
+        propertyChangeSupport.addPropertyChangeListener(controller);
     }
 
     @Test
@@ -116,6 +125,14 @@ public class MainWindowViewTest implements PropertyChangeListener{
         view.getNumberOfPointsTextField().setText("1");
         view.getNumberOfPointsTextField().getInputVerifier().verify(view.getNumberOfPointsTextField());
         assertTrue(view.getDrawButton().isEnabled());
+    }
+
+    @Test
+    public void viewUpdateTest() {
+        propertyChangeSupport.firePropertyChange(MainWindowController.NUMBER_OF_POINTS, 0, 100);
+        assertEquals(view.getNumberOfPointsTextField().getText(), "100");
+        propertyChangeSupport.firePropertyChange(MainWindowController.INTEGRATION_METHOD, 0, IntegrationMethods.ADAMS_MOULTON);
+        assertEquals(view.getIntegrationMethodsComboBox().getSelectedItem(), IntegrationMethods.ADAMS_MOULTON);
     }
 
     @Override

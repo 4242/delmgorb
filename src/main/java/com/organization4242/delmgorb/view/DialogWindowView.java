@@ -130,6 +130,8 @@ public class DialogWindowView extends AbstractView {
                 break;
             } case DialogWindowController.DISPOSE : {
                 dialog.dispose();
+                textArea.setText("Calculating");
+                button.setEnabled(true);
                 break;
             } case DialogWindowController.CALCULATED : {
                 textArea.setText("Drawing");
