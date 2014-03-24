@@ -128,6 +128,14 @@ public class MainWindowViewTest implements PropertyChangeListener{
     }
 
     @Test
+    public void testMenu() throws Exception {
+        view.getImportDataMenuItem().getActionListeners()[0].actionPerformed(actionEvent);
+        assertEquals(propertyName, MainWindowController.IMPORT);
+        view.getExportDataMenuItem().getActionListeners()[0].actionPerformed(actionEvent);
+        assertEquals(propertyName, MainWindowController.EXPORT);
+    }
+
+    @Test
     public void viewUpdateTest() {
         propertyChangeSupport.firePropertyChange(MainWindowController.NUMBER_OF_POINTS, 0, 100);
         assertEquals(view.getNumberOfPointsTextField().getText(), "100");

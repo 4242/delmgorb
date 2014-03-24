@@ -507,18 +507,6 @@ public class MainWindowView extends AbstractView {
         placeButtonControls();
     }
 
-    private class MenuItemActionListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource().equals(getImportDataMenuItem())) {
-                MainWindowView.this.firePropertyChange(MainWindowController.IMPORT, 0, 1);
-            }
-            else if (e.getSource().equals(getExportDataMenuItem())) {
-                MainWindowView.this.firePropertyChange(MainWindowController.EXPORT, 0, 1);
-            }
-        }
-    }
-
     private class ComboBoxItemListener implements ItemListener {
         private String oldValue = null;
         private String newValue = null;
@@ -632,9 +620,8 @@ public class MainWindowView extends AbstractView {
     };
 
     private void addActionListeners() {
-        ActionListener menuItemActionListener = new MenuItemActionListener();
-        importDataMenuItem.addActionListener(e -> firePropertyChange("", 1, 9));
-        exportDataMenuItem.addActionListener(menuItemActionListener);
+        importDataMenuItem.addActionListener(e -> firePropertyChange(MainWindowController.IMPORT, 0, 1));
+        exportDataMenuItem.addActionListener(e -> firePropertyChange(MainWindowController.EXPORT, 0, 1));
 
         ItemListener itemListener = new ComboBoxItemListener();
         integrationMethodsComboBox.addItemListener(itemListener);
