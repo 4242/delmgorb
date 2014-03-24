@@ -31,6 +31,22 @@ public class DialogWindowView extends AbstractView {
     private JProgressBar progressBar;
     private JLabel textArea;
 
+    public JDialog getDialog() {
+        return dialog;
+    }
+
+    public JButton getButton() {
+        return button;
+    }
+
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public JLabel getTextArea() {
+        return textArea;
+    }
+
     /**
     * Initializes dialog window without showing it.
     * If you use this constructor, cancel button will be disabled.
@@ -96,7 +112,6 @@ public class DialogWindowView extends AbstractView {
     private void addActionListeners() {
         button.addActionListener(e -> {
             close();
-            progressBar.setValue(0);
             firePropertyChange(DialogWindowController.CANCEL, 0, 1);
         });
     }
@@ -115,6 +130,7 @@ public class DialogWindowView extends AbstractView {
     }
 
     public void close() {
+        button.setEnabled(true);
         progressBar.setValue(0);
         dialog.setVisible(false);
     }

@@ -19,7 +19,7 @@ public class DataModel extends Observable implements Serializable {
     }
 
     public void setPoints(Points points) {
-        this.points = points;
+        this.points = null;
     }
 
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
