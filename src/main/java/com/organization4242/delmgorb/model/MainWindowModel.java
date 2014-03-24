@@ -32,7 +32,6 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     private Double psi;
     private Double theta;
     private Integer numberOfSpheres;
-    private InterpolationMethods interpolationMethod = InterpolationMethods.MICROSPHERE;
 
     private transient Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
@@ -88,10 +87,6 @@ public class MainWindowModel extends AbstractModel implements Serializable {
 
     public Integer getNumberOfSpheres() {
         return numberOfSpheres;
-    }
-
-    public InterpolationMethods getInterpolationMethod() {
-        return interpolationMethod;
     }
 
     private void validate(Object object, Validator validator) {

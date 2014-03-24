@@ -79,8 +79,7 @@ public class PlotBuilder extends AbstractModel implements Observer {
             return null;
         }
 
-        MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getInterpolationMethod(),
-                mainWindowModel.getNumberOfSpheres());
+        MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getNumberOfSpheres());
         PlotModel plotModel = new PlotModel(function, mainWindowModel.getXMin(), mainWindowModel.getXMax(),
                 mainWindowModel.getYMin(), mainWindowModel.getYMax());
         firePropertyChange(DialogWindowController.CALCULATED, 0, 1);
@@ -102,8 +101,7 @@ public class PlotBuilder extends AbstractModel implements Observer {
 
         points = dataModel.getPoints();
 
-        MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getInterpolationMethod(),
-                mainWindowModel.getNumberOfSpheres());
+        MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getNumberOfSpheres());
         PlotModel plotModel = new PlotModel(function, mainWindowModel.getXMin(), mainWindowModel.getXMax(),
                 mainWindowModel.getYMin(), mainWindowModel.getYMax());
         PlotView plotView = new PlotView();

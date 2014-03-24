@@ -13,12 +13,10 @@ public class InterpolatorModel {
      * Produces function which is passed to {@link com.organization4242.delmgorb.view.PlotView}
      *
      * @param points set of points to be interpolated
-     * @param interpolationMethods {@link com.organization4242.delmgorb.model.InterpolationMethods}
      * @param numberOfSpheres parameter of {@link org.apache.commons.math3.analysis.interpolation.MicrosphereInterpolator}
      * @return {@link org.apache.commons.math3.analysis.MultivariateFunction}
      */
-    public MultivariateFunction interpolate(Points points,
-                                            InterpolationMethods interpolationMethods, int numberOfSpheres) {
+    public MultivariateFunction interpolate(Points points, int numberOfSpheres) {
         int length = points.getXVal().length;
         double[][] fVals = new double[length*length][2];
         double[] values = new double[length*length];
