@@ -17,16 +17,16 @@ public class InterpolatorModel {
      * @return {@link org.apache.commons.math3.analysis.MultivariateFunction}
      */
     public MultivariateFunction interpolate(Points points, int numberOfSpheres) {
-        int length = points.getXVal().length;
+        int length = points.getXVal().size();
         double[][] fVals = new double[length*length][2];
         double[] values = new double[length*length];
 
         int c = 0;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
-                fVals[c][0] = points.getXVal()[i];
-                fVals[c][1] = points.getYVal()[j];
-                values[c] = points.getFVal()[i][j];
+                fVals[c][0] = points.getXVal().get(i);
+                fVals[c][1] = points.getYVal().get(j);
+                values[c] = points.getFVal().get(i).get(j);
                 c++;
             }
         }

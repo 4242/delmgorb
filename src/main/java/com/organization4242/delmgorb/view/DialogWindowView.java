@@ -120,16 +120,15 @@ public class DialogWindowView extends AbstractView {
     * Shows dialog using {@code SwingUtilities.invokeLater()}.
     */
     public void display() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-                dialog.setVisible(true);
-            }
+        SwingUtilities.invokeLater(() -> {
+            dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+            dialog.setVisible(true);
         });
     }
 
     public void close() {
+        dialog.dispose();
+        textArea.setText("Calculating");
         button.setEnabled(true);
         progressBar.setValue(0);
         dialog.setVisible(false);
@@ -142,15 +141,16 @@ public class DialogWindowView extends AbstractView {
                 display();
                 break;
             } case DialogWindowController.PERCENTAGE : {
-                progressBar.setValue((Integer) pce.getNewValue());
+                if (progressBar.getValue() < (Integer) pce.getNewValue()) {
+                    progressBar.setValue((Integer) pce.getNewValue());
+                }
                 break;
             } case DialogWindowController.DISPOSE : {
-                dialog.dispose();
-                textArea.setText("Calculating");
-                button.setEnabled(true);
+                close();
                 break;
             } case DialogWindowController.CALCULATED : {
                 textArea.setText("Drawing");
+                progressBar.setValue(0);
                 button.setEnabled(false);
                 break;
             }

@@ -244,7 +244,7 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         setPhi(0.01);
         setPsi(0.01);
         setTheta(0.01);
-        setNumberOfSpheres(50);
+        setNumberOfSpheres(10);
     }
 
     public void update(MainWindowModel mainWindowModel) {

@@ -1,6 +1,7 @@
 package com.organization4242.delmgorb.model;
 
 import java.util.Arrays;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Data structure used to conveniently pass to
@@ -9,42 +10,45 @@ import java.util.Arrays;
  * @author Murzinov Ilya
  */
 public class Points {
-    private Double[] xVal;
-    private Double[] yVal;
-    private Double[][] fVal;
+    private CopyOnWriteArrayList<Double> xVal;
+    private CopyOnWriteArrayList<Double> yVal;
+    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> fVal;
 
-    public Double[] getXVal() {
+    public CopyOnWriteArrayList<Double> getXVal() {
         return xVal;
     }
 
-    public Double[] getYVal() {
+    public CopyOnWriteArrayList<Double> getYVal() {
         return yVal;
     }
 
-    public Double[][] getFVal() {
+    public CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> getFVal() {
         return fVal;
     }
 
     public void setXVal(Double[] newXVal) {
         if (newXVal == null) {
-            this.xVal = new Double[0];
+            this.xVal = new CopyOnWriteArrayList<>();
         } else {
-            this.xVal = Arrays.copyOf(newXVal, newXVal.length);
+            this.xVal = new CopyOnWriteArrayList<>(Arrays.copyOf(newXVal, newXVal.length));
         }
     }
 
     public void setYVal(Double[] newYVal) {
         if (newYVal == null) {
-            this.yVal = new Double[0];
+            this.yVal = new CopyOnWriteArrayList<>();
         } else {
-            this.yVal = Arrays.copyOf(newYVal, newYVal.length);
+            this.yVal = new CopyOnWriteArrayList<>(Arrays.copyOf(newYVal, newYVal.length));
         }
     }
 
-    Points(int a, int b) {
-        this.xVal = new Double[a];
-        this.yVal = new Double[b];
-        this.fVal = new Double[a][b];
+    Points(int a) {
+        this.xVal = new CopyOnWriteArrayList<>(new Double[a]);
+        this.yVal = new CopyOnWriteArrayList<>(new Double[a]);
+        this.fVal = new CopyOnWriteArrayList<>();
+        for (int i=0; i<a; i++) {
+            this.fVal.add(new CopyOnWriteArrayList<>(new Double[a]));
+        }
     }
 
     public Points() {

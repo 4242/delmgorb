@@ -3,16 +3,24 @@ package com.organization4242.delmgorb.model;
 import org.apache.commons.math3.ode.FirstOrderDifferentialEquations;
 import org.apache.commons.math3.ode.FirstOrderIntegrator;
 import org.apache.commons.math3.ode.nonstiff.*;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.Observable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.*;
 
 public class DataModel extends Observable implements Serializable {
     private Points points;
-    private MainWindowModel mainWindowModel;
+    private transient MainWindowModel mainWindowModel;
     private transient Boolean stop = false;
+    private transient FirstOrderIntegrator integrator;
+
+    private transient Logger logger = LogManager.getLogger(DataModel.class);
 
     public Points getPoints() {
         return points;
@@ -199,128 +207,58 @@ public class DataModel extends Observable implements Serializable {
 
     public void buildPoints() {
         final Points comboArray;
-        comboArray = new Points(mainWindowModel.getNumberOfPoints(), mainWindowModel.getNumberOfPoints());
-        //final FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
+        comboArray = new Points(mainWindowModel.getNumberOfPoints());
         comboArray.setXVal(doFragmentation(mainWindowModel.getXMin(), mainWindowModel.getXMax(), mainWindowModel.getNumberOfPoints()));
         comboArray.setYVal(doFragmentation(mainWindowModel.getYMin(), mainWindowModel.getYMax(), mainWindowModel.getNumberOfPoints()));
         final double[] initialState = InitialConditionsFactory.createConditions(mainWindowModel.getPhi(), mainWindowModel.getPsi(),
                 mainWindowModel.getTheta());
-        long timeout= System.currentTimeMillis();
-        int bigNum = mainWindowModel.getNumberOfPoints();
-        int midNum = bigNum/2;
-        Runnable runnable1 = () -> {
-            FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
-            double middlePoint1 = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                    mainWindowModel.getTimeStep(), comboArray.getYVal()[mainWindowModel.getNumberOfPoints()/2],
-                    comboArray.getXVal()[mainWindowModel.getNumberOfPoints()/2], integrator, initialState);
-            for (int i = 0; i < mainWindowModel.getNumberOfPoints()/2; i++) {
-                for (int j = 0; j < mainWindowModel.getNumberOfPoints()/2; j++) {
-                    if (i>=j)
-                    comboArray.getFVal()[j][i] = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                            mainWindowModel.getTimeStep(), comboArray.getYVal()[i], comboArray.getXVal()[j],
-                            integrator, initialState);
-                    else
-                    comboArray.getFVal()[j][i] = middlePoint1;
+        long timeout = System.currentTimeMillis();
+
+        integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
+        ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        double middlePoint = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
+                mainWindowModel.getTimeStep(), comboArray.getYVal().get(mainWindowModel.getNumberOfPoints() - 1),
+                comboArray.getXVal().get(mainWindowModel.getNumberOfPoints() - 1), integrator, initialState);
+
+        comboArray.getXVal().forEach(x -> {
+            comboArray.getXVal().forEach(y -> {
+                int i = comboArray.getXVal().indexOf(x);
+                int j = comboArray.getXVal().indexOf(y);
+                service.submit(() -> {
+                    FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
+                    if (i >= j) {
+                        comboArray.getFVal().get(j).set(i, getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
+                                mainWindowModel.getTimeStep(), comboArray.getYVal().get(i), comboArray.getXVal().get(j),
+                                integrator, initialState));
+                    } else {
+                        comboArray.getFVal().get(j).set(i, middlePoint);
+                    }
+
                     if (stop) {
                         stop = false;
                         return;
                     }
+
                     setChanged();
                     notifyObservers((int) (((double)
                             (i * mainWindowModel.getNumberOfPoints() + j + 1) / Math.pow(mainWindowModel.getNumberOfPoints(), 2)) * 100));
-                }
-            }
-        };
-        Runnable runnable2 = () -> {
-            FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
-            double middlePoint2 = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                    mainWindowModel.getTimeStep(), comboArray.getYVal()[mainWindowModel.getNumberOfPoints()/2],
-                    comboArray.getXVal()[mainWindowModel.getNumberOfPoints()/2], integrator, initialState);
-            for (int i = mainWindowModel.getNumberOfPoints()/2; i < mainWindowModel.getNumberOfPoints(); i++) {
-                for (int j = 0; j < mainWindowModel.getNumberOfPoints()/2; j++) {
-                    if (i>=j)
-                        comboArray.getFVal()[j][i] = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                                mainWindowModel.getTimeStep(), comboArray.getYVal()[i], comboArray.getXVal()[j],
-                                integrator, initialState);
-                    else
-                        comboArray.getFVal()[j][i] = middlePoint2;
-                    if (stop) {
-                        stop = false;
-                        return;
-                    }
-                    setChanged();
-                    notifyObservers((int) (((double)
-                            (i * mainWindowModel.getNumberOfPoints() + j + 1) / Math.pow(mainWindowModel.getNumberOfPoints(), 2)) * 100));
-                }
-            }
-        };
-        Runnable runnable3 = () -> {
-            FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
-            double middlePoint3 = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                    mainWindowModel.getTimeStep(), comboArray.getYVal()[mainWindowModel.getNumberOfPoints()/2],
-                    comboArray.getXVal()[mainWindowModel.getNumberOfPoints()/2], integrator, initialState);
-            for (int i = 0; i < mainWindowModel.getNumberOfPoints()/2; i++) {
-                for (int j = mainWindowModel.getNumberOfPoints()/2; j < mainWindowModel.getNumberOfPoints(); j++) {
-                    if (i>=j)
-                        comboArray.getFVal()[j][i] = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                                mainWindowModel.getTimeStep(), comboArray.getYVal()[i], comboArray.getXVal()[j],
-                                integrator, initialState);
-                    else
-                        comboArray.getFVal()[j][i] = middlePoint3;
-                    if (stop) {
-                        stop = false;
-                        return;
-                    }
-                    setChanged();
-                    notifyObservers((int) (((double)
-                            (i * mainWindowModel.getNumberOfPoints() + j + 1) / Math.pow(mainWindowModel.getNumberOfPoints(), 2)) * 100));
-                }
-            }
-        };
-        Runnable runnable4 = () -> {
-            FirstOrderIntegrator integrator = IntegratorFactory.createFor(mainWindowModel.getIntegrationMethod());
-            double middlePoint4 = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                    mainWindowModel.getTimeStep(), comboArray.getYVal()[mainWindowModel.getNumberOfPoints()/2],
-                    comboArray.getXVal()[mainWindowModel.getNumberOfPoints()/2], integrator, initialState);
-            for (int i = mainWindowModel.getNumberOfPoints()/2; i < mainWindowModel.getNumberOfPoints(); i++) {
-                for (int j = mainWindowModel.getNumberOfPoints()/2; j < mainWindowModel.getNumberOfPoints(); j++) {
-                    if (i>=j)
-                        comboArray.getFVal()[j][i] = getMaxValue(mainWindowModel.getAngle(), mainWindowModel.getTimePeriod(),
-                                mainWindowModel.getTimeStep(), comboArray.getYVal()[i], comboArray.getXVal()[j],
-                                integrator, initialState);
-                    else
-                        comboArray.getFVal()[j][i] = middlePoint4;
-                    if (stop) {
-                        stop = false;
-                        return;
-                    }
-                    setChanged();
-                    notifyObservers((int) (((double)
-                            (i * mainWindowModel.getNumberOfPoints() + j + 1) / Math.pow(mainWindowModel.getNumberOfPoints(), 2)) * 100));
-                }
-            }
-        };
-        Thread thread1 = new Thread(runnable1);
-        Thread thread2 = new Thread(runnable2);
-        Thread thread3 = new Thread(runnable3);
-        Thread thread4 = new Thread(runnable4);
-        thread1.start();
-        thread2.start();
-        thread3.start();
-        thread4.start();
-        while (thread1.isAlive() || thread2.isAlive() || thread3.isAlive() || thread4.isAlive()) {
-            try {
+                });
+            });
+        });
+
+        service.shutdown();
+
+        try {
+            while (!service.awaitTermination(10000, TimeUnit.SECONDS)) {
                 Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+        } catch (InterruptedException ex) {
+            logger.error(ex);
         }
+
         timeout = System.currentTimeMillis() - timeout;
         points = comboArray;
-        thread1.interrupt();
-        thread2.interrupt();
-        thread3.interrupt();
-        thread4.interrupt();
-        System.out.println("Time = " + timeout);
+        logger.trace("Time = " + timeout);
     }
 }
