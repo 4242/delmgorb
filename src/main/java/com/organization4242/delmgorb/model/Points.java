@@ -1,7 +1,6 @@
 package com.organization4242.delmgorb.model;
 
 import java.util.Arrays;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Data structure used to conveniently pass to
@@ -10,45 +9,42 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Murzinov Ilya
  */
 public class Points {
-    private CopyOnWriteArrayList<Double> xVal;
-    private CopyOnWriteArrayList<Double> yVal;
-    private CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> fVal;
+    private Double[] xVal;
+    private Double[] yVal;
+    private Double[][] fVal;
 
-    public CopyOnWriteArrayList<Double> getXVal() {
+    public Double[] getXVal() {
         return xVal;
     }
 
-    public CopyOnWriteArrayList<Double> getYVal() {
+    public Double[] getYVal() {
         return yVal;
     }
 
-    public CopyOnWriteArrayList<CopyOnWriteArrayList<Double>> getFVal() {
+    public Double[][] getFVal() {
         return fVal;
     }
 
     public void setXVal(Double[] newXVal) {
         if (newXVal == null) {
-            this.xVal = new CopyOnWriteArrayList<>();
+            this.xVal = new Double[0];
         } else {
-            this.xVal = new CopyOnWriteArrayList<>(Arrays.copyOf(newXVal, newXVal.length));
+            this.xVal = Arrays.copyOf(newXVal, newXVal.length);
         }
     }
 
     public void setYVal(Double[] newYVal) {
         if (newYVal == null) {
-            this.yVal = new CopyOnWriteArrayList<>();
+            this.yVal = new Double[0];
         } else {
-            this.yVal = new CopyOnWriteArrayList<>(Arrays.copyOf(newYVal, newYVal.length));
+            this.yVal = Arrays.copyOf(newYVal, newYVal.length);
         }
     }
 
-    Points(int a) {
-        this.xVal = new CopyOnWriteArrayList<>(new Double[a]);
-        this.yVal = new CopyOnWriteArrayList<>(new Double[a]);
-        this.fVal = new CopyOnWriteArrayList<>();
-        for (int i=0; i<a; i++) {
-            this.fVal.add(new CopyOnWriteArrayList<>(new Double[a]));
-        }
+    Points(int a, int b) {
+        this.xVal = new Double[a];
+        this.yVal = new Double[b];
+        this.fVal = new Double[a][b];
     }
 
     public Points() {
