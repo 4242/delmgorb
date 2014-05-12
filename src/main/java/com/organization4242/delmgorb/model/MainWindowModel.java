@@ -4,13 +4,9 @@ import com.organization4242.delmgorb.controller.MainWindowController;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
 import java.beans.PropertyChangeEvent;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
 
 /**
  * Class is used for storing values from {@link com.organization4242.delmgorb.view.MainWindowView}
@@ -32,8 +28,6 @@ public class MainWindowModel extends AbstractModel implements Serializable {
     private Double psi;
     private Double theta;
     private Integer numberOfSpheres;
-
-    private transient Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     private transient Logger logger = LogManager.getLogger(MainWindowModel.class);
 
@@ -87,14 +81,6 @@ public class MainWindowModel extends AbstractModel implements Serializable {
 
     public Integer getNumberOfSpheres() {
         return numberOfSpheres;
-    }
-
-    private void validate(Object object, Validator validator) {
-        Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
-
-        for (ConstraintViolation<Object> cv : constraintViolations) {
-            logger.warn(cv.getMessage());
-        }
     }
 
     public void setNumberOfPoints(String numberOfPoints) {
@@ -270,6 +256,5 @@ public class MainWindowModel extends AbstractModel implements Serializable {
         } catch (NoSuchMethodException | SecurityException | IllegalAccessException | InvocationTargetException ex) {
             logger.error(ex);
         }
-        validate(this, validator);
     }
 }
