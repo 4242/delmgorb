@@ -26,12 +26,10 @@ public class PlotBuilder extends AbstractModel implements Observer {
         this.interpolatorModel = interpolatorModel;
     }
 
-    @Required
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
         this.mainWindowModel = mainWindowModel;
     }
 
-    @Required
     public void setDataModel(DataModel dataModel) {
         this.dataModel = dataModel;
         dataModel.addObserver(this);
@@ -94,21 +92,6 @@ public class PlotBuilder extends AbstractModel implements Observer {
         firePropertyChange(DialogWindowController.DISPOSE, 0, 1);
 
         return new PlotWindowView(plotView);
-    }
-
-    public PlotView getSample() {
-        Points points;
-
-        points = dataModel.getPoints();
-
-        MultivariateFunction function = interpolatorModel.interpolate(points, mainWindowModel.getNumberOfSpheres());
-        PlotModel plotModel = new PlotModel(function, mainWindowModel.getXMin(), mainWindowModel.getXMax(),
-                mainWindowModel.getYMin(), mainWindowModel.getYMax());
-        PlotView plotView = new PlotView();
-        plotView.setTitleText("X -> Delta, Y -> Epsilon, Z -> " + mainWindowModel.getAngle());
-        plotView.setModel(plotModel);
-        plotView.getTask().execute();
-        return plotView;
     }
 
     private class Task extends SwingWorker<Void, Integer> {

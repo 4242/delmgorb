@@ -54,6 +54,8 @@ public class MainWindowController extends AbstractController {
     @Required
     public void setMainWindowModel(MainWindowModel mainWindowModel) {
         this.mainWindowModel = mainWindowModel;
+        this.dataModel = new DataModel();
+        this.dataModel.setMainWindowModel(this.mainWindowModel);
         addModel(this.mainWindowModel);
         mainWindowModel.setDefaults();
     }
@@ -65,13 +67,10 @@ public class MainWindowController extends AbstractController {
     }
 
     @Required
-    public void setDataModel(DataModel dataModel) {
-        this.dataModel = dataModel;
-    }
-
-    @Required
     public void setPlotBuilder(PlotBuilder plotBuilder) {
         this.plotBuilder = plotBuilder;
+        this.plotBuilder.setDataModel(dataModel);
+        this.plotBuilder.setMainWindowModel(mainWindowModel);
     }
 
     public void setxStream(XStream xStream) {

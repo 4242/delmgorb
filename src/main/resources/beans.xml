@@ -13,15 +13,11 @@
 
     <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView"/>
 
-    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel">
-        <property name="mainWindowModel" ref="mainWindowModel"/>
-    </bean>
+    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel"/>
 
     <bean id="interpolatorModel" class="com.organization4242.delmgorb.model.InterpolatorModel" lazy-init="true"/>
 
     <bean id="plotBuilder" class="com.organization4242.delmgorb.model.PlotBuilder" lazy-init="true">
-        <property name="mainWindowModel" ref="mainWindowModel"/>
-        <property name="dataModel" ref="dataModel"/>
         <property name="interpolatorModel" ref="interpolatorModel"/>
     </bean>
 
@@ -37,7 +33,6 @@
     <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">
         <property name="mainWindowView" ref="mainWindowView"/>
         <property name="mainWindowModel" ref="mainWindowModel"/>
-        <property name="dataModel" ref="dataModel"/>
         <property name="plotBuilder" ref="plotBuilder"/>
         <property name="xStream" ref="xStream"/>
     </bean>
