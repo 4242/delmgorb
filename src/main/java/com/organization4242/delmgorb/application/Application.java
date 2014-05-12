@@ -7,7 +7,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * Main application class.
  *
- * @author Mu//inov Ilya
+ * @author Murzinov Ilya
  */
 public final class Application {
     private Application() {
