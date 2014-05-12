@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <context:annotation-config/>
+
+    <bean id="mainWindowModel" class="com.organization4242.delmgorb.model.MainWindowModel">
+    </bean>
+
+    <bean id="mainWindowView" class="com.organization4242.delmgorb.view.MainWindowView"/>
+
+    <bean id="dataModel" class="com.organization4242.delmgorb.model.DataModel">
+        <property name="mainWindowModel" ref="mainWindowModel"/>
+    </bean>
+
+    <bean id="interpolatorModel" class="com.organization4242.delmgorb.model.InterpolatorModel" lazy-init="true"/>
+
+    <bean id="plotBuilder" class="com.organization4242.delmgorb.model.PlotBuilder" lazy-init="true">
+        <property name="mainWindowModel" ref="mainWindowModel"/>
+        <property name="dataModel" ref="dataModel"/>
+        <property name="interpolatorModel" ref="interpolatorModel"/>
+    </bean>
+
+    <bean id="dialogWindowView" class="com.organization4242.delmgorb.view.DialogWindowView" lazy-init="true">
+        <constructor-arg value="Progress"/>
+    </bean>
+
+    <bean id="dialogWindowController" class="com.organization4242.delmgorb.controller.DialogWindowController">
+        <property name="dialogWindowView" ref="dialogWindowView"/>
+        <property name="plotBuilder" ref="plotBuilder"/>
+    </bean>
+
+    <bean id="mainWindowController" class="com.organization4242.delmgorb.controller.MainWindowController">
+        <property name="mainWindowView" ref="mainWindowView"/>
+        <property name="mainWindowModel" ref="mainWindowModel"/>
+        <property name="dataModel" ref="dataModel"/>
+        <property name="plotBuilder" ref="plotBuilder"/>
+        <property name="xStream" ref="xStream"/>
+    </bean>
+
+    <bean id="xStream" class="com.thoughtworks.xstream.XStream" lazy-init="true">
+        <constructor-arg ref="domDriver"/>
+    </bean>
+
+    <bean id="domDriver" class="com.thoughtworks.xstream.io.xml.DomDriver" lazy-init="true"/>
+</beans>
